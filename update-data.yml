@@ -1,0 +1,32 @@
+name: Update Performance Data
+
+on:
+  schedule:
+    - cron: '0 2 * * *'   # runs daily at 2am UTC (7:30am IST)
+  workflow_dispatch:        # also allow manual trigger from GitHub Actions tab
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Fetch sheet and generate data.json
+        run: python3 .github/scripts/fetch_data.py
+
+      - name: Commit and push if data changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git diff --staged --quiet || git commit -m "chore: update performance data $(date -u +%Y-%m-%d)"
+          git push
