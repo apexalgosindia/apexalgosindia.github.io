@@ -34,25 +34,25 @@
 
     /* ── LIGHT MODE ── */
     :root.light {
-      --cream: #1A1600;
-      --ink: #F7F4EC;
-      --mid: #6A5E30;
-      --accent: #A07820;
-      --accent-light: #C8A030;
-      --rule: #E0D8C0;
-      --surface: #F0EAD8;
-      --surface2: #E8DFC8;
-      --nav-bg: rgba(247,244,236,0.94);
-      --chart-grid: rgba(100,80,20,0.1);
-      --chart-text: rgba(100,80,20,0.6);
-      --chart-tooltip-bg: #F0EAD8;
-      --metric-name-color: rgba(80,60,10,0.5);
-      --metric-border: rgba(80,60,10,0.1);
-      --tab-border: rgba(80,60,10,0.2);
-      --tab-text: rgba(80,60,10,0.45);
-      --tab-hover: rgba(80,60,10,0.75);
-      --disclaimer-color: rgba(80,60,10,0.35);
-      --chart-label-color: rgba(80,60,10,0.4);
+      --cream: #1C1400;           /* near-black text on light bg */
+      --ink: #F5F0E4;             /* warm cream bg */
+      --mid: #4A3D10;             /* dark gold-brown mid tone */
+      --accent: #8A6A10;          /* darker gold for contrast on light */
+      --accent-light: #A07820;
+      --rule: #D8CFA8;
+      --surface: #EDE8D8;
+      --surface2: #E4DEC8;
+      --nav-bg: rgba(245,240,228,0.96);
+      --chart-grid: rgba(60,45,10,0.12);
+      --chart-text: rgba(40,28,5,0.65);
+      --chart-tooltip-bg: #EDE8D8;
+      --metric-name-color: rgba(40,28,5,0.55);
+      --metric-border: rgba(40,28,5,0.12);
+      --tab-border: rgba(40,28,5,0.18);
+      --tab-text: rgba(40,28,5,0.5);
+      --tab-hover: rgba(40,28,5,0.85);
+      --disclaimer-color: rgba(40,28,5,0.4);
+      --chart-label-color: rgba(40,28,5,0.5);
     }
 
     /* ── THEME TOGGLE BUTTON ── */
@@ -480,20 +480,56 @@
 
     /* Light mode surface overrides */
     :root.light body { background: var(--ink); color: var(--cream); }
-    :root.light .feature-desc { color: #5A4A10; }
-    :root.light .contact-intro p { color: #5A4A10; }
-    :root.light .stat-label { color: #5A4A10; }
-    :root.light footer p { color: #6A5A20; }
-    :root.light .form-group label { color: #5A4A10; }
+    :root.light nav { border-bottom-color: var(--rule); }
+    :root.light .nav-links a { color: var(--mid); }
+    :root.light .nav-links a:hover { color: var(--cream); }
+    :root.light .nav-cta { color: var(--accent); border-color: var(--accent); }
+    :root.light .nav-cta:hover { background: var(--accent); color: var(--ink); }
+    :root.light .section-title { color: var(--cream); }
+    :root.light .section-label { color: var(--accent); }
+    :root.light .hero-tag { color: var(--mid); }
+    :root.light .hero-sub { color: var(--mid); }
+    :root.light .hero-headline { color: var(--cream); }
+    :root.light .hero-headline em { color: var(--accent); }
+    :root.light .btn-primary { background: var(--accent); color: #FFF8E8; }
+    :root.light .btn-primary:hover { background: var(--accent-light); }
+    :root.light .btn-ghost { color: var(--mid); border-color: var(--rule); }
+    :root.light .btn-ghost:hover { color: var(--cream); }
+    :root.light #stats { border-color: var(--rule); }
+    :root.light .stat-num { color: var(--cream); }
+    :root.light .stat-num span { color: var(--accent); }
+    :root.light .stat-label { color: var(--mid); }
+    :root.light .stat-cell { border-color: var(--rule); }
+    :root.light .feature-num { color: var(--accent); }
+    :root.light .feature-title { color: var(--cream); }
+    :root.light .feature-desc { color: var(--mid); }
+    :root.light .feature-card { border-color: var(--rule); }
+    :root.light .feature-link { color: var(--accent); border-color: var(--rule); }
+    :root.light .feature-link:hover { color: var(--cream); }
+    :root.light .perf-tab { color: var(--tab-text); border-color: var(--tab-border); }
+    :root.light .perf-tab.active { background: rgba(138,106,16,0.1); color: var(--accent); }
+    :root.light .metric-val { color: var(--cream); }
+    :root.light .strategy-badge { color: var(--accent); border-color: var(--rule); }
+    :root.light .view-btn { color: var(--tab-text); }
+    :root.light .view-btn.active { color: var(--accent); }
+    :root.light .contact-intro h2, :root.light .contact-intro p { color: var(--cream); }
+    :root.light .contact-intro p { color: var(--mid); }
+    :root.light .contact-detail a { color: var(--accent); }
+    :root.light .form-group label { color: var(--mid); }
     :root.light .form-group input,
-    :root.light .form-group textarea { color: var(--cream); }
+    :root.light .form-group textarea { color: var(--cream); border-color: var(--rule); }
     :root.light .form-group input::placeholder,
-    :root.light .form-group textarea::placeholder { color: #B0A060; }
+    :root.light .form-group textarea::placeholder { color: rgba(40,28,5,0.3); }
     :root.light .form-group input:focus,
     :root.light .form-group textarea:focus { border-color: var(--accent); }
-    :root.light .hero-tag { color: var(--mid); }
-    :root.light .hero-sub { color: #6A5E30; }
-    :root.light .btn-ghost { color: var(--mid); }
+    :root.light .form-submit { background: var(--accent); color: #FFF8E8; }
+    :root.light .form-submit:hover { background: var(--accent-light); }
+    :root.light footer { border-color: var(--rule); }
+    :root.light footer p { color: var(--mid); }
+    :root.light .ticker-symbol { color: var(--cream); }
+    :root.light .ticker-val { color: var(--cream); }
+    :root.light .live-badge { border-color: var(--rule); }
+    :root.light .disclaimer { color: var(--disclaimer-color); border-color: var(--rule); }
 
     /* CONTACT */
     #contact {
@@ -966,15 +1002,13 @@
         const labels = DAILY_DATA.dates;
         const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#C8A030';
 
+        chart.data.labels = labels;
         if (strategy === 'combined') {
-          const combined = DAILY_DATA.nap.map((v,i) => v + DAILY_DATA.sap[i]);
-          chart.data.labels = labels;
           chart.data.datasets[0].data = DAILY_DATA.nap;
           chart.data.datasets[1].data = DAILY_DATA.sap;
           document.getElementById(labelMap[strategy]).textContent = 'Daily P&L — NAP vs SAP (₹)';
         } else {
           const data = DAILY_DATA[strategy];
-          chart.data.labels = labels;
           chart.data.datasets[0].data = data;
           chart.data.datasets[0].backgroundColor = data.map(v =>
             v >= 0 ? (strategy === 'sap' ? 'rgba(126,179,200,0.7)' : 'rgba(200,160,48,0.7)')
@@ -987,15 +1021,18 @@
         const monthly = window._liveData || {};
         const nap_m = monthly.nap_monthly || FALLBACK.nap_monthly;
         const sap_m = monthly.sap_monthly || FALLBACK.sap_monthly;
+        const lbls  = monthly.months      || FALLBACK.months;
 
+        chart.data.labels = lbls;
         if (strategy === 'combined') {
-          chart.data.labels = monthly.months || FALLBACK.months;
           chart.data.datasets[0].data = nap_m;
           chart.data.datasets[1].data = sap_m;
+          // Restore original grouped colours (not pos/neg)
+          chart.data.datasets[0].backgroundColor = 'rgba(200,169,110,0.7)';
+          chart.data.datasets[1].backgroundColor = 'rgba(126,179,200,0.6)';
           document.getElementById(labelMap[strategy]).textContent = 'Monthly P&L — NAP vs SAP (₹)';
         } else {
           const data = strategy === 'nap' ? nap_m : sap_m;
-          chart.data.labels = monthly.months || FALLBACK.months;
           chart.data.datasets[0].data = data;
           chart.data.datasets[0].backgroundColor = data.map(v =>
             v >= 0 ? (strategy === 'sap' ? 'rgba(126,179,200,0.7)' : 'rgba(200,160,48,0.7)')
@@ -1116,6 +1153,15 @@
         const res  = await fetch('./data.json?t=' + Date.now());
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const d = await res.json();
+
+        // Populate DAILY_DATA so the Daily toggle actually works
+        if (d.nap_daily && d.nap_daily.length > 0) {
+          DAILY_DATA.nap   = d.nap_daily;
+          DAILY_DATA.sap   = d.sap_daily;
+          DAILY_DATA.dates = d.daily_dates;
+        }
+        // Store full live data for monthly fallback in setView
+        window._liveData = d;
 
         updateCharts(d.months, d.nap_monthly, d.sap_monthly);
         updateMetrics(d.nap_monthly, d.sap_monthly);
