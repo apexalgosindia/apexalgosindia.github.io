@@ -20,23 +20,23 @@
       --surface2:     #1A1710;       /* hover / card bg */
       --rule:         #252118;       /* barely-there warm dividers */
       --cream:        #EDE6D6;       /* warm ivory — principal text */
-      --muted:        #6E6455;       /* warm stone — body copy, labels */
-      --mid:          #9C8E7A;       /* mid warm — secondary text */
+      --muted:        #A09080;       /* warm stone — body copy, labels */
+      --mid:          #C0B09A;       /* mid warm — secondary text */
       --accent:       #D4A840;       /* rich amber-gold */
       --accent-dim:   #A88020;
       --accent-glow:  rgba(212,168,64,0.10);
       --accent-light: #ECC84C;
       --nav-bg:       rgba(10,9,6,0.90);
-      --chart-grid:   rgba(237,230,214,0.045);
-      --chart-text:   rgba(237,230,214,0.35);
+      --chart-grid:   rgba(237,230,214,0.08);
+      --chart-text:   rgba(237,230,214,0.6);
       --chart-tooltip-bg: #1A1710;
-      --metric-name-color: #8C7E6A;
+      --metric-name-color: #B0A090;
       --metric-border:     #1E1C14;
-      --tab-border:        #2E2B20;
-      --tab-text:          #7A6E5E;
+      --tab-border:        #3E3B2E;
+      --tab-text:          #9A8E7E;
       --tab-hover:         #EDE6D6;
-      --disclaimer-color:  #5C5445;
-      --chart-label-color: #6E6050;
+      --disclaimer-color:  #8A7A68;
+      --chart-label-color: #9A8878;
       --pos: #3FE088;
       --neg: #F07070;
     }
@@ -49,23 +49,23 @@
       --surface2:     #E8E2D6;       /* hover state */
       --rule:         #D6CEBC;       /* warm taupe rule */
       --cream:        #18140C;       /* near-black warm ink — max readability */
-      --muted:        #7A6E5C;       /* warm sepia secondary */
-      --mid:          #4E4438;       /* rich mid-dark for emphasis */
+      --muted:        #5A4E3C;       /* warm sepia secondary */
+      --mid:          #3A2E22;       /* rich mid-dark for emphasis */
       --accent:       #96680A;       /* deep burnished amber — high contrast */
       --accent-dim:   #784E06;
       --accent-glow:  rgba(150,104,10,0.09);
       --accent-light: #B8820E;
       --nav-bg:       rgba(250,247,242,0.95);
       --chart-grid:   rgba(24,20,12,0.065);
-      --chart-text:   rgba(24,20,12,0.5);
+      --chart-text:   rgba(24,20,12,0.7);
       --chart-tooltip-bg: #F1EDE3;
-      --metric-name-color: #8A7E6C;
+      --metric-name-color: #6A5E4C;
       --metric-border:     #D6CEBC;
       --tab-border:        #C8C0AC;
-      --tab-text:          #8A7E6C;
+      --tab-text:          #6A5E4C;
       --tab-hover:         #18140C;
-      --disclaimer-color:  #B0A894;
-      --chart-label-color: #9A8E7C;
+      --disclaimer-color:  #7A6E5C;
+      --chart-label-color: #7A6E5C;
       --pos: #1F7A38;
       --neg: #B03030;
     }
@@ -226,7 +226,7 @@
       margin-top: 2rem;
       max-width: 44ch;
       font-size: 1.05rem;
-      font-weight: 300;
+      font-weight: 400;
       line-height: 1.75;
       color: var(--muted);
       letter-spacing: 0;
@@ -396,7 +396,7 @@
     .feature-desc {
       font-family: 'Jost', sans-serif;
       font-size: 0.9rem;
-      font-weight: 300;
+      font-weight: 400;
       line-height: 1.78;
       color: var(--muted);
     }
@@ -661,6 +661,7 @@
     }
     .contact-intro .section-title { margin-bottom: 1.5rem; }
     .contact-intro p {
+      color: var(--mid);
       font-family: 'Jost', sans-serif;
       font-size: 0.97rem;
       font-weight: 350;
@@ -734,6 +735,28 @@
     .form-group select:focus { border-color: var(--accent); }
     .form-group select option { background: var(--surface2); color: var(--cream); }
     .required-star { color: var(--accent); margin-left: 2px; }
+    .radio-group {
+      display: flex;
+      gap: 2rem;
+      padding: 0.5rem 0;
+    }
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--mid);
+    }
+    .radio-label input[type="radio"] {
+      width: 16px; height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .radio-label span { color: var(--cream); }
+    :root.light .radio-label span { color: var(--cream); }
     :root.light .form-group select { background: var(--surface2); color: var(--cream); border-color: var(--rule); }
     :root.light .form-group select option { background: var(--surface); color: var(--cream); }
     /* Toast notification */
@@ -1158,6 +1181,23 @@
           <option value="₹10L – ₹25L">₹10L – ₹25L</option>
           <option value="₹25L+">₹25L+</option>
         </select>
+      </div>
+      <div class="form-group">
+        <label>Experienced with Tradetron?</label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" name="tradetron_experience" value="Yes" />
+            <span>Yes</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="tradetron_experience" value="No" />
+            <span>No</span>
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Current Broker &amp; Brokerage Plan</label>
+        <input type="text" name="broker_plan" placeholder="e.g. Zerodha — Flat ₹20 per order" />
       </div>
       <div class="form-group">
         <label>Message</label>
