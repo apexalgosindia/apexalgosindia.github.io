@@ -6,67 +6,80 @@
   <title>Apex Algos — Algorithmic Trading</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --cream: #E8D48A;
-      --ink: #080808;
-      --mid: #9A8A6A;
-      --accent: #C8A030;
-      --accent-light: #F0D070;
-      --rule: #2A2820;
-      --surface: #0F0E0A;
-      --surface2: #181610;
-      --nav-bg: rgba(8,8,8,0.92);
-      --chart-grid: rgba(200,160,48,0.08);
-      --chart-text: rgba(200,160,48,0.45);
-      --chart-tooltip-bg: #0A0900;
-      --metric-name-color: rgba(245,242,236,0.45);
-      --metric-border: rgba(245,242,236,0.08);
-      --tab-border: rgba(245,242,236,0.15);
-      --tab-text: rgba(245,242,236,0.4);
-      --tab-hover: rgba(245,242,236,0.7);
-      --disclaimer-color: rgba(245,242,236,0.25);
-      --chart-label-color: rgba(245,242,236,0.35);
+      /* ── Dark: espresso-warm, editorial luxury ── */
+      --ink:          #0A0906;       /* true warm black — like old ink */
+      --surface:      #121008;       /* very slightly lifted */
+      --surface2:     #1A1710;       /* hover / card bg */
+      --rule:         #252118;       /* barely-there warm dividers */
+      --cream:        #EDE6D6;       /* warm ivory — principal text */
+      --muted:        #6E6455;       /* warm stone — body copy, labels */
+      --mid:          #9C8E7A;       /* mid warm — secondary text */
+      --accent:       #D4A840;       /* rich amber-gold */
+      --accent-dim:   #A88020;
+      --accent-glow:  rgba(212,168,64,0.10);
+      --accent-light: #ECC84C;
+      --nav-bg:       rgba(10,9,6,0.90);
+      --chart-grid:   rgba(237,230,214,0.045);
+      --chart-text:   rgba(237,230,214,0.35);
+      --chart-tooltip-bg: #1A1710;
+      --metric-name-color: #4A4438;
+      --metric-border:     #1E1C14;
+      --tab-border:        #2E2B20;
+      --tab-text:          #6E6455;
+      --tab-hover:         #EDE6D6;
+      --disclaimer-color:  #38352A;
+      --chart-label-color: #4A4438;
+      --pos: #5DC98C;
+      --neg: #D96B6B;
     }
 
     /* ── LIGHT MODE ── */
     :root.light {
-      --cream: #1C1400;           /* near-black text on light bg */
-      --ink: #F5F0E4;             /* warm cream bg */
-      --mid: #4A3D10;             /* dark gold-brown mid tone */
-      --accent: #8A6A10;          /* darker gold for contrast on light */
-      --accent-light: #A07820;
-      --rule: #D8CFA8;
-      --surface: #EDE8D8;
-      --surface2: #E4DEC8;
-      --nav-bg: rgba(245,240,228,0.96);
-      --chart-grid: rgba(60,45,10,0.12);
-      --chart-text: rgba(40,28,5,0.65);
-      --chart-tooltip-bg: #EDE8D8;
-      --metric-name-color: rgba(40,28,5,0.55);
-      --metric-border: rgba(40,28,5,0.12);
-      --tab-border: rgba(40,28,5,0.18);
-      --tab-text: rgba(40,28,5,0.5);
-      --tab-hover: rgba(40,28,5,0.85);
-      --disclaimer-color: rgba(40,28,5,0.4);
-      --chart-label-color: rgba(40,28,5,0.5);
+      /* Warm Japanese paper — washi, cream, ink, amber */
+      --ink:          #FAF7F2;       /* bleached linen — airy bg */
+      --surface:      #F1EDE3;       /* warm card surface */
+      --surface2:     #E8E2D6;       /* hover state */
+      --rule:         #D6CEBC;       /* warm taupe rule */
+      --cream:        #18140C;       /* near-black warm ink — max readability */
+      --muted:        #7A6E5C;       /* warm sepia secondary */
+      --mid:          #4E4438;       /* rich mid-dark for emphasis */
+      --accent:       #96680A;       /* deep burnished amber — high contrast */
+      --accent-dim:   #784E06;
+      --accent-glow:  rgba(150,104,10,0.09);
+      --accent-light: #B8820E;
+      --nav-bg:       rgba(250,247,242,0.95);
+      --chart-grid:   rgba(24,20,12,0.065);
+      --chart-text:   rgba(24,20,12,0.5);
+      --chart-tooltip-bg: #F1EDE3;
+      --metric-name-color: #8A7E6C;
+      --metric-border:     #D6CEBC;
+      --tab-border:        #C8C0AC;
+      --tab-text:          #8A7E6C;
+      --tab-hover:         #18140C;
+      --disclaimer-color:  #B0A894;
+      --chart-label-color: #9A8E7C;
+      --pos: #1F7A38;
+      --neg: #B03030;
     }
 
     /* ── THEME TOGGLE BUTTON ── */
     .theme-toggle {
       background: transparent;
       border: 1px solid var(--tab-border);
-      color: var(--tab-text);
+      color: var(--muted);
       font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.08em;
-      padding: 0.4rem 0.8rem;
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      padding: 0.4rem 0.9rem;
       cursor: pointer;
       transition: all 0.2s;
-      display: flex; align-items: center; gap: 0.4rem;
+      display: flex; align-items: center; gap: 0.45rem;
     }
     .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
     .theme-toggle .icon { font-size: 0.85rem; }
@@ -80,8 +93,9 @@
     }
     .view-btn {
       font-family: 'DM Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.1em;
+      font-size: 0.6rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--tab-text);
       background: transparent;
@@ -92,7 +106,7 @@
       transition: background 0.2s, color 0.2s;
     }
     .view-btn:last-child { border-right: none; }
-    .view-btn.active { background: rgba(200,160,48,0.12); color: var(--accent); }
+    .view-btn.active { background: rgba(212,168,64,0.1); color: var(--accent); }
     .view-btn:hover:not(.active) { color: var(--tab-hover); }
 
     html { scroll-behavior: smooth; }
@@ -100,9 +114,14 @@
     body {
       background: var(--ink);
       color: var(--cream);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
+      font-family: 'Jost', sans-serif;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.65;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
     }
 
     /* NAV */
@@ -115,35 +134,36 @@
       border-bottom: 1px solid var(--rule);
     }
     .nav-logo {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.2rem;
-      letter-spacing: 0.04em;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
       color: var(--cream);
       text-decoration: none;
     }
-    .nav-logo span { color: var(--accent); }
+    .nav-logo span { color: var(--accent); font-style: italic; font-weight: 500; }
     .nav-links { display: flex; gap: 2.5rem; list-style: none; }
     .nav-links a {
       font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 400;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--mid);
+      color: var(--muted);
       text-decoration: none;
-      transition: color 0.2s;
+      transition: color 0.25s;
     }
     .nav-links a:hover { color: var(--cream); }
     .nav-cta {
       font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 500;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--accent);
       text-decoration: none;
-      border: 1px solid var(--accent);
-      padding: 0.55rem 1.2rem;
+      border: 1px solid rgba(212,168,64,0.45);
+      padding: 0.5rem 1.2rem;
       transition: background 0.2s, color 0.2s;
     }
     .nav-cta:hover { background: var(--accent); color: var(--ink); }
@@ -155,7 +175,10 @@
       padding: 0 4rem 5rem;
       position: relative;
       overflow: hidden;
-      background: radial-gradient(ellipse 80% 60% at 30% 60%, rgba(200,160,48,0.06) 0%, transparent 70%), var(--ink);
+      background:
+        radial-gradient(ellipse 60% 55% at 25% 65%, rgba(200,148,28,0.09) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 30% at 75% 20%, rgba(200,148,28,0.04) 0%, transparent 60%),
+        var(--ink);
     }
     .hero-rule {
       position: absolute; top: 0; left: 0; right: 0;
@@ -165,41 +188,45 @@
           90deg,
           transparent,
           transparent calc(100% / 12 - 1px),
-          rgba(200,160,48,0.15) calc(100% / 12 - 1px),
-          rgba(200,160,48,0.15) calc(100% / 12)
+          rgba(200,148,28,0.09) calc(100% / 12 - 1px),
+          rgba(200,148,28,0.09) calc(100% / 12)
         );
       opacity: 1;
       pointer-events: none;
     }
     .hero-tag {
       font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.16em;
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 1.6rem;
+      margin-bottom: 2rem;
       opacity: 0;
       animation: fadeUp 0.8s 0.2s forwards;
     }
     .hero-headline {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(3.5rem, 8vw, 7.5rem);
-      line-height: 1.02;
-      letter-spacing: -0.02em;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.4rem, 7.5vw, 7rem);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
       max-width: 14ch;
       opacity: 0;
       animation: fadeUp 0.8s 0.4s forwards;
     }
     .hero-headline em {
       font-style: italic;
+      font-weight: 500;
       color: var(--accent);
     }
     .hero-sub {
-      margin-top: 2.4rem;
+      margin-top: 2rem;
       max-width: 44ch;
       font-size: 1.05rem;
-      line-height: 1.7;
-      color: #7A7060;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--muted);
+      letter-spacing: 0;
       opacity: 0;
       animation: fadeUp 0.8s 0.6s forwards;
     }
@@ -228,7 +255,7 @@
       text-transform: uppercase;
       text-decoration: none;
       color: var(--mid);
-      border-bottom: 1px solid rgba(200,160,48,0.3);
+      border-bottom: 1px solid rgba(212,168,67,0.25);
       padding-bottom: 2px;
       transition: color 0.2s, border-color 0.2s;
     }
@@ -243,13 +270,13 @@
     .ticker-item {
       display: flex; align-items: center; gap: 0.8rem;
       font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
-      color: var(--mid);
+      font-size: 0.7rem;
+      color: var(--muted);
     }
-    .ticker-symbol { font-weight: 500; color: var(--ink); }
+    .ticker-symbol { font-weight: 500; color: var(--cream); }
     .ticker-val { color: var(--mid); }
-    .ticker-change { color: #4A7C59; }
-    .ticker-change.neg { color: #B85C5C; }
+    .ticker-change { color: var(--pos); }
+    .ticker-change.neg { color: var(--neg); }
     .ticker-dot {
       width: 6px; height: 6px; border-radius: 50%;
       background: var(--accent);
@@ -268,22 +295,27 @@
       padding: 3.5rem 4rem;
       border-right: 1px solid var(--rule);
       background: var(--surface);
+      transition: background 0.2s;
     }
     .stat-cell:last-child { border-right: none; }
+    .stat-cell:hover { background: var(--surface2); }
     .stat-num {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(2.5rem, 4vw, 3.8rem);
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 3.8vw, 3.6rem);
+      font-weight: 400;
       line-height: 1;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.01em;
+      color: var(--cream);
     }
-    .stat-num span { color: var(--accent); font-style: italic; }
+    .stat-num span { color: var(--accent); font-style: italic; font-weight: 500; }
     .stat-label {
-      margin-top: 0.6rem;
+      margin-top: 0.8rem;
       font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
+      font-size: 0.65rem;
+      font-weight: 400;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: #5A5040;
+      color: var(--muted);
     }
 
     /* FEATURES */
@@ -293,18 +325,20 @@
     }
     .section-label {
       font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.18em;
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 1rem;
+      margin-bottom: 1.4rem;
     }
     .section-title {
-      font-family: 'DM Serif Display', serif;
+      font-family: 'Playfair Display', serif;
       font-size: clamp(2rem, 4vw, 3.2rem);
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      max-width: 20ch;
+      font-weight: 400;
+      line-height: 1.12;
+      letter-spacing: 0;
+      max-width: 22ch;
       margin-bottom: 5rem;
       color: var(--cream);
     }
@@ -325,49 +359,67 @@
     .feature-card:hover { background: var(--surface2); }
     .feature-card:nth-child(3n) { border-right: none; }
     .feature-card:nth-child(4), .feature-card:nth-child(5), .feature-card:nth-child(6) { border-bottom: none; }
+    .feature-card:nth-child(3n) { border-right: none; }
     .feature-num {
       font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
       color: var(--accent);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.8rem;
     }
     .feature-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.4rem;
-      margin-bottom: 0.8rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 500;
+      line-height: 1.25;
+      margin-bottom: 0.9rem;
+      color: var(--cream);
     }
     .feature-desc {
+      font-family: 'Jost', sans-serif;
       font-size: 0.9rem;
-      line-height: 1.7;
-      color: #5A5040;
+      font-weight: 300;
+      line-height: 1.78;
+      color: var(--muted);
     }
 
-    .feature-link {
+    .strategy-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      margin-top: 1.4rem;
+    }
+    .strategy-links .feature-link {
+      margin-top: 0;
+    }
+        .feature-link {
       display: inline-flex; align-items: center; gap: 0.4rem;
-      margin-top: 1.2rem;
+      margin-top: 1.4rem;
       font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.1em;
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--accent);
       text-decoration: none;
-      border-bottom: 1px solid rgba(200,169,110,0.3);
+      border-bottom: 1px solid rgba(212,168,64,0.28);
       padding-bottom: 2px;
-      transition: border-color 0.2s, color 0.2s;
+      transition: border-color 0.25s, color 0.25s;
     }
-    .feature-link:hover { color: var(--ink); border-color: var(--ink); }
+    .feature-link:hover { color: var(--cream); border-color: var(--accent); }
     .live-badge {
       display: inline-block;
       font-family: 'DM Mono', monospace;
       font-size: 0.58rem;
-      letter-spacing: 0.08em;
-      background: rgba(200,169,110,0.12);
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      background: var(--accent-glow);
       color: var(--accent);
-      border: 1px solid rgba(200,169,110,0.25);
-      padding: 0.1rem 0.4rem;
-      margin-left: 0.5rem;
+      border: 1px solid rgba(212,168,64,0.22);
+      padding: 0.15rem 0.5rem;
+      margin-left: 0.6rem;
       vertical-align: middle;
+      border-radius: 2px;
     }
 
     /* PERFORMANCE */
@@ -387,11 +439,12 @@
     }
     .perf-tab {
       font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
+      font-weight: 400;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--tab-text);
-      padding: 0.6rem 1.4rem;
+      padding: 0.6rem 1.5rem;
       cursor: pointer;
       border: none;
       background: transparent;
@@ -399,7 +452,7 @@
       transition: background 0.2s, color 0.2s;
     }
     .perf-tab:last-child { border-right: none; }
-    .perf-tab.active { background: rgba(200,169,110,0.15); color: var(--accent); }
+    .perf-tab.active { background: rgba(212,168,64,0.1); color: var(--accent); }
     .perf-tab:hover:not(.active) { color: var(--tab-hover); }
 
     /* panels */
@@ -409,11 +462,12 @@
     .perf-charts { display: flex; flex-direction: column; gap: 0; }
     .chart-label {
       font-family: 'DM Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
+      font-size: 0.6rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--chart-label-color);
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.7rem;
     }
     .chart-wrap { margin-bottom: 2rem; }
     .chart-inner {
@@ -432,30 +486,35 @@
     }
     .metric-name {
       font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.1em;
+      font-size: 0.63rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--metric-name-color);
     }
     .metric-val {
-      font-family: 'DM Serif Display', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
       color: var(--cream);
     }
-    .metric-val.pos { color: #7EC8A0; }
-    .metric-val.neg { color: #C47C7C; }
+    .metric-val.pos { color: var(--pos); }
+    .metric-val.neg { color: var(--neg); }
 
     /* strategy badge */
     .strategy-badge {
       display: inline-flex; align-items: center; gap: 0.5rem;
       font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--accent);
-      border: 1px solid rgba(200,169,110,0.3);
-      padding: 0.3rem 0.8rem;
-      margin-bottom: 1.5rem;
+      border: 1px solid rgba(212,168,64,0.22);
+      padding: 0.35rem 0.9rem;
+      margin-bottom: 1.8rem;
+      background: var(--accent-glow);
     }
     .strategy-badge span {
       width: 6px; height: 6px; border-radius: 50%;
@@ -465,11 +524,11 @@
 
     .disclaimer {
       margin-top: 2rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.06em;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 300;
+      line-height: 1.75;
       color: var(--disclaimer-color);
-      line-height: 1.7;
       border-top: 1px solid var(--metric-border);
       padding-top: 1.2rem;
     }
@@ -478,58 +537,100 @@
       .perf-panel.active { grid-template-columns: 1fr; gap: 3rem; }
     }
 
-    /* Light mode surface overrides */
+    /* ── LIGHT MODE OVERRIDES ── */
     :root.light body { background: var(--ink); color: var(--cream); }
+
+    /* Light hero bg + grid */
+    :root.light #hero {
+      background: radial-gradient(ellipse 70% 50% at 28% 68%, rgba(150,104,10,0.07) 0%, transparent 65%), var(--ink);
+    }
+    :root.light .hero-rule {
+      background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent calc(100% / 12 - 1px),
+        rgba(24,20,12,0.05) calc(100% / 12 - 1px),
+        rgba(24,20,12,0.05) calc(100% / 12)
+      );
+    }
+
+    /* Nav */
     :root.light nav { border-bottom-color: var(--rule); }
-    :root.light .nav-links a { color: var(--mid); }
+    :root.light .nav-logo { color: var(--cream); }
+    :root.light .nav-links a { color: var(--muted); }
     :root.light .nav-links a:hover { color: var(--cream); }
     :root.light .nav-cta { color: var(--accent); border-color: var(--accent); }
-    :root.light .nav-cta:hover { background: var(--accent); color: var(--ink); }
-    :root.light .section-title { color: var(--cream); }
-    :root.light .section-label { color: var(--accent); }
-    :root.light .hero-tag { color: var(--mid); }
-    :root.light .hero-sub { color: var(--mid); }
+    :root.light .nav-cta:hover { background: var(--accent); color: #FFF8E8; }
+    :root.light .theme-toggle { color: var(--muted); border-color: var(--tab-border); }
+
+    /* Hero */
     :root.light .hero-headline { color: var(--cream); }
     :root.light .hero-headline em { color: var(--accent); }
-    :root.light .btn-primary { background: var(--accent); color: #FFF8E8; }
+    :root.light .hero-tag { color: var(--accent); }
+    :root.light .hero-sub { color: var(--muted); font-weight: 400; }
+    :root.light .btn-primary { background: var(--accent); color: #FAF8F5; }
     :root.light .btn-primary:hover { background: var(--accent-light); }
-    :root.light .btn-ghost { color: var(--mid); border-color: var(--rule); }
+    :root.light .btn-ghost { color: var(--muted); }
     :root.light .btn-ghost:hover { color: var(--cream); }
-    :root.light #stats { border-color: var(--rule); }
+    :root.light .ticker-symbol { color: var(--cream); }
+    :root.light .ticker-val { color: var(--muted); }
+    :root.light .ticker-change { color: #15803D; }
+    :root.light .ticker-change.neg { color: #B91C1C; }
+
+    /* Stats */
+    :root.light #stats { border-color: var(--rule); background: var(--surface); }
+    :root.light .stat-cell { background: var(--surface); border-color: var(--rule); }
     :root.light .stat-num { color: var(--cream); }
     :root.light .stat-num span { color: var(--accent); }
-    :root.light .stat-label { color: var(--mid); }
-    :root.light .stat-cell { border-color: var(--rule); }
+    :root.light .stat-label { color: var(--muted); }
+
+    /* Features */
+    :root.light .section-title { color: var(--cream); }
+    :root.light .section-label { color: var(--accent); }
+    :root.light .features-grid { border-color: var(--rule); }
+    :root.light .feature-card { background: var(--surface); border-color: var(--rule); }
+    :root.light .feature-card:hover { background: var(--surface2); }
     :root.light .feature-num { color: var(--accent); }
     :root.light .feature-title { color: var(--cream); }
-    :root.light .feature-desc { color: var(--mid); }
-    :root.light .feature-card { border-color: var(--rule); }
-    :root.light .feature-link { color: var(--accent); border-color: var(--rule); }
-    :root.light .feature-link:hover { color: var(--cream); }
+    :root.light .feature-desc { color: var(--muted); }
+    :root.light .feature-link { color: var(--accent); border-color: rgba(146,104,10,0.25); }
+    :root.light .feature-link:hover { color: var(--cream); border-color: var(--accent); }
+
+    /* Performance */
+    :root.light #performance { background: var(--surface); }
+    :root.light .perf-tabs { border-color: var(--tab-border); }
     :root.light .perf-tab { color: var(--tab-text); border-color: var(--tab-border); }
-    :root.light .perf-tab.active { background: rgba(138,106,16,0.1); color: var(--accent); }
+    :root.light .perf-tab.active { background: rgba(146,104,10,0.08); color: var(--accent); }
+    :root.light .metric-row { border-color: var(--metric-border); }
+    :root.light .metric-name { color: var(--metric-name-color); }
     :root.light .metric-val { color: var(--cream); }
-    :root.light .strategy-badge { color: var(--accent); border-color: var(--rule); }
-    :root.light .view-btn { color: var(--tab-text); }
-    :root.light .view-btn.active { color: var(--accent); }
-    :root.light .contact-intro h2, :root.light .contact-intro p { color: var(--cream); }
-    :root.light .contact-intro p { color: var(--mid); }
+    :root.light .metric-val.pos { color: var(--pos); }
+    :root.light .metric-val.neg { color: var(--neg); }
+    :root.light .strategy-badge { color: var(--accent); border-color: rgba(146,104,10,0.2); background: var(--accent-glow); }
+    :root.light .chart-label { color: var(--chart-label-color); }
+    :root.light .view-toggle { border-color: var(--tab-border); }
+    :root.light .view-btn { color: var(--tab-text); border-color: var(--tab-border); }
+    :root.light .view-btn.active { color: var(--accent); background: rgba(146,104,10,0.07); }
+    :root.light .live-badge { color: var(--accent); border-color: rgba(146,104,10,0.2); background: var(--accent-glow); }
+    :root.light .disclaimer { color: var(--disclaimer-color); border-color: var(--metric-border); }
+
+    /* Contact */
+    :root.light #contact { background: var(--ink); }
+    :root.light .contact-intro p { color: var(--muted); }
     :root.light .contact-detail a { color: var(--accent); }
-    :root.light .form-group label { color: var(--mid); }
+    :root.light .form-group label { color: var(--muted); }
     :root.light .form-group input,
     :root.light .form-group textarea { color: var(--cream); border-color: var(--rule); }
     :root.light .form-group input::placeholder,
-    :root.light .form-group textarea::placeholder { color: rgba(40,28,5,0.3); }
+    :root.light .form-group textarea::placeholder { color: var(--disclaimer-color); }
     :root.light .form-group input:focus,
     :root.light .form-group textarea:focus { border-color: var(--accent); }
-    :root.light .form-submit { background: var(--accent); color: #FFF8E8; }
+    :root.light .form-submit { background: var(--accent); color: #FAF8F5; }
     :root.light .form-submit:hover { background: var(--accent-light); }
-    :root.light footer { border-color: var(--rule); }
-    :root.light footer p { color: var(--mid); }
-    :root.light .ticker-symbol { color: var(--cream); }
-    :root.light .ticker-val { color: var(--cream); }
-    :root.light .live-badge { border-color: var(--rule); }
-    :root.light .disclaimer { color: var(--disclaimer-color); border-color: var(--rule); }
+
+    /* Footer */
+    :root.light footer { background: var(--surface); border-color: var(--rule); }
+    :root.light footer p { color: var(--muted); }
 
     /* CONTACT */
     #contact {
@@ -542,10 +643,12 @@
     }
     .contact-intro .section-title { margin-bottom: 1.5rem; }
     .contact-intro p {
-      font-size: 0.95rem;
-      line-height: 1.8;
-      color: #5A5040;
-      max-width: 36ch;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.97rem;
+      font-weight: 350;
+      line-height: 1.82;
+      color: var(--muted);
+      max-width: 40ch;
     }
     .contact-detail {
       margin-top: 2.5rem;
@@ -557,7 +660,7 @@
       letter-spacing: 0.06em;
       color: var(--accent);
       text-decoration: none;
-      border-bottom: 1px solid rgba(200,160,48,0.3);
+      border-bottom: 1px solid rgba(212,168,67,0.25);
       width: fit-content;
       padding-bottom: 2px;
       transition: border-color 0.2s, color 0.2s;
@@ -567,10 +670,11 @@
     .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
     .form-group label {
       font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.14em;
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: #5A5040;
+      color: var(--muted);
     }
     .form-group input,
     .form-group textarea {
@@ -578,11 +682,12 @@
       border: none;
       border-bottom: 1px solid var(--rule);
       padding: 0.7rem 0;
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Jost', sans-serif;
       font-size: 0.9rem;
       color: var(--cream);
+      font-weight: 400;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.25s;
       resize: none;
     }
     .form-group input::placeholder,
@@ -595,8 +700,9 @@
       background: var(--accent);
       color: var(--ink);
       font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.14em;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       border: none;
       padding: 1rem 2rem;
@@ -618,8 +724,9 @@
     footer p {
       font-family: 'DM Mono', monospace;
       font-size: 0.65rem;
+      font-weight: 400;
       letter-spacing: 0.08em;
-      color: #3A3020;
+      color: var(--muted);
     }
 
     /* ANIMATIONS */
@@ -663,6 +770,33 @@
       #contact { grid-template-columns: 1fr; gap: 3rem; }
       footer { padding: 1.5rem 2rem; flex-direction: column; gap: 0.5rem; text-align: center; }
     }
+
+    /* ── GRAIN TEXTURE — atmospheric depth ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      mix-blend-mode: overlay;
+    }
+    :root.light body::before { opacity: 0.018; }
+
+    /* ── SMOOTH THEME TRANSITIONS ── */
+    body, nav, #stats, #features, #performance, #contact, footer,
+    .feature-card, .stat-cell, .metric-row, .perf-tab, .nav-links a,
+    .section-title, .section-label, .stat-num, .stat-label,
+    .feature-title, .feature-desc, .feature-num, .metric-name, .metric-val,
+    .chart-label, .disclaimer, .strategy-badge, .live-badge, .hero-headline,
+    .hero-sub, .hero-tag, .btn-primary, .btn-ghost, .theme-toggle {
+      transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease;
+    }
+
+    /* ── IMPROVED SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--ink); }
+    ::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 0; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--tab-border); }
+
   </style>
 </head>
 <body>
@@ -747,13 +881,21 @@
         <div class="feature-num">01</div>
         <h3 class="feature-title">NAP — Nifty Apex Predator</h3>
         <p class="feature-desc">Momentum-based intraday system trading the Nifty index. Precision entries with strict ₹5,000/day max loss controls and systematic exit logic.</p>
-        <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">View on Tradetron →</a>
+        <div class="strategy-links">
+          <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">NAP on Tradetron →</a>
+          <a class="feature-link" href="https://tradetron.tech/strategy/7803165" target="_blank" rel="noopener">NAP v2 on Tradetron →</a>
+          <a class="feature-link" href="https://tradetron.tech/strategy/8678425" target="_blank" rel="noopener">NAP v3 on Tradetron →</a>
+        </div>
       </div>
       <div class="feature-card reveal">
         <div class="feature-num">02</div>
         <h3 class="feature-title">SAP — Sensex Apex Predator</h3>
         <p class="feature-desc">Systematic intraday strategy on the Sensex index. Designed to capture directional moves with disciplined risk management and automated execution.</p>
-        <a class="feature-link" href="https://tradetron.tech/strategy/7324685" target="_blank" rel="noopener">View on Tradetron →</a>
+        <div class="strategy-links">
+          <a class="feature-link" href="https://tradetron.tech/strategy/7324685" target="_blank" rel="noopener">SAP on Tradetron →</a>
+          <a class="feature-link" href="https://tradetron.tech/strategy/8838677" target="_blank" rel="noopener">SAP v2 on Tradetron →</a>
+          <a class="feature-link" href="https://tradetron.tech/strategy/8680369" target="_blank" rel="noopener">SAP v3 on Tradetron →</a>
+        </div>
       </div>
       <div class="feature-card reveal">
         <div class="feature-num">03</div>
@@ -888,9 +1030,9 @@
       <h2 class="section-title">Let's talk about your capital.</h2>
       <p>Whether you're an institutional investor, family office, or a trader looking for systematic edge — we'd like to hear from you.</p>
       <div class="contact-detail">
-        <a href="mailto:apexalgosindia@gmail.com"><span class="__cf_email__" data-cfemail="1179747d7d7e5170617469707d767e623f727e7c">apexalgosindia@gmail.com</span></a>
-        <a href="https://t.me/apexalgosadmin"> Contact us →</a>
-        <a href="https://t.me/apexalgoschat"> Join our community →</a>
+        <a href="mailto:apexalgosindia@gmail.com">apexalgosindia@gmail.com</a>
+        <a href="https://t.me/apexalgosadmin" target="_blank" rel="noopener">Contact Us →</a>
+        <a href="https://t.me/apexalgoschat" target="_blank" rel="noopener">Join Our Community →</a>
       </div>
     </div>
     <form class="contact-form reveal" onsubmit="handleSubmit(event)">
@@ -1012,8 +1154,8 @@
           const data = DAILY_DATA[strategy];
           chart.data.datasets[0].data = data;
           chart.data.datasets[0].backgroundColor = data.map(v =>
-            v >= 0 ? (strategy === 'sap' ? 'rgba(126,179,200,0.7)' : 'rgba(200,160,48,0.7)')
-                   : 'rgba(184,92,92,0.65)'
+            v >= 0 ? 'rgba(74,222,128,0.7)'
+                   : 'rgba(192,80,80,0.62)'
           );
           document.getElementById(labelMap[strategy]).textContent = `Daily P&L — ${strategy.toUpperCase()} (₹)`;
         }
@@ -1029,15 +1171,15 @@
           chart.data.datasets[0].data = nap_m;
           chart.data.datasets[1].data = sap_m;
           // Restore original grouped colours (not pos/neg)
-          chart.data.datasets[0].backgroundColor = 'rgba(200,169,110,0.7)';
-          chart.data.datasets[1].backgroundColor = 'rgba(126,179,200,0.6)';
+          chart.data.datasets[0].backgroundColor = 'rgba(212,168,67,0.75)';
+          chart.data.datasets[1].backgroundColor = 'rgba(139,191,212,0.7)';
           document.getElementById(labelMap[strategy]).textContent = 'Monthly P&L — NAP vs SAP (₹)';
         } else {
           const data = strategy === 'nap' ? nap_m : sap_m;
           chart.data.datasets[0].data = data;
           chart.data.datasets[0].backgroundColor = data.map(v =>
-            v >= 0 ? (strategy === 'sap' ? 'rgba(126,179,200,0.7)' : 'rgba(200,160,48,0.7)')
-                   : 'rgba(184,92,92,0.65)'
+            v >= 0 ? 'rgba(74,222,128,0.7)'
+                   : 'rgba(192,80,80,0.62)'
           );
           document.getElementById(labelMap[strategy]).textContent = `Monthly P&L — ${strategy.toUpperCase()} (₹)`;
         }
@@ -1131,7 +1273,7 @@
           if (c.data.datasets[i]) {
             c.data.datasets[i].data = d;
             if (dataSets.length === 1) {
-              c.data.datasets[i].backgroundColor = d.map(v => v >= 0 ? (key.includes('SAP') ? 'rgba(126,179,200,0.75)' : 'rgba(200,169,110,0.75)') : 'rgba(184,92,92,0.65)');
+              c.data.datasets[i].backgroundColor = d.map(v => v >= 0 ? (key.includes('SAP') ? 'rgba(126,179,200,0.75)' : 'rgba(212,168,64,0.72)') : 'rgba(192,80,80,0.62)');
             }
           }
         });
@@ -1218,7 +1360,7 @@
           grid:    s.getPropertyValue('--chart-grid').trim()    || 'rgba(200,160,48,0.08)',
           text:    s.getPropertyValue('--chart-text').trim()    || 'rgba(200,160,48,0.45)',
           tooltip: s.getPropertyValue('--chart-tooltip-bg').trim() || '#0A0900',
-          accent:  s.getPropertyValue('--accent').trim()        || '#C8A030',
+          accent:  s.getPropertyValue('--accent').trim()        || '#D4A840',
         };
       }
 
@@ -1289,31 +1431,31 @@
         });
       };
 
-      const accent = '#C8A030';
-      const blue   = '#8BBFD4';
+      const accent = '#D4A840';
+      const blue   = '#7EB8CC';
 
       // Init all charts with fallback data
       lineChart('cumCombined', 'cumChartCombined', [
         { label: 'Combined', data: comb_cum, borderColor: accent, borderWidth: 2, pointRadius: 3,
           pointBackgroundColor: accent, fill: true,
-          backgroundColor: ctx => makeGradient(ctx, 'rgba(200,169,110,1)'), tension: 0.4 },
-        { label: 'NAP', data: nap_cum, borderColor: 'rgba(126,179,200,0.7)', borderWidth: 1.5,
+          backgroundColor: ctx => makeGradient(ctx, 'rgba(212,168,64,1)'), tension: 0.4 },
+        { label: 'NAP', data: nap_cum, borderColor: 'rgba(126,184,204,0.7)', borderWidth: 1.5,
           pointRadius: 0, fill: false, tension: 0.4, borderDash: [4,3] },
-        { label: 'SAP', data: sap_cum, borderColor: 'rgba(126,200,160,0.7)', borderWidth: 1.5,
+        { label: 'SAP', data: sap_cum, borderColor: 'rgba(94,186,134,0.7)', borderWidth: 1.5,
           pointRadius: 0, fill: false, tension: 0.4, borderDash: [4,3] },
       ]);
       barChart('barCombined', 'barChartCombined', [
-        { label: 'NAP', data: nap_monthly, backgroundColor: 'rgba(200,169,110,0.7)', borderRadius: 2, borderSkipped: false },
-        { label: 'SAP', data: sap_monthly, backgroundColor: 'rgba(126,179,200,0.6)', borderRadius: 2, borderSkipped: false },
+        { label: 'NAP', data: nap_monthly, backgroundColor: 'rgba(212,168,67,0.75)', borderRadius: 2, borderSkipped: false },
+        { label: 'SAP', data: sap_monthly, backgroundColor: 'rgba(139,191,212,0.7)', borderRadius: 2, borderSkipped: false },
       ], true);
 
       lineChart('cumNAP', 'cumChartNAP', [
         { label: 'NAP', data: nap_cum, borderColor: accent, borderWidth: 2, pointRadius: 3,
           pointBackgroundColor: accent, fill: true,
-          backgroundColor: ctx => makeGradient(ctx, 'rgba(200,169,110,1)'), tension: 0.4 },
+          backgroundColor: ctx => makeGradient(ctx, 'rgba(212,168,64,1)'), tension: 0.4 },
       ]);
       barChart('barNAP', 'barChartNAP', [
-        { label: 'NAP', data: nap_monthly, backgroundColor: nap_monthly.map(v => v >= 0 ? 'rgba(200,169,110,0.75)' : 'rgba(184,92,92,0.65)'), borderRadius: 2, borderSkipped: false },
+        { label: 'NAP', data: nap_monthly, backgroundColor: nap_monthly.map(v => v >= 0 ? 'rgba(74,222,128,0.7)' : 'rgba(248,113,113,0.7)'), borderRadius: 2, borderSkipped: false },
       ], false);
 
       lineChart('cumSAP', 'cumChartSAP', [
@@ -1322,7 +1464,7 @@
           backgroundColor: ctx => makeGradient(ctx, 'rgba(126,179,200,1)'), tension: 0.4 },
       ]);
       barChart('barSAP', 'barChartSAP', [
-        { label: 'SAP', data: sap_monthly, backgroundColor: sap_monthly.map(v => v >= 0 ? 'rgba(126,179,200,0.75)' : 'rgba(184,92,92,0.65)'), borderRadius: 2, borderSkipped: false },
+        { label: 'SAP', data: sap_monthly, backgroundColor: sap_monthly.map(v => v >= 0 ? 'rgba(74,222,128,0.7)' : 'rgba(248,113,113,0.7)'), borderRadius: 2, borderSkipped: false },
       ], false);
 
       // Now fetch live data from sheet and update
