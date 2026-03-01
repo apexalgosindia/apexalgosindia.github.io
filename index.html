@@ -359,7 +359,7 @@
     }
     .feature-card:hover { background: var(--surface2); }
     .feature-card:nth-child(3n) { border-right: none; }
-    .feature-card:nth-child(4), .feature-card:nth-child(5), .feature-card:nth-child(6) { border-bottom: none; }
+    .feature-card:nth-child(1), .feature-card:nth-child(2), .feature-card:nth-child(3) { border-bottom: none; }
     .feature-card:nth-child(3n) { border-right: none; }
     .feature-num {
       font-family: 'DM Mono', monospace;
@@ -883,7 +883,7 @@
         <h3 class="feature-title">NAP — Nifty Apex Predator</h3>
         <p class="feature-desc">Momentum-based intraday system trading the Nifty index. Precision entries with strict ₹5,000/day max loss controls and systematic exit logic.</p>
         <div class="strategy-links">
-          <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">NAP v1 on Tradetron →</a>
+          <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">NAP on Tradetron →</a>
           <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">NAP v2 on Tradetron →</a>
           <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">NAP v3 on Tradetron →</a>
         </div>
@@ -893,30 +893,15 @@
         <h3 class="feature-title">SAP — Sensex Apex Predator</h3>
         <p class="feature-desc">Systematic intraday strategy on the Sensex index. Designed to capture directional moves with disciplined risk management and automated execution.</p>
         <div class="strategy-links">
-          <a class="feature-link" href="https://tradetron.tech/strategy/7324685" target="_blank" rel="noopener">SAP v1 on Tradetron →</a>
+          <a class="feature-link" href="https://tradetron.tech/strategy/7324685" target="_blank" rel="noopener">SAP on Tradetron →</a>
           <a class="feature-link" href="https://tradetron.tech/strategy/7324685" target="_blank" rel="noopener">SAP v2 on Tradetron →</a>
           <a class="feature-link" href="https://tradetron.tech/strategy/7324685" target="_blank" rel="noopener">SAP v3 on Tradetron →</a>
         </div>
       </div>
       <div class="feature-card reveal">
         <div class="feature-num">03</div>
-        <h3 class="feature-title">Market Making</h3>
-        <p class="feature-desc">High-frequency liquidity provision algorithms that capture bid-ask spreads with adaptive inventory management and risk limits.</p>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-num">04</div>
-        <h3 class="feature-title">Risk Management</h3>
-        <p class="feature-desc">Every strategy runs through our proprietary risk engine — position sizing, correlation filtering, and real-time drawdown monitoring.</p>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-num">05</div>
-        <h3 class="feature-title">Execution Infrastructure</h3>
-        <p class="feature-desc">Co-located, low-latency execution built on battle-tested infrastructure. Smart order routing with slippage minimization baked in.</p>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-num">06</div>
-        <h3 class="feature-title">Custom Strategy Dev</h3>
-        <p class="feature-desc">Work directly with our quant team to develop and backtest bespoke systematic strategies tailored to your risk profile and objectives.</p>
+        <h3 class="feature-title">Sustainable Returns</h3>
+        <p class="feature-desc">Our aim is sustainable returns with manageable drawdowns to generate wealth for our users.</p>
       </div>
     </div>
   </section>
@@ -937,7 +922,13 @@
     <div class="perf-panel active" id="panel-combined">
       <div class="perf-charts">
         <div class="chart-wrap">
-          <div class="chart-label" id="labelCumCombined">Cumulative ROI — Feb 2025 to Feb 2026</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
+            <div class="chart-label" style="margin-bottom:0;" id="labelCumCombined">Cumulative ROI — Monthly (Feb 2025 – Feb 2026)</div>
+            <div class="view-toggle">
+              <button class="view-btn active" onclick="setCumView('combined','monthly',this)">Monthly</button>
+              <button class="view-btn" onclick="setCumView('combined','daily',this)">Daily</button>
+            </div>
+          </div>
           <div class="chart-inner tall"><canvas id="cumChartCombined"></canvas></div>
         </div>
         <div class="chart-wrap">
@@ -967,7 +958,13 @@
     <div class="perf-panel" id="panel-nap">
       <div class="perf-charts">
         <div class="chart-wrap">
-          <div class="chart-label">Cumulative ROI — NAP (Nifty Apex Predator)</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
+            <div class="chart-label" style="margin-bottom:0;" id="labelCumNAP">Cumulative ROI — NAP Monthly</div>
+            <div class="view-toggle">
+              <button class="view-btn active" onclick="setCumView('nap','monthly',this)">Monthly</button>
+              <button class="view-btn" onclick="setCumView('nap','daily',this)">Daily</button>
+            </div>
+          </div>
           <div class="chart-inner tall"><canvas id="cumChartNAP"></canvas></div>
         </div>
         <div class="chart-wrap">
@@ -997,7 +994,13 @@
     <div class="perf-panel" id="panel-sap">
       <div class="perf-charts">
         <div class="chart-wrap">
-          <div class="chart-label">Cumulative ROI — SAP (Sensex Apex Predator)</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
+            <div class="chart-label" style="margin-bottom:0;" id="labelCumSAP">Cumulative ROI — SAP Monthly</div>
+            <div class="view-toggle">
+              <button class="view-btn active" onclick="setCumView('sap','monthly',this)">Monthly</button>
+              <button class="view-btn" onclick="setCumView('sap','daily',this)">Daily</button>
+            </div>
+          </div>
           <div class="chart-inner tall"><canvas id="cumChartSAP"></canvas></div>
         </div>
         <div class="chart-wrap">
@@ -1187,6 +1190,71 @@
       chart.update('none');
     }
 
+    // ── Cumulative ROI chart toggle (monthly line vs daily cumulative line) ──
+    function cumROIFromDaily(daily, capital) {
+      let cum = 0;
+      return daily.map(v => { cum += v; return parseFloat((cum / capital * 100).toFixed(2)); });
+    }
+
+    function setCumView(strategy, view, btn) {
+      btn.closest('.view-toggle').querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cumMap   = { combined: 'cumCombined', nap: 'cumNAP', sap: 'cumSAP' };
+      const labelMap = { combined: 'labelCumCombined', nap: 'labelCumNAP', sap: 'labelCumSAP' };
+      const chart = CHARTS[cumMap[strategy]];
+      if (!chart) return;
+
+      const labelEl = document.getElementById(labelMap[strategy]);
+
+      if (view === 'daily') {
+        // Build daily cumulative ROI from embedded daily P&L
+        const dates = DAILY_DATA.dates;
+        if (!dates || dates.length === 0) return;
+
+        if (strategy === 'combined') {
+          const comb = DAILY_DATA.nap.map((v, i) => v + (DAILY_DATA.sap[i] || 0));
+          const combCum = cumROIFromDaily(comb, CAP_COMB);
+          const napCum  = cumROIFromDaily(DAILY_DATA.nap, CAP_NAP);
+          const sapCum  = cumROIFromDaily(DAILY_DATA.sap, CAP_SAP);
+          chart.data.labels = dates;
+          chart.data.datasets[0].data = combCum;
+          if (chart.data.datasets[1]) chart.data.datasets[1].data = napCum;
+          if (chart.data.datasets[2]) chart.data.datasets[2].data = sapCum;
+          if (labelEl) labelEl.textContent = 'Cumulative ROI — Daily (Feb 2025 – Feb 2026)';
+        } else {
+          const dailyArr = DAILY_DATA[strategy];
+          const cap = strategy === 'nap' ? CAP_NAP : CAP_SAP;
+          const cumArr = cumROIFromDaily(dailyArr, cap);
+          chart.data.labels = dates;
+          chart.data.datasets[0].data = cumArr;
+          if (labelEl) labelEl.textContent = `Cumulative ROI — ${strategy.toUpperCase()} Daily`;
+        }
+      } else {
+        // Back to monthly
+        const monthly = window._liveData || {};
+        const nap_m = monthly.nap_monthly || FALLBACK.nap_monthly;
+        const sap_m = monthly.sap_monthly || FALLBACK.sap_monthly;
+        const lbls  = monthly.months      || FALLBACK.months;
+        const nap_cum  = cumROI(nap_m,  CAP_NAP);
+        const sap_cum  = cumROI(sap_m,  CAP_SAP);
+        const comb_m   = nap_m.map((v, i) => v + sap_m[i]);
+        const comb_cum = cumROI(comb_m, CAP_COMB);
+
+        chart.data.labels = lbls;
+        if (strategy === 'combined') {
+          chart.data.datasets[0].data = comb_cum;
+          if (chart.data.datasets[1]) chart.data.datasets[1].data = nap_cum;
+          if (chart.data.datasets[2]) chart.data.datasets[2].data = sap_cum;
+          if (labelEl) labelEl.textContent = 'Cumulative ROI — Monthly (Feb 2025 – Feb 2026)';
+        } else {
+          const data = strategy === 'nap' ? nap_cum : sap_cum;
+          chart.data.datasets[0].data = data;
+          if (labelEl) labelEl.textContent = `Cumulative ROI — ${strategy.toUpperCase()} Monthly`;
+        }
+      }
+      chart.update('none');
+    }
 
     // ── Google Sheets Live Data ──
     const SHEET_ID = '1Rgy-HH8bcY7guN7PuH6biiK-JVV-PaFOH5aDII8oVf8';
@@ -1478,4 +1546,12 @@
           backgroundColor: ctx => makeGradient(ctx, 'rgba(126,179,200,1)'), tension: 0.4 },
       ]);
       barChart('barSAP', 'barChartSAP', [
-        { label: 'SAP', data: sap_monthly, backgroundColor
+        { label: 'SAP', data: sap_monthly, backgroundColor: sap_monthly.map(v => v >= 0 ? 'rgba(126,179,200,0.75)' : 'rgba(248,113,113,0.7)'), borderRadius: 2, borderSkipped: false },
+      ], false);
+
+      updateMetrics(nap_monthly, sap_monthly);
+      fetchSheetData();
+    });
+  </script>
+</body>
+</html>
