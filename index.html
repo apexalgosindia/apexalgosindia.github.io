@@ -20,23 +20,23 @@
       --surface2:     #1A1710;       /* hover / card bg */
       --rule:         #252118;       /* barely-there warm dividers */
       --cream:        #EDE6D6;       /* warm ivory — principal text */
-      --muted:        #A09080;       /* warm stone — body copy, labels */
-      --mid:          #C0B09A;       /* mid warm — secondary text */
+      --muted:        #C8B89A;       /* warm stone — body copy, labels */
+      --mid:          #DDD0BC;       /* mid warm — secondary text */
       --accent:       #D4A840;       /* rich amber-gold */
       --accent-dim:   #A88020;
       --accent-glow:  rgba(212,168,64,0.10);
       --accent-light: #ECC84C;
       --nav-bg:       rgba(10,9,6,0.90);
       --chart-grid:   rgba(237,230,214,0.08);
-      --chart-text:   rgba(237,230,214,0.6);
+      --chart-text:   rgba(237,230,214,0.75);
       --chart-tooltip-bg: #1A1710;
-      --metric-name-color: #B0A090;
+      --metric-name-color: #C8B8A4;
       --metric-border:     #1E1C14;
       --tab-border:        #3E3B2E;
-      --tab-text:          #9A8E7E;
+      --tab-text:          #B8AC9C;
       --tab-hover:         #EDE6D6;
-      --disclaimer-color:  #8A7A68;
-      --chart-label-color: #9A8878;
+      --disclaimer-color:  #A89888;
+      --chart-label-color: #B8A894;
       --pos: #3FE088;
       --neg: #F07070;
     }
@@ -228,7 +228,7 @@
       font-size: 1.05rem;
       font-weight: 400;
       line-height: 1.75;
-      color: var(--muted);
+      color: var(--mid);
       letter-spacing: 0;
       opacity: 0;
       animation: fadeUp 0.8s 0.6s forwards;
@@ -398,7 +398,7 @@
       font-size: 0.9rem;
       font-weight: 400;
       line-height: 1.78;
-      color: var(--muted);
+      color: var(--mid);
     }
 
     .strategy-links {
@@ -699,7 +699,7 @@
     .form-group textarea {
       background: transparent;
       border: none;
-      border-bottom: 1px solid var(--rule);
+      border-bottom: 1px solid rgba(237,230,214,0.18);
       padding: 0.7rem 0;
       font-family: 'Jost', sans-serif;
       font-size: 0.9rem;
@@ -710,14 +710,14 @@
       resize: none;
     }
     .form-group input::placeholder,
-    .form-group textarea::placeholder { color: #3A3020; }
+    .form-group textarea::placeholder { color: #7A6A58; }
     .form-group input:focus,
     .form-group textarea:focus { border-color: var(--accent); }
     .form-group textarea { height: 100px; }
     .form-group select {
       background: var(--surface2);
       color: var(--cream);
-      border: 1px solid var(--rule);
+      border: 1px solid rgba(237,230,214,0.18);
       padding: 0.75rem 1rem;
       font-family: 'Outfit', sans-serif;
       font-size: 0.9rem;
@@ -1147,7 +1147,7 @@
       <h2 class="section-title">Let's talk about your capital.</h2>
       <p>Whether you're an institutional investor, family office, or a trader looking for systematic edge — we'd like to hear from you.</p>
       <div class="contact-detail">
-        <a href="mailto:apexalgosindia@gmail.com">apexalgosindia@gmail.com</a>
+        <a href="/cdn-cgi/l/email-protection#88e9f8edf0e9e4efe7fbe1e6ece1e9c8efe5e9e1e4a6ebe7e5"><span class="__cf_email__" data-cfemail="b1d0c1d4c9d0ddd6dec2d8dfd5d8d0f1d6dcd0d8dd9fd2dedc">[email&#160;protected]</span></a>
         <a href="https://t.me/apexalgosadmin" target="_blank" rel="noopener">Contact Us on Telegram →</a>
         <a href="https://t.me/apexalgoschat" target="_blank" rel="noopener">Join Our Community →</a>
       </div>
@@ -1221,7 +1221,7 @@
 
   <div class="toast" id="formToast"></div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // Scroll reveal
     const reveals = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
@@ -1804,6 +1804,7 @@
 
           const sign = chgPct >= 0 ? '+' : '';
           chgEl.textContent  = sign + chgPct.toFixed(2) + '%';
+
           chgEl.className    = 'ticker-change' + (chgPct < 0 ? ' neg' : '');
         } catch (e) {
           // silently keep '—' if fetch fails
