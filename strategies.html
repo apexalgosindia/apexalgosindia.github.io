@@ -433,6 +433,53 @@
     :root.light body::before { opacity: 0.018; }
 
     /* ── SMOOTH THEME TRANSITIONS ── */
+    footer {
+      border-top: 1px solid var(--rule);
+      padding: 2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface);
+    }
+    footer p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .footer-disclaimer {
+      padding: 1.4rem 4rem;
+      border-bottom: 1px solid var(--rule);
+      background: var(--surface);
+    }
+    .footer-disclaimer-text {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+      letter-spacing: 0;
+    }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 4rem;
+    }
+    :root.light footer { background: var(--surface); border-color: var(--rule); }
+    :root.light footer p { color: var(--muted); }
+    :root.light .footer-disclaimer { background: var(--surface); border-color: var(--rule); }
+    :root.light .footer-disclaimer-text { color: var(--muted); }
+    @media (max-width: 900px) {
+      footer { padding: 1.5rem 2rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+      .footer-disclaimer { padding: 1.2rem 2rem; }
+      .footer-bottom { padding: 1rem 2rem; flex-direction: column; gap: 0.4rem; }
+    }
+
     body, nav, footer, .strat-card, .sheet-banner, .tg-card {
       transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease;
     }
@@ -969,5 +1016,16 @@
     refreshPnL();
     setInterval(refreshPnL, 5 * 60 * 1000);
   </script>
+
+  <footer>
+    <div class="footer-disclaimer">
+      <p class="footer-disclaimer-text">⚠ Disclaimer: Past performance is not a guarantee of future results. As per SEBI, 93% of traders lose money in F&O. Apex Algos is not a SEBI-registered advisor. You are responsible for your trading decisions &amp; losses.</p>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Apex Algos. All rights reserved.</p>
+      <p>Built for performance. Engineered with discipline.</p>
+    </div>
+  </footer>
+
 </body>
 </html>
