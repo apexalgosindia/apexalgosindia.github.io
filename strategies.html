@@ -249,6 +249,32 @@
     }
 
     /* ── STRATEGY CARD ── */
+    /* ── AVG MONTHLY ROI BADGE ── */
+    .card-roi-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      padding: 0.75rem 0.9rem;
+      background: rgba(212,168,64,0.05);
+      border: 1px solid rgba(212,168,64,0.15);
+      border-radius: 3px;
+    }
+    :root.light .card-roi-row { background: rgba(146,104,10,0.05); border-color: rgba(146,104,10,0.2); }
+    .card-roi-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.52rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .card-roi-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.9rem; font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+    .card-roi-val.loading { color: var(--muted); font-size: 0.7rem; font-weight: 400; }
+    .card-roi-val.neg { color: #e07070; }
+
     .strat-card {
       background: var(--surface);
       border: 1px solid rgba(237,230,214,0.07);
@@ -651,6 +677,10 @@
             <div class="param-val neg">&#8377;5,000</div>
           </div>
         </div>
+        <div class="card-roi-row">
+          <span class="card-roi-label">Avg Monthly ROI</span>
+          <span class="card-roi-val loading" id="roi-nap">—</span>
+        </div>
         <div class="card-links">
           <a class="card-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">
             <span class="card-link-icon">&#128279;</span>
@@ -694,6 +724,10 @@
             <div class="param-val neg">&#8377;5,000</div>
           </div>
         </div>
+        <div class="card-roi-row">
+          <span class="card-roi-label">Avg Monthly ROI</span>
+          <span class="card-roi-val loading" id="roi-sap">—</span>
+        </div>
         <div class="card-links">
           <a class="card-link" href="https://tradetron.tech/strategy/7324685" target="_blank" rel="noopener">
             <span class="card-link-icon">&#128279;</span>
@@ -734,6 +768,10 @@
             <div class="param-label">Stop Loss</div>
             <div class="param-val neg">&#8377;2,500</div>
           </div>
+        </div>
+        <div class="card-roi-row">
+          <span class="card-roi-label">Avg Monthly ROI</span>
+          <span class="card-roi-val loading" id="roi-cap">—</span>
         </div>
         <div class="card-links">
           <a class="card-link" href="https://tradetron.tech/strategy/8616893" target="_blank" rel="noopener">
@@ -787,6 +825,10 @@
             <div class="param-val neg">&#8377;3,500</div>
           </div>
         </div>
+        <div class="card-roi-row">
+          <span class="card-roi-label">Avg Monthly ROI</span>
+          <span class="card-roi-val loading" id="roi-napv2">—</span>
+        </div>
         <div class="card-links">
           <a class="card-link" href="https://tradetron.tech/strategy/7803165" target="_blank" rel="noopener">
             <span class="card-link-icon">&#128279;</span>
@@ -827,6 +869,10 @@
             <div class="param-label">Stop Loss</div>
             <div class="param-val neg">&#8377;3,500</div>
           </div>
+        </div>
+        <div class="card-roi-row">
+          <span class="card-roi-label">Avg Monthly ROI</span>
+          <span class="card-roi-val loading" id="roi-napv3">—</span>
         </div>
         <div class="card-links">
           <a class="card-link" href="https://tradetron.tech/strategy/8678425" target="_blank" rel="noopener">
@@ -869,6 +915,10 @@
             <div class="param-val neg">&#8377;3,500</div>
           </div>
         </div>
+        <div class="card-roi-row">
+          <span class="card-roi-label">Avg Monthly ROI</span>
+          <span class="card-roi-val loading" id="roi-sapv2">—</span>
+        </div>
         <div class="card-links">
           <a class="card-link" href="https://tradetron.tech/strategy/8838677" target="_blank" rel="noopener">
             <span class="card-link-icon">&#128279;</span>
@@ -909,6 +959,10 @@
             <div class="param-label">Stop Loss</div>
             <div class="param-val neg">&#8377;3,500</div>
           </div>
+        </div>
+        <div class="card-roi-row">
+          <span class="card-roi-label">Avg Monthly ROI</span>
+          <span class="card-roi-val loading" id="roi-sapv3">—</span>
         </div>
         <div class="card-links">
           <a class="card-link" href="https://tradetron.tech/strategy/8680369" target="_blank" rel="noopener">
@@ -1015,6 +1069,84 @@
 
     refreshPnL();
     setInterval(refreshPnL, 5 * 60 * 1000);
+
+    // ── Avg Monthly ROI from Google Sheet ────────────────────────────────────
+    const SHEET_ID = '1Rgy-HH8bcY7guN7PuH6biiK-JVV-PaFOH5aDII8oVf8';
+
+    // Map: elementId → { gid: sheet tab gid, capital: capital deployed in ₹ }
+    // gid values correspond to the sheet tabs — update if your sheet tabs differ
+    const STRATEGIES = [
+      { id: 'roi-nap',   gid: '0',          capital: 150000 },
+      { id: 'roi-sap',   gid: '1903391976', capital: 150000 },
+      { id: 'roi-cap',   gid: '1234567890', capital: 100000 },
+      { id: 'roi-napv2', gid: '2000000001', capital: 100000 },
+      { id: 'roi-napv3', gid: '2000000002', capital: 100000 },
+      { id: 'roi-sapv2', gid: '2000000003', capital: 100000 },
+      { id: 'roi-sapv3', gid: '2000000004', capital: 100000 },
+    ];
+
+    async function fetchSheetCSV(gid) {
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${gid}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Sheet fetch failed: ' + res.status);
+      return await res.text();
+    }
+
+    function parseMonthlyPnL(csv) {
+      // Parse CSV rows, look for numeric P&L values in a "Monthly P&L" or similar column
+      const rows = csv.split('\n').map(r => r.split(',').map(c => c.replace(/["'\r]/g, '').trim()));
+      if (rows.length < 2) return null;
+
+      // Try to detect a header row with month/pnl columns
+      const header = rows[0].map(h => h.toLowerCase());
+      let pnlCol = header.findIndex(h => h.includes('pnl') || h.includes('profit') || h.includes('p&l') || h.includes('net'));
+      if (pnlCol === -1) pnlCol = 1; // fallback: second column
+
+      const values = [];
+      for (let i = 1; i < rows.length; i++) {
+        const raw = rows[i][pnlCol];
+        if (!raw) continue;
+        const num = parseFloat(raw.replace(/[₹,\s]/g, ''));
+        if (!isNaN(num)) values.push(num);
+      }
+      return values.length ? values : null;
+    }
+
+    function setRoiEl(id, roi, error) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (error || roi === null) {
+        el.textContent = 'N/A';
+        el.classList.remove('loading', 'neg');
+        el.style.color = 'var(--muted)';
+        return;
+      }
+      el.classList.remove('loading');
+      const sign = roi >= 0 ? '+' : '';
+      el.textContent = sign + roi.toFixed(1) + '%';
+      if (roi < 0) el.classList.add('neg');
+      else el.classList.remove('neg');
+    }
+
+    async function loadAvgROI(strat) {
+      try {
+        const csv = await fetchSheetCSV(strat.gid);
+        const pnlValues = parseMonthlyPnL(csv);
+        if (!pnlValues || pnlValues.length === 0) {
+          setRoiEl(strat.id, null, true);
+          return;
+        }
+        const avgPnL = pnlValues.reduce((a, b) => a + b, 0) / pnlValues.length;
+        const avgROI = (avgPnL / strat.capital) * 100;
+        setRoiEl(strat.id, avgROI, false);
+      } catch (e) {
+        console.warn('ROI fetch failed for', strat.id, e.message);
+        setRoiEl(strat.id, null, true);
+      }
+    }
+
+    // Load all strategy ROIs in parallel
+    STRATEGIES.forEach(s => loadAvgROI(s));
   </script>
 
   <footer>
