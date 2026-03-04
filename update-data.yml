@@ -2,7 +2,7 @@ name: Update Performance Data
 
 on:
   schedule:
-    - cron: '0 2 * * *'   # runs daily at 2am UTC (7:30am IST)
+    - cron: '0 11 * * *'   # runs daily at 11:00 AM UTC (4:30 PM IST)
   workflow_dispatch:        # also allow manual trigger from GitHub Actions tab
 
 jobs:
