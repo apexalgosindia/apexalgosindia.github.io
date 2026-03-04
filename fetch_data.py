@@ -197,6 +197,7 @@ def avg_monthly_roi(monthly_pnl, capital):
     avg = sum(active) / len(active)
     return round((avg / capital) * 100, 1)
 
+def win_rate(daily):
     if not daily:
         return 0
     return round(sum(1 for d in daily if d > 0) / len(daily) * 100, 1)
