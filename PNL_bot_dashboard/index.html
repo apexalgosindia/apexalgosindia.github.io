@@ -300,39 +300,6 @@
 //  CONFIG — set your backend URL here
 // ════════════════════════════════════════
 const API = 'https://apexalgos-backend.onrender.com';
-```
-
-Save it.
-
----
-
-## Step 2 — Upload to your GitHub repo
-
-1. Go to your `apexalgosindia.github.io` repo on GitHub
-2. Click **Add file → Create new file**
-3. In the filename box type exactly: `PNL_bot_dashboard/index.html`
-4. GitHub will automatically create the folder
-5. Open your edited `index.html` in Notepad → **Select All → Copy**
-6. Paste into the GitHub editor
-7. Click **Commit changes**
-
-✅ Dashboard is now live at `apexalgosindia.github.io/PNL_bot_dashboard`
-
----
-
-## Step 3 — Create backend repo on GitHub
-
-Your existing repo can't run Python — create a **separate repo** just for the backend:
-
-1. Go to github.com → **New repository** → name it `apexalgos-backend` → Public → Create
-2. Upload these files from your zip (drag & drop):
-   - The entire `backend/` folder
-   - The entire `frontend/` folder  
-   - `requirements.txt`
-3. Create a new file called `Procfile` (no extension) with this content:
-```
-web: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
-
 
 // ── State ─────────────────────────────
 let token = localStorage.getItem('apex_token') || '';
