@@ -4,300 +4,154 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apex Algos — Performance Analytics</title>
-  <link rel="icon" type="image/png" href="data:image/png;base64,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" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@300;400;500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --ink:          #0A0906;
-      --surface:      #121008;
-      --surface2:     #1A1710;
-      --rule:         #252118;
-      --cream:        #EDE6D6;
-      --muted:        #C8B89A;
-      --mid:          #DDD0BC;
-      --accent:       #D4A840;
-      --accent-dim:   #A88020;
-      --accent-glow:  rgba(212,168,64,0.10);
-      --accent-light: #ECC84C;
-      --nav-bg:       rgba(10,9,6,0.92);
-      --chart-grid:   rgba(237,230,214,0.07);
-      --chart-text:   rgba(237,230,214,0.65);
-      --pos: #3FE088;
-      --neg: #F07070;
+      --ink: #0A0906; --surface: #121008; --surface2: #1A1710;
+      --rule: #252118; --cream: #EDE6D6; --muted: #C8B89A; --mid: #DDD0BC;
+      --accent: #D4A840; --accent-dim: #A88020; --accent-glow: rgba(212,168,64,0.10);
+      --accent-light: #ECC84C; --nav-bg: rgba(10,9,6,0.92);
+      --chart-grid: rgba(237,230,214,0.07); --chart-text: rgba(237,230,214,0.65);
+      --pos: #3FE088; --neg: #F07070; --pos-bg: rgba(63,224,136,0.12); --neg-bg: rgba(240,112,112,0.12);
     }
     :root.light {
-      --ink:          #FAF7F2;
-      --surface:      #F1EDE3;
-      --surface2:     #E8E2D6;
-      --rule:         #D6CEBC;
-      --cream:        #18140C;
-      --muted:        #5A4E3C;
-      --mid:          #3A2E22;
-      --accent:       #96680A;
-      --accent-dim:   #784E06;
-      --accent-glow:  rgba(150,104,10,0.09);
-      --accent-light: #B8820E;
-      --nav-bg:       rgba(250,247,242,0.96);
-      --chart-grid:   rgba(24,20,12,0.06);
-      --chart-text:   rgba(24,20,12,0.65);
-      --pos: #1F7A38;
-      --neg: #B03030;
+      --ink: #FAF7F2; --surface: #F1EDE3; --surface2: #E8E2D6;
+      --rule: #D6CEBC; --cream: #18140C; --muted: #5A4E3C; --mid: #3A2E22;
+      --accent: #96680A; --accent-dim: #784E06; --accent-glow: rgba(150,104,10,0.09);
+      --accent-light: #B8820E; --nav-bg: rgba(250,247,242,0.96);
+      --chart-grid: rgba(24,20,12,0.06); --chart-text: rgba(24,20,12,0.65);
+      --pos: #1F7A38; --neg: #B03030; --pos-bg: rgba(31,122,56,0.1); --neg-bg: rgba(176,48,48,0.1);
     }
-
-    body {
-      background: var(--ink);
-      color: var(--cream);
-      font-family: 'Jost', sans-serif;
-      font-size: 15px;
-      line-height: 1.65;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1.2rem 3.5rem;
-      background: var(--nav-bg);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--rule);
-    }
-    .nav-logo {
-      font-family: 'DM Mono', monospace;
-      font-size: 1rem; font-weight: 700;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--cream); text-decoration: none;
-    }
+    body { background: var(--ink); color: var(--cream); font-family: 'Jost', sans-serif; font-size: 15px; line-height: 1.65; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 2.5rem; background: var(--nav-bg); backdrop-filter: blur(20px); border-bottom: 1px solid var(--rule); }
+    .nav-logo { font-family: 'DM Mono', monospace; font-size: 1rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cream); text-decoration: none; }
     .nav-logo span { color: var(--accent); }
     .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a {
-      font-size: 0.75rem; font-weight: 600;
-      letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--muted); text-decoration: none;
-      transition: color 0.2s;
-    }
+    .nav-links a { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
     .nav-links a:hover, .nav-links a.active { color: var(--cream); }
-    .nav-right { display: flex; align-items: center; gap: 1rem; }
-    .theme-btn {
-      background: transparent;
-      border: 1px solid var(--rule);
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem; letter-spacing: 0.1em;
-      padding: 0.38rem 0.85rem;
-      cursor: pointer; transition: all 0.2s;
-    }
+    .nav-right { display: flex; align-items: center; gap: 0.75rem; }
+    .live-badge { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.12em; background: rgba(63,224,136,0.1); border: 1px solid rgba(63,224,136,0.3); color: #7EC8A0; padding: 0.3rem 0.75rem; }
+    .theme-btn { background: transparent; border: 1px solid var(--rule); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; padding: 0.35rem 0.8rem; cursor: pointer; transition: all 0.2s; }
     .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .live-badge {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem; letter-spacing: 0.12em;
-      background: rgba(63,224,136,0.1);
-      border: 1px solid rgba(63,224,136,0.3);
-      color: #7EC8A0;
-      padding: 0.3rem 0.75rem;
-    }
-    @media (max-width: 768px) {
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { display: none; }
-    }
+    main { max-width: 1220px; margin: 0 auto; padding: 88px 2rem 5rem; }
+    .page-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.7rem; }
+    .page-title { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem, 3vw, 2.5rem); font-weight: 400; color: var(--cream); margin-bottom: 0.4rem; }
+    .page-subtitle { font-size: 0.88rem; color: var(--muted); max-width: 56ch; margin-bottom: 1.5rem; line-height: 1.7; }
+    .updated-tag { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 1.5rem; }
 
-    /* ── MAIN LAYOUT ── */
-    main { max-width: 1180px; margin: 0 auto; padding: 100px 2.5rem 5rem; }
-
-    /* ── PAGE HEADER ── */
-    .page-eyebrow {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 0.9rem;
-    }
-    .page-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-      font-weight: 400; line-height: 1.1;
-      color: var(--cream); margin-bottom: 0.7rem;
-    }
-    .page-subtitle {
-      font-size: 0.92rem; color: var(--muted);
-      max-width: 56ch; margin-bottom: 2.5rem; line-height: 1.7;
-    }
-
-    /* ── TAB BAR ── */
-    .tab-bar {
-      display: flex; gap: 0; margin-bottom: 2.5rem;
-      border-bottom: 1px solid var(--rule);
-    }
-    .tab {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--muted); background: transparent;
-      border: none; border-bottom: 2px solid transparent;
-      padding: 0.75rem 1.4rem; cursor: pointer;
-      transition: color 0.2s, border-color 0.2s;
-      margin-bottom: -1px;
-    }
-    .tab:hover { color: var(--cream); }
-    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    /* ── TAB + DATE NAV BAR ── */
+    .top-controls { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--rule); padding-bottom: 1.25rem; }
+    .tab-group { display: flex; gap: 0; }
+    .tab { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: var(--surface2); border: 1px solid var(--rule); padding: 0.5rem 1.2rem; cursor: pointer; transition: all 0.18s; margin-right: -1px; }
+    .tab:hover { color: var(--cream); border-color: var(--accent-dim); z-index: 1; }
+    .tab.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); z-index: 2; }
+    .date-nav { display: flex; align-items: center; gap: 0.4rem; margin-left: auto; }
+    .nav-btn { background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.65rem; padding: 0.38rem 0.7rem; cursor: pointer; transition: all 0.18s; }
+    .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .nav-btn.today { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
+    .date-label { font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; color: var(--cream); min-width: 90px; text-align: center; background: var(--surface); border: 1px solid var(--rule); padding: 0.38rem 0.6rem; }
 
     /* ── STRATEGY SELECTOR ── */
-    .strategy-bar {
-      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem;
-    }
-    .strat-btn {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
-      background: var(--surface2);
-      border: 1px solid var(--rule);
-      color: var(--muted); padding: 0.4rem 0.9rem;
-      cursor: pointer; transition: all 0.18s;
-    }
+    .strategy-bar { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.5rem; }
+    .strat-btn { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); padding: 0.38rem 0.85rem; cursor: pointer; transition: all 0.18s; }
     .strat-btn:hover { border-color: var(--accent-dim); color: var(--cream); }
     .strat-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
+    .strat-btn.all { background: var(--surface2); }
+    .strat-btn.all.active { background: var(--accent); color: var(--ink); border-color: var(--accent); }
 
     /* ── STATS GRID ── */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
-      gap: 1px; background: var(--rule);
-      border: 1px solid var(--rule);
-      margin-bottom: 2.5rem;
-    }
-    .stat-cell {
-      background: var(--surface);
-      padding: 1.2rem 1.4rem;
-      transition: background 0.15s;
-    }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 2rem; }
+    .stat-cell { background: var(--surface); padding: 1.1rem 1.3rem; transition: background 0.15s; }
     .stat-cell:hover { background: var(--surface2); }
-    .stat-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 0.4rem;
-    }
-    .stat-val {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.5rem; font-weight: 600;
-      color: var(--cream); line-height: 1.1;
-    }
+    .stat-label { font-family: 'DM Mono', monospace; font-size: 0.56rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; }
+    .stat-val { font-family: 'Playfair Display', serif; font-size: 1.45rem; font-weight: 600; color: var(--cream); line-height: 1.1; }
     .stat-val.pos { color: var(--pos); }
     .stat-val.neg { color: var(--neg); }
-    .stat-sub {
-      font-size: 0.7rem; color: var(--muted); margin-top: 0.2rem;
-    }
+    .stat-sub { font-size: 0.68rem; color: var(--muted); margin-top: 0.15rem; }
 
-    /* ── BREAKDOWN TABLE ── */
-    .section-title {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 1rem;
-    }
-    .table-wrap { overflow-x: auto; margin-bottom: 2.5rem; }
-    table {
-      width: 100%; border-collapse: collapse;
-      font-size: 0.82rem;
-    }
-    thead th {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--muted); text-align: right;
-      padding: 0.6rem 1rem; border-bottom: 1px solid var(--rule);
-    }
+    /* ── SECTION TITLE ── */
+    .section-title { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; margin-top: 0.5rem; }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; margin-bottom: 2rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.81rem; }
+    thead th { font-family: 'DM Mono', monospace; font-size: 0.56rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); text-align: right; padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--rule); white-space: nowrap; }
     thead th:first-child { text-align: left; }
     tbody tr { border-bottom: 1px solid var(--rule); transition: background 0.12s; }
     tbody tr:hover { background: var(--surface2); }
-    tbody td {
-      padding: 0.75rem 1rem; text-align: right;
-      color: var(--mid);
-    }
+    tbody td { padding: 0.7rem 0.9rem; text-align: right; color: var(--mid); white-space: nowrap; }
     tbody td:first-child { text-align: left; color: var(--cream); font-weight: 500; }
     .td-pos { color: var(--pos) !important; }
     .td-neg { color: var(--neg) !important; }
     .td-neutral { color: var(--muted) !important; }
+    .td-badge-pos { display: inline-block; background: var(--pos-bg); color: var(--pos); font-family: 'DM Mono', monospace; font-size: 0.56rem; padding: 0.15rem 0.5rem; letter-spacing: 0.08em; }
+    .td-badge-neg { display: inline-block; background: var(--neg-bg); color: var(--neg); font-family: 'DM Mono', monospace; font-size: 0.56rem; padding: 0.15rem 0.5rem; letter-spacing: 0.08em; }
+    .td-badge-na { display: inline-block; background: rgba(200,184,154,0.1); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.56rem; padding: 0.15rem 0.5rem; }
 
-    /* ── CHART PANELS ── */
-    .chart-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem; margin-bottom: 2.5rem;
-    }
+    /* ── CHARTS ── */
+    .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem; }
     @media (max-width: 820px) { .chart-grid { grid-template-columns: 1fr; } }
-    .chart-panel {
-      background: var(--surface);
-      border: 1px solid var(--rule);
-      padding: 1.5rem;
-    }
+    .chart-panel { background: var(--surface); border: 1px solid var(--rule); padding: 1.4rem; }
     .chart-panel.full { grid-column: 1 / -1; }
-    .chart-panel-title {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 1.2rem;
-    }
-    .chart-wrap { position: relative; height: 220px; }
-    .chart-wrap.tall { height: 280px; }
+    .chart-panel-title { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.1rem; }
+    .chart-wrap { position: relative; height: 210px; }
+    .chart-wrap.tall { height: 270px; }
+    .chart-wrap.med { height: 240px; }
 
-    /* ── MONTHLY HEATMAP ── */
-    .heatmap-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 2px; margin-bottom: 2.5rem;
-    }
-    .heat-cell {
-      padding: 0.7rem 0.8rem;
-      text-align: center;
-    }
-    .heat-month {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 0.2rem;
-    }
-    .heat-val {
-      font-size: 0.88rem; font-weight: 600;
-    }
+    /* ── HEATMAP ── */
+    .heatmap-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); gap: 2px; margin-bottom: 2rem; }
+    .heat-cell { padding: 0.65rem 0.75rem; text-align: center; }
+    .heat-month { font-family: 'DM Mono', monospace; font-size: 0.56rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.2rem; }
+    .heat-val { font-size: 0.85rem; font-weight: 600; }
 
-    /* ── STRATEGY DETAIL SECTION ── */
-    .section-panel {
-      background: var(--surface);
-      border: 1px solid var(--rule);
-      padding: 1.5rem 2rem;
-      margin-bottom: 1.5rem;
-    }
-    .section-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 1.2rem;
-    }
+    /* ── TARGET TRACKER ── */
+    .target-panel { background: var(--surface); border: 1px solid var(--rule); padding: 1.4rem 1.8rem; margin-bottom: 2rem; }
+    .target-row { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; margin-bottom: 1.2rem; }
+    .target-input-wrap { display: flex; gap: 0.5rem; align-items: center; }
+    .target-input { background: var(--surface2); border: 1px solid var(--rule); color: var(--cream); font-family: 'DM Mono', monospace; font-size: 0.78rem; padding: 0.45rem 0.8rem; width: 150px; outline: none; }
+    .target-input:focus { border-color: var(--accent); }
+    .target-set-btn { background: var(--accent-glow); border: 1px solid var(--accent); color: var(--accent); font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.08em; padding: 0.45rem 1rem; cursor: pointer; transition: all 0.18s; }
+    .target-set-btn:hover { background: var(--accent); color: var(--ink); }
+    .target-clear-btn { background: transparent; border: 1px solid var(--rule); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.6rem; padding: 0.45rem 0.8rem; cursor: pointer; }
+    .target-stats { display: flex; gap: 0; background: var(--rule); }
+    .target-stat { background: var(--surface2); padding: 0.9rem 1.4rem; flex: 1; }
+    .target-stat-label { font-family: 'DM Mono', monospace; font-size: 0.54rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.2rem; }
+    .target-stat-val { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 600; }
+    .progress-bar-wrap { margin-top: 1rem; }
+    .progress-bar-bg { background: var(--surface2); border: 1px solid var(--rule); height: 6px; width: 100%; }
+    .progress-bar-fill { height: 100%; background: var(--accent); transition: width 0.5s ease; }
+    .progress-label { font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--muted); margin-top: 0.4rem; }
 
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--rule);
-      padding: 2rem 3.5rem;
-      max-width: 1180px; margin: 0 auto;
-    }
-    .disclaimer {
-      font-size: 0.75rem; color: var(--muted);
-      line-height: 1.6; margin-bottom: 1rem;
-    }
-    .footer-bottom {
-      display: flex; justify-content: space-between;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem; letter-spacing: 0.1em;
-      color: var(--muted);
-    }
+    /* ── STRATEGY COMPARISON ── */
+    .compare-panel { background: var(--surface); border: 1px solid var(--rule); padding: 1.4rem; margin-bottom: 2rem; }
+    .compare-selects { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+    .compare-select { background: var(--surface2); border: 1px solid var(--rule); color: var(--cream); font-family: 'DM Mono', monospace; font-size: 0.7rem; padding: 0.4rem 0.8rem; outline: none; cursor: pointer; }
+    .compare-vs { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em; color: var(--muted); }
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .compare-table th { font-family: 'DM Mono', monospace; font-size: 0.54rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); padding: 0.5rem 1rem; border-bottom: 1px solid var(--rule); text-align: right; }
+    .compare-table th:first-child { text-align: left; }
+    .compare-table td { padding: 0.6rem 1rem; text-align: right; color: var(--mid); border-bottom: 1px solid var(--rule); }
+    .compare-table td:first-child { text-align: left; color: var(--cream); font-size: 0.72rem; letter-spacing: 0.08em; }
+
+    /* ── STRATEGY DETAIL ── */
+    .detail-header { background: var(--surface); border: 1px solid var(--rule); padding: 1.5rem 1.8rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; }
 
     /* ── VIEWS ── */
     .view { display: none; }
     .view.active { display: block; }
 
-    /* ── UTILITY ── */
-    .mono { font-family: 'DM Mono', monospace; }
-    .updated-tag {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.58rem; letter-spacing: 0.12em;
-      color: var(--muted); margin-bottom: 2rem;
-    }
+    /* ── COLOR DOTS ── */
+    .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; flex-shrink: 0; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--rule); padding: 1.8rem 2.5rem; max-width: 1220px; margin: 0 auto; }
+    .disclaimer { font-size: 0.73rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.8rem; }
+    .footer-bottom { display: flex; justify-content: space-between; font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; color: var(--muted); }
+    @media (max-width: 768px) { nav { padding: 1rem 1.2rem; } .nav-links { display: none; } .top-controls { gap: 0.5rem; } }
   </style>
 </head>
 <body>
@@ -316,116 +170,187 @@
 </nav>
 
 <main>
-
-  <!-- ── HEADER ── -->
   <p class="page-eyebrow">Apex Algos · Performance Dashboard</p>
   <h1 class="page-title">Analytics & P&L</h1>
   <p class="page-subtitle">Live performance data across all algo strategies. Updated daily from trading records.</p>
   <p class="updated-tag" id="updatedTag">Last updated: —</p>
 
-  <!-- ── TABS ── -->
-  <div class="tab-bar">
-    <button class="tab active" data-tab="overview" onclick="switchTab('overview', this)">Portfolio Overview</button>
-    <button class="tab" data-tab="monthly"  onclick="switchTab('monthly', this)">Monthly</button>
-    <button class="tab" data-tab="strategy" onclick="switchTab('strategy', this)">Strategy Detail</button>
+  <!-- ── TOP CONTROLS ── -->
+  <div class="top-controls">
+    <div class="tab-group">
+      <button class="tab active" onclick="switchTab('daily',this)">📅 Daily</button>
+      <button class="tab" onclick="switchTab('monthly',this)">📊 Monthly</button>
+      <button class="tab" onclick="switchTab('yearly',this)">📈 Yearly</button>
+      <button class="tab" onclick="switchTab('strategy',this)">🔍 Strategy</button>
+    </div>
+    <div class="date-nav" id="dateNav">
+      <button class="nav-btn" onclick="navDate(-1)">←</button>
+      <div class="date-label" id="dateLabel">—</div>
+      <button class="nav-btn" onclick="navDate(1)">→</button>
+      <button class="nav-btn today" onclick="navToday()">● Today</button>
+    </div>
   </div>
 
-  <!-- ════════════════════════════════════════════════════
-       TAB: OVERVIEW
-       ════════════════════════════════════════════════════ -->
-  <div id="tab-overview" class="view active">
+  <!-- ════════════ DAILY ════════════ -->
+  <div id="tab-daily" class="view active">
+    <p class="section-title" id="dailySectionTitle">Daily Report — —</p>
+    <div class="stats-grid" id="dailyStats"></div>
 
-    <!-- Portfolio summary stats -->
-    <p class="section-title">Portfolio Summary — All Strategies</p>
-    <div class="stats-grid" id="portfolioStats"></div>
-
-    <!-- Strategy breakdown table -->
-    <p class="section-title">Strategy Breakdown</p>
+    <p class="section-title">All Strategies — Today's P&L</p>
     <div class="table-wrap">
-      <table id="stratTable">
-        <thead>
-          <tr>
-            <th>Strategy</th>
-            <th>Capital</th>
-            <th>Total P&L</th>
-            <th>ROI%</th>
-            <th>Avg / Month</th>
-            <th>Sharpe</th>
-            <th>Max DD%</th>
-            <th>Win Rate</th>
-            <th>Days</th>
-          </tr>
-        </thead>
-        <tbody id="stratBody"></tbody>
+      <table id="dailyTable">
+        <thead><tr>
+          <th>Strategy</th><th>Capital</th>
+          <th>Today P&L</th><th>Today ROI%</th>
+          <th>Month-to-Date</th><th>MTD ROI%</th>
+          <th>Year-to-Date</th><th>YTD ROI%</th>
+          <th>Max DD%</th>
+        </tr></thead>
+        <tbody id="dailyTableBody"></tbody>
       </table>
     </div>
 
-    <!-- Charts row 1 -->
-    <div class="chart-grid">
-      <div class="chart-panel full">
-        <p class="chart-panel-title">Cumulative P&L Growth — All Strategies (Daily)</p>
-        <div class="chart-wrap tall"><canvas id="chartCumulative"></canvas></div>
+    <!-- Target Tracker -->
+    <p class="section-title">Monthly P&L Target Tracker</p>
+    <div class="target-panel">
+      <div class="target-row">
+        <div class="target-input-wrap">
+          <span style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted)">Set Target ₹</span>
+          <input type="number" class="target-input" id="targetInput" placeholder="e.g. 50000" />
+          <button class="target-set-btn" onclick="setTarget()">SET TARGET</button>
+          <button class="target-clear-btn" onclick="clearTarget()">CLEAR</button>
+        </div>
       </div>
+      <div id="targetDisplay" style="display:none">
+        <div class="target-stats" id="targetStats"></div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+          <div class="progress-label" id="progressLabel"></div>
+        </div>
+      </div>
+      <div id="targetPlaceholder" style="font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);margin-top:0.5rem">Enter a monthly P&L target above to track progress</div>
     </div>
 
-    <div class="chart-grid">
-      <div class="chart-panel">
-        <p class="chart-panel-title">Monthly P&L — Portfolio Total</p>
-        <div class="chart-wrap"><canvas id="chartMonthlyTotal"></canvas></div>
+    <!-- Strategy Comparison -->
+    <p class="section-title">Strategy Comparison</p>
+    <div class="compare-panel">
+      <div class="compare-selects" id="compareSelects">
+        <select class="compare-select" id="cmpA" onchange="renderComparison()"></select>
+        <span class="compare-vs">VS</span>
+        <select class="compare-select" id="cmpB" onchange="renderComparison()"></select>
       </div>
-      <div class="chart-panel">
-        <p class="chart-panel-title">Max Drawdown % by Strategy</p>
-        <div class="chart-wrap"><canvas id="chartDrawdown"></canvas></div>
-      </div>
+      <table class="compare-table" id="compareTable"></table>
     </div>
 
+    <!-- Charts -->
+    <p class="section-title">Performance Charts</p>
     <div class="chart-grid">
       <div class="chart-panel">
-        <p class="chart-panel-title">Win Rate % by Strategy</p>
-        <div class="chart-wrap"><canvas id="chartWinRate"></canvas></div>
+        <p class="chart-panel-title">Today's P&L by Strategy</p>
+        <div class="chart-wrap"><canvas id="chartTodayBar"></canvas></div>
       </div>
       <div class="chart-panel">
-        <p class="chart-panel-title">Total ROI% Since Inception</p>
-        <div class="chart-wrap"><canvas id="chartROI"></canvas></div>
+        <p class="chart-panel-title">Month-to-Date P&L by Strategy</p>
+        <div class="chart-wrap"><canvas id="chartMTDBar"></canvas></div>
       </div>
     </div>
+    <div class="chart-grid">
+      <div class="chart-panel">
+        <p class="chart-panel-title">YTD ROI% by Strategy (Since Inception)</p>
+        <div class="chart-wrap"><canvas id="chartYTDROI"></canvas></div>
+      </div>
+      <div class="chart-panel">
+        <p class="chart-panel-title">Max Drawdown % Since Inception</p>
+        <div class="chart-wrap"><canvas id="chartDDBar"></canvas></div>
+      </div>
+    </div>
+  </div>
 
-  </div><!-- /overview -->
-
-
-  <!-- ════════════════════════════════════════════════════
-       TAB: MONTHLY
-       ════════════════════════════════════════════════════ -->
+  <!-- ════════════ MONTHLY ════════════ -->
   <div id="tab-monthly" class="view">
+    <p class="section-title" id="monthlySectionTitle">Monthly Summary — —</p>
+    <div class="stats-grid" id="monthlyStats"></div>
 
-    <p class="section-title">Monthly P&L by Strategy</p>
+    <p class="section-title">Monthly Strategy Breakdown</p>
+    <div class="table-wrap">
+      <table id="monthlyDetailTable">
+        <thead><tr>
+          <th>Strategy</th><th>Capital</th>
+          <th>Monthly P&L</th><th>Monthly ROI%</th>
+          <th>Best Day</th><th>Worst Day</th>
+          <th>Max DD%</th><th>Win Days</th>
+        </tr></thead>
+        <tbody id="monthlyDetailBody"></tbody>
+      </table>
+    </div>
+
     <div class="chart-grid">
       <div class="chart-panel full">
-        <p class="chart-panel-title">Monthly P&L — Side by Side</p>
-        <div class="chart-wrap tall"><canvas id="chartMonthlyBar"></canvas></div>
+        <p class="chart-panel-title">Monthly P&L Trend — All Strategies</p>
+        <div class="chart-wrap tall"><canvas id="chartMonthlyTrend"></canvas></div>
+      </div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-panel">
+        <p class="chart-panel-title">Monthly P&L by Strategy (Selected Month)</p>
+        <div class="chart-wrap"><canvas id="chartMonthlyBar"></canvas></div>
+      </div>
+      <div class="chart-panel">
+        <p class="chart-panel-title">Monthly ROI % by Strategy</p>
+        <div class="chart-wrap"><canvas id="chartMonthlyROI"></canvas></div>
       </div>
     </div>
 
-    <p class="section-title">Monthly Breakdown Table</p>
-    <div class="table-wrap" id="monthlyTableWrap"></div>
+    <p class="section-title">Monthly P&L Breakdown Table (All Months)</p>
+    <div class="table-wrap" id="monthlyAllTable"></div>
 
     <p class="section-title">Monthly ROI % Heatmap</p>
-    <div id="heatmapWrap"></div>
+    <div class="strategy-bar" id="heatmapStratBar"></div>
+    <div id="heatmapContainer"></div>
+  </div>
 
-  </div><!-- /monthly -->
+  <!-- ════════════ YEARLY ════════════ -->
+  <div id="tab-yearly" class="view">
+    <p class="section-title" id="yearlySectionTitle">Yearly Summary — —</p>
+    <div class="stats-grid" id="yearlyStats"></div>
 
+    <p class="section-title">Yearly Strategy Breakdown</p>
+    <div class="table-wrap">
+      <table id="yearlyDetailTable">
+        <thead><tr>
+          <th>Strategy</th><th>Capital</th>
+          <th>Yearly P&L</th><th>Yearly ROI%</th>
+          <th>Best Day</th><th>Worst Day</th>
+          <th>Best Month</th><th>Worst Month</th>
+          <th>Max DD%</th><th>Win Rate</th>
+        </tr></thead>
+        <tbody id="yearlyDetailBody"></tbody>
+      </table>
+    </div>
 
-  <!-- ════════════════════════════════════════════════════
-       TAB: STRATEGY DETAIL
-       ════════════════════════════════════════════════════ -->
+    <div class="chart-grid">
+      <div class="chart-panel full">
+        <p class="chart-panel-title">Annual P&L per Strategy — All Years</p>
+        <div class="chart-wrap tall"><canvas id="chartYearlyBar"></canvas></div>
+      </div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-panel">
+        <p class="chart-panel-title">Year-over-Year ROI %</p>
+        <div class="chart-wrap"><canvas id="chartYearlyROI"></canvas></div>
+      </div>
+      <div class="chart-panel">
+        <p class="chart-panel-title">Win Rate % (All-time)</p>
+        <div class="chart-wrap"><canvas id="chartYearlyWR"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ STRATEGY ════════════ -->
   <div id="tab-strategy" class="view">
-
     <div class="strategy-bar" id="stratSelector"></div>
-
     <div id="stratDetailContent"></div>
-
-  </div><!-- /strategy -->
-
+  </div>
 </main>
 
 <footer>
@@ -437,540 +362,464 @@
 </footer>
 
 <script>
-// ────────────────────────────────────────────────────────────
-// CONFIG
-// ────────────────────────────────────────────────────────────
+// ── CONFIG ──
 const STRATEGIES = [
-  { key: 'nap',   label: 'NAP',    full: 'Nifty Apex Predator',          cap: 250000 },
-  { key: 'sap',   label: 'SAP',    full: 'Sensex Apex Predator',         cap: 250000 },
-  { key: 'cap',   label: 'CAP',    full: 'Crude Apex Predator',       cap: 500000 },
-  { key: 'napv2', label: 'NAP v2', full: 'Nifty Apex Predator v2',       cap: 250000 },
-  { key: 'napv3', label: 'NAP v3', full: 'Nifty Apex Predator v3',       cap: 250000 },
-  { key: 'sapv2', label: 'SAP v2', full: 'Sensex Apex Predator v2',      cap: 250000 },
-  { key: 'sapv3', label: 'SAP v3', full: 'Sensex Apex Predator v3',      cap: 250000 },
+  { key:'nap',   label:'NAP',    full:'Nifty Algo Pro',       cap:250000 },
+  { key:'sap',   label:'SAP',    full:'Sensex Algo Pro',      cap:250000 },
+  { key:'cap',   label:'CAP',    full:'Combined Algo Pro',    cap:500000 },
+  { key:'napv2', label:'NAP v2', full:'Nifty Algo Pro v2',    cap:250000 },
+  { key:'napv3', label:'NAP v3', full:'Nifty Algo Pro v3',    cap:250000 },
+  { key:'sapv2', label:'SAP v2', full:'Sensex Algo Pro v2',   cap:250000 },
+  { key:'sapv3', label:'SAP v3', full:'Sensex Algo Pro v3',   cap:250000 },
 ];
+const COLORS = { nap:'#D4A840', sap:'#5BA4E0', cap:'#E07850', napv2:'#6DC98E', napv3:'#C070D8', sapv2:'#70C8D4', sapv3:'#E0C070' };
 
-const COLORS = {
-  nap:   '#D4A840',
-  sap:   '#5BA4E0',
-  cap:   '#E07850',
-  napv2: '#6DC98E',
-  napv3: '#C070D8',
-  sapv2: '#70C8D4',
-  sapv3: '#E0C070',
-};
-
-// ────────────────────────────────────────────────────────────
-// STATE
-// ────────────────────────────────────────────────────────────
+// ── STATE ──
 let DATA = null;
+let currentTab = 'daily';
+let currentDayIdx = 0;   // index into daily_dates
+let currentMonthIdx = 0; // index into months
+let currentYearKey = null;
 let activeStratKey = 'nap';
+let monthTarget = null;
 const charts = {};
 
-// ────────────────────────────────────────────────────────────
-// THEME
-// ────────────────────────────────────────────────────────────
-(function() {
-  const saved = localStorage.getItem('apex-theme');
-  if (saved === 'light') {
-    document.documentElement.classList.add('light');
-    document.addEventListener('DOMContentLoaded', () => {
-      const icon = document.getElementById('themeIcon');
-      const label = document.getElementById('themeLabel');
-      if (icon) icon.textContent = '◐';
-      if (label) label.textContent = 'Dark';
-    });
-  }
-})();
-function toggleTheme() {
-  const isLight = document.documentElement.classList.toggle('light');
-  document.getElementById('themeIcon').textContent  = isLight ? '◐' : '☀';
-  document.getElementById('themeLabel').textContent = isLight ? 'Dark' : 'Light';
-  localStorage.setItem('apex-theme', isLight ? 'light' : 'dark');
-  rebuildCharts();
-}
+// ── THEME ──
+(function(){ const s=localStorage.getItem('apex-theme'); if(s==='light'){ document.documentElement.classList.add('light'); document.addEventListener('DOMContentLoaded',()=>{ const i=document.getElementById('themeIcon'),l=document.getElementById('themeLabel'); if(i)i.textContent='◐'; if(l)l.textContent='Dark'; }); } })();
+function toggleTheme(){ const isLight=document.documentElement.classList.toggle('light'); document.getElementById('themeIcon').textContent=isLight?'◐':'☀'; document.getElementById('themeLabel').textContent=isLight?'Dark':'Light'; localStorage.setItem('apex-theme',isLight?'light':'dark'); rebuildAllCharts(); }
 
-// ────────────────────────────────────────────────────────────
-// HELPERS
-// ────────────────────────────────────────────────────────────
-const INR = v => '₹' + Math.abs(Math.round(v)).toLocaleString('en-IN');
-const PCT = (v, dec=1) => (v >= 0 ? '+' : '') + v.toFixed(dec) + '%';
+// ── HELPERS ──
+const INR = v => '₹'+Math.abs(Math.round(v)).toLocaleString('en-IN');
+const SINR = v => (v>=0?'+':'-')+'₹'+Math.abs(Math.round(v)).toLocaleString('en-IN');
+const PCT = (v,d=1) => (v>=0?'+':'')+v.toFixed(d)+'%';
 const cssVar = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-function gridColor() { return cssVar('--chart-grid'); }
-function textColor() { return cssVar('--chart-text'); }
+const gridColor = () => cssVar('--chart-grid');
+const textColor = () => cssVar('--chart-text');
+function chartDefaults(){ return { color:textColor(), scales:{ x:{ grid:{color:gridColor()}, ticks:{color:textColor(),font:{family:'DM Mono',size:10}} }, y:{ grid:{color:gridColor()}, ticks:{color:textColor(),font:{family:'DM Mono',size:10}} } }, plugins:{ legend:{ labels:{color:textColor(),font:{family:'DM Mono',size:10},boxWidth:10,padding:12} }, tooltip:{titleFont:{family:'DM Mono'},bodyFont:{family:'DM Mono'}, callbacks:{label:ctx=>' '+INR(ctx.parsed.y??ctx.parsed.x??0)}} }, animation:{duration:400}, responsive:true, maintainAspectRatio:false }; }
+function makeChart(id,type,labels,datasets,extraOpts={}){ if(charts[id])charts[id].destroy(); const ctx=document.getElementById(id); if(!ctx)return; const opts=JSON.parse(JSON.stringify(chartDefaults())); deepMerge(opts,extraOpts); charts[id]=new Chart(ctx,{type,data:{labels,datasets},options:opts}); }
+function deepMerge(target,source){ for(const k in source){ if(source[k]&&typeof source[k]==='object'&&!Array.isArray(source[k])){ target[k]=target[k]||{}; deepMerge(target[k],source[k]); }else{ target[k]=source[k]; } } return target; }
+function cumSum(arr){ let s=0; return arr.map(v=>{s+=v;return s;}); }
+function colorBySign(arr){ return arr.map(v=>v>=0?'rgba(63,224,136,0.65)':'rgba(240,112,112,0.65)'); }
+function getColor(key){ return COLORS[key]||'#888'; }
+function dot(key){ return `<span class="dot" style="background:${getColor(key)}"></span>`; }
 
-function chartDefaults() {
-  return {
-    color: textColor(),
-    scales: {
-      x: { grid: { color: gridColor() }, ticks: { color: textColor(), font: { family: 'DM Mono', size: 10 } } },
-      y: { grid: { color: gridColor() }, ticks: { color: textColor(), font: { family: 'DM Mono', size: 10 } } },
-    },
-    plugins: {
-      legend: { labels: { color: textColor(), font: { family: 'DM Mono', size: 10 }, boxWidth: 10, padding: 14 } },
-      tooltip: { titleFont: { family: 'DM Mono' }, bodyFont: { family: 'DM Mono' }, callbacks: { label: ctx => ' ' + INR(ctx.parsed.y) } }
-    },
-    animation: { duration: 500 },
-    responsive: true, maintainAspectRatio: false,
-  };
-}
+// ── YEAR HELPERS ──
+function getYearsFromData(){ if(!DATA)return []; const years=new Set(); DATA.daily_dates.forEach(d=>{ const y=parseDate(d).getFullYear(); years.add(y); }); return [...years].sort(); }
+function parseDate(s){ const [d,m,y]=s.split('/'); return new Date(2000+parseInt(y),parseInt(m)-1,parseInt(d)); }
 
-function makeChart(id, type, labels, datasets, extraOpts={}) {
-  if (charts[id]) charts[id].destroy();
-  const ctx = document.getElementById(id);
-  if (!ctx) return;
-  charts[id] = new Chart(ctx, {
-    type,
-    data: { labels, datasets },
-    options: { ...chartDefaults(), ...extraOpts }
-  });
-}
+function getDailyForYear(key,year){ return DATA.daily_dates.map((d,i)=>({ d, v:(DATA[key+'_daily']||[])[i]||0 })).filter(x=>parseDate(x.d).getFullYear()===year); }
+function getDailyForMonth(key,monthLabel){ const mi=DATA.months.indexOf(monthLabel); if(mi<0)return []; // find all dates within that month const dates=[]; DATA.daily_dates.forEach((d,i)=>{ const dt=parseDate(d); const lbl=dt.toLocaleString('default',{month:'short',year:'2-digit'}).replace(' ',' '); // match month label const y2=String(dt.getFullYear()).slice(2); const mo=dt.toLocaleString('default',{month:'short'}); const lbl2=mo+' '+y2; if(lbl2===monthLabel)dates.push({d,i,v:(DATA[key+'_daily']||[])[i]||0}); }); return dates; }
 
-function cumSum(arr) {
-  let s = 0; return arr.map(v => { s += v; return s; });
-}
+// Month indices per year
+function getMonthsForYear(year){ return DATA.months.map((m,i)=>{ const parts=m.split(' '); const yy=parseInt(parts[1]); const fy=yy+(yy>=25?1900:2000); if(fy===year)return i; return -1; }).filter(i=>i>=0); }
 
-function colorBySign(arr, pos='rgba(63,224,136,0.7)', neg='rgba(240,112,112,0.7)') {
-  return arr.map(v => v >= 0 ? pos : neg);
-}
+// ── NAV ──
+function navDate(delta){ if(!DATA)return; if(currentTab==='daily'){ currentDayIdx=Math.max(0,Math.min(DATA.daily_dates.length-1,currentDayIdx+delta)); renderDailyTab(); } else if(currentTab==='monthly'){ currentMonthIdx=Math.max(0,Math.min(DATA.months.length-1,currentMonthIdx+delta)); renderMonthlyTab(); } else if(currentTab==='yearly'){ const years=getYearsFromData(); let idx=years.indexOf(currentYearKey); idx=Math.max(0,Math.min(years.length-1,idx+delta)); currentYearKey=years[idx]; renderYearlyTab(); } }
+function navToday(){ if(!DATA)return; if(currentTab==='daily'){ currentDayIdx=DATA.daily_dates.length-1; renderDailyTab(); } else if(currentTab==='monthly'){ currentMonthIdx=DATA.months.length-1; renderMonthlyTab(); } else if(currentTab==='yearly'){ const years=getYearsFromData(); currentYearKey=years[years.length-1]; renderYearlyTab(); } }
+function updateDateLabel(txt){ document.getElementById('dateLabel').textContent=txt; }
 
-// ────────────────────────────────────────────────────────────
-// DATA FETCH
-// ────────────────────────────────────────────────────────────
-async function loadData() {
-  try {
-    const res = await fetch('./data.json?t=' + Date.now());
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    DATA = await res.json();
-    renderAll();
-  } catch(e) {
-    console.error('data.json not found, using fallback demo data', e);
-    DATA = DEMO_DATA;
-    renderAll();
-  }
-}
+// ── LOAD ──
+async function loadData(){ try{ const res=await fetch('./data.json?t='+Date.now()); if(!res.ok)throw new Error(); DATA=await res.json(); }catch(e){ DATA=DEMO_DATA; } init(); }
 
-// ────────────────────────────────────────────────────────────
-// RENDER ALL
-// ────────────────────────────────────────────────────────────
-function renderAll() {
-  if (!DATA) return;
+function init(){ if(!DATA)return; document.getElementById('liveBadge').textContent='LIVE · '+DATA.updated; document.getElementById('updatedTag').textContent='Last updated: '+DATA.updated; const years=getYearsFromData(); currentYearKey=years[years.length-1]; currentDayIdx=DATA.daily_dates.length-1; currentMonthIdx=DATA.months.length-1; populateCompareSelects(); buildStratSelector(); renderDailyTab(); }
 
-  // Live badge
-  const badge = document.getElementById('liveBadge');
-  if (badge && DATA.updated) badge.textContent = 'LIVE · ' + DATA.updated;
-  const updated = document.getElementById('updatedTag');
-  if (updated && DATA.updated) updated.textContent = 'Last updated: ' + DATA.updated;
+// ── TABS ──
+function switchTab(name,btn){ document.querySelectorAll('.view').forEach(v=>v.classList.remove('active')); document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); document.getElementById('tab-'+name).classList.add('active'); btn.classList.add('active'); currentTab=name; setTimeout(()=>{ if(name==='daily')renderDailyTab(); if(name==='monthly')renderMonthlyTab(); if(name==='yearly')renderYearlyTab(); if(name==='strategy')renderStratDetail(activeStratKey); },50); }
 
-  renderPortfolioStats();
-  renderStratTable();
-  buildOverviewCharts();
-  buildMonthlyTab();
-  buildStratSelector();
-  renderStratDetail(activeStratKey);
-}
+// ── DAILY TAB ──
+function renderDailyTab(){
+  if(!DATA)return;
+  const di=currentDayIdx;
+  const dateStr=DATA.daily_dates[di];
+  updateDateLabel(dateStr);
+  document.getElementById('dailySectionTitle').textContent='Daily Report — '+dateStr;
 
-// ────────────────────────────────────────────────────────────
-// OVERVIEW TAB
-// ────────────────────────────────────────────────────────────
-function renderPortfolioStats() {
-  const s = DATA.stats;
-  const totalPnL = STRATEGIES.reduce((acc, st) => acc + (s[st.key]?.pnl || 0), 0);
-  const totalCap = STRATEGIES.reduce((acc, st) => acc + st.cap, 0);
-  const totalROI  = (totalPnL / totalCap * 100).toFixed(1);
-  const cells = [
-    { label: 'Total P&L (All Strats)', val: INR(totalPnL), cls: totalPnL >= 0 ? 'pos' : 'neg', sub: 'Since inception' },
-    { label: 'Portfolio ROI',          val: PCT(+totalROI), cls: +totalROI >= 0 ? 'pos' : 'neg', sub: 'Total capital deployed' },
-    { label: 'NAP+SAP Combined ROI',   val: PCT(s.comb.roi), cls: 'pos', sub: 'Core portfolio' },
-    { label: 'Best Sharpe',            val: Math.max(...STRATEGIES.map(st => s[st.key]?.sharpe || 0)).toFixed(2), cls: '', sub: 'NAP — ' + s.nap.sharpe },
-    { label: 'Portfolio Max DD',       val: s.comb.max_dd + '%', cls: 'neg', sub: 'NAP+SAP combined' },
-    { label: 'Best Win Rate',          val: s.nap.win_rate + '%', cls: 'pos', sub: 'NAP strategy' },
-    { label: 'Trading Days',           val: s.nap.days, cls: '', sub: 'Records parsed' },
-    { label: 'Total Capital',          val: INR(totalCap), cls: '', sub: '7 strategies' },
-  ];
-  document.getElementById('portfolioStats').innerHTML = cells.map(c => `
-    <div class="stat-cell">
-      <div class="stat-label">${c.label}</div>
-      <div class="stat-val ${c.cls}">${c.val}</div>
-      <div class="stat-sub">${c.sub}</div>
-    </div>
-  `).join('');
-}
+  // Get month label for current day
+  const dt=parseDate(dateStr);
+  const y2=String(dt.getFullYear()).slice(2);
+  const mo=dt.toLocaleString('default',{month:'short'});
+  const curMonthLabel=mo+' '+y2;
 
-function renderStratTable() {
-  const s = DATA.stats;
-  const rows = STRATEGIES.map(st => {
-    const d = s[st.key] || {};
-    const pnlCls = d.pnl >= 0 ? 'td-pos' : 'td-neg';
-    const roiCls = d.roi >= 0 ? 'td-pos' : 'td-neg';
-    return `
-      <tr>
-        <td><span style="display:inline-block;width:8px;height:8px;background:${COLORS[st.key]};border-radius:50%;margin-right:7px"></span>${st.full}</td>
-        <td>${INR(st.cap)}</td>
-        <td class="${pnlCls}">${INR(d.pnl)}</td>
-        <td class="${roiCls}">${PCT(d.roi)}</td>
-        <td>${PCT(d.avg_month_roi || 0)}</td>
-        <td class="${d.sharpe >= 1.5 ? 'td-pos' : ''}">${d.sharpe}</td>
-        <td class="td-neg">${d.max_dd}%</td>
-        <td class="${d.win_rate >= 50 ? 'td-pos' : 'td-neutral'}">${d.win_rate}%</td>
-        <td>${d.days}</td>
-      </tr>`;
-  });
-  document.getElementById('stratBody').innerHTML = rows.join('');
-}
+  // Portfolio summary for today
+  const totalToday=STRATEGIES.reduce((a,s)=>a+((DATA[s.key+'_daily']||[])[di]||0),0);
+  const totalCap=STRATEGIES.reduce((a,s)=>a+s.cap,0);
+  const totalPnL=STRATEGIES.reduce((a,s)=>a+sum(DATA[s.key+'_daily']||[]),0);
+  const bestToday=STRATEGIES.reduce((best,s)=>{ const v=(DATA[s.key+'_daily']||[])[di]||0; return v>best.v?{v,label:s.label}:best; },{v:-Infinity,label:''});
 
-function buildOverviewCharts() {
-  const months = DATA.months;
-  const dd = DATA.daily_dates;
+  // MTD calc
+  const mtd=STRATEGIES.reduce((a,s)=>{ const mi=DATA.months.indexOf(curMonthLabel); return a+(mi>=0?(DATA[s.key+'_monthly']||[])[mi]||0:0); },0);
 
-  // 1. Cumulative P&L
-  const cumDatasets = STRATEGIES.map(st => ({
-    label: st.label,
-    data: cumSum(DATA[st.key + '_daily']),
-    borderColor: COLORS[st.key],
-    backgroundColor: 'transparent',
-    borderWidth: 1.5,
-    pointRadius: 0,
-    tension: 0.3,
-  }));
-  makeChart('chartCumulative', 'line', dd, cumDatasets, {
-    plugins: { ...chartDefaults().plugins, tooltip: { ...chartDefaults().plugins.tooltip, mode: 'index', intersect: false } },
-    scales: {
-      x: { ...chartDefaults().scales.x, ticks: { ...chartDefaults().scales.x.ticks, maxTicksLimit: 12 } },
-      y: { ...chartDefaults().scales.y }
-    }
-  });
+  document.getElementById('dailyStats').innerHTML=[
+    {label:'Today Portfolio P&L', val:INR(totalToday), cls:totalToday>=0?'pos':'neg', sub:dateStr},
+    {label:'Today ROI%', val:PCT(totalToday/totalCap*100), cls:totalToday>=0?'pos':'neg', sub:'Combined'},
+    {label:'Best Algo Today', val:bestToday.label, cls:'', sub:SINR(bestToday.v)},
+    {label:'Month-to-Date P&L', val:INR(mtd), cls:mtd>=0?'pos':'neg', sub:curMonthLabel},
+    {label:'Total P&L (All Strats)', val:INR(totalPnL), cls:totalPnL>=0?'pos':'neg', sub:'Since inception'},
+    {label:'NAP ROI (Since Inc.)', val:PCT(DATA.stats.nap.roi), cls:'pos', sub:'Nifty Algo Pro'},
+    {label:'SAP ROI (Since Inc.)', val:PCT(DATA.stats.sap.roi), cls:DATA.stats.sap.roi>=0?'pos':'neg', sub:'Sensex Algo Pro'},
+    {label:'Trading Days', val:DATA.stats.nap.days, cls:'', sub:'NAP records parsed'},
+  ].map(c=>`<div class="stat-cell"><div class="stat-label">${c.label}</div><div class="stat-val ${c.cls}">${c.val}</div><div class="stat-sub">${c.sub}</div></div>`).join('');
 
-  // 2. Monthly portfolio total
-  const totalMonthly = months.map((_, i) =>
-    STRATEGIES.reduce((acc, st) => acc + (DATA[st.key + '_monthly'][i] || 0), 0)
-  );
-  makeChart('chartMonthlyTotal', 'bar', months, [{
-    label: 'Portfolio P&L',
-    data: totalMonthly,
-    backgroundColor: colorBySign(totalMonthly, 'rgba(63,224,136,0.65)', 'rgba(240,112,112,0.65)'),
-    borderRadius: 2,
-  }], {
-    plugins: { ...chartDefaults().plugins, legend: { display: false } }
-  });
-
-  // 3. Drawdown
-  const ddVals = STRATEGIES.map(st => Math.abs(DATA.stats[st.key]?.max_dd || 0));
-  makeChart('chartDrawdown', 'bar', STRATEGIES.map(s => s.label), [{
-    label: 'Max Drawdown %',
-    data: ddVals,
-    backgroundColor: STRATEGIES.map(st => COLORS[st.key] + 'AA'),
-    borderColor:     STRATEGIES.map(st => COLORS[st.key]),
-    borderWidth: 1, borderRadius: 2,
-  }], {
-    indexAxis: 'y',
-    plugins: { ...chartDefaults().plugins, legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.x + '%' } } },
-    scales: {
-      x: { ...chartDefaults().scales.x, ticks: { ...chartDefaults().scales.x.ticks, callback: v => v + '%' } },
-      y: { ...chartDefaults().scales.y }
-    }
-  });
-
-  // 4. Win rate
-  const wrVals = STRATEGIES.map(st => DATA.stats[st.key]?.win_rate || 0);
-  makeChart('chartWinRate', 'bar', STRATEGIES.map(s => s.label), [{
-    label: 'Win Rate %',
-    data: wrVals,
-    backgroundColor: STRATEGIES.map(st => COLORS[st.key] + 'AA'),
-    borderColor:     STRATEGIES.map(st => COLORS[st.key]),
-    borderWidth: 1, borderRadius: 2,
-  }], {
-    plugins: { ...chartDefaults().plugins, legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y + '%' } } },
-    scales: {
-      y: { ...chartDefaults().scales.y, min: 0, max: 100, ticks: { ...chartDefaults().scales.y.ticks, callback: v => v + '%' } },
-      x: chartDefaults().scales.x
-    }
-  });
-
-  // 5. Total ROI
-  const roiVals = STRATEGIES.map(st => DATA.stats[st.key]?.roi || 0);
-  makeChart('chartROI', 'bar', STRATEGIES.map(s => s.label), [{
-    label: 'Total ROI %',
-    data: roiVals,
-    backgroundColor: roiVals.map(v => v >= 0 ? 'rgba(63,224,136,0.65)' : 'rgba(240,112,112,0.65)'),
-    borderRadius: 2,
-  }], {
-    plugins: { ...chartDefaults().plugins, legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y + '%' } } },
-    scales: {
-      y: { ...chartDefaults().scales.y, ticks: { ...chartDefaults().scales.y.ticks, callback: v => v + '%' } },
-      x: chartDefaults().scales.x
-    }
-  });
-}
-
-// ────────────────────────────────────────────────────────────
-// MONTHLY TAB
-// ────────────────────────────────────────────────────────────
-function buildMonthlyTab() {
-  const months = DATA.months;
-
-  // Grouped bar chart
-  const datasets = STRATEGIES.map(st => ({
-    label: st.label,
-    data: DATA[st.key + '_monthly'],
-    backgroundColor: COLORS[st.key] + 'BB',
-    borderColor: COLORS[st.key],
-    borderWidth: 1, borderRadius: 2,
-  }));
-  makeChart('chartMonthlyBar', 'bar', months, datasets, {
-    plugins: {
-      ...chartDefaults().plugins,
-      tooltip: { ...chartDefaults().plugins.tooltip, mode: 'index', intersect: false }
-    },
-    scales: {
-      x: chartDefaults().scales.x,
-      y: { ...chartDefaults().scales.y, ticks: { ...chartDefaults().scales.y.ticks, callback: v => INR(v) } }
-    }
-  });
-
-  // Monthly table
-  const rows = months.map((m, i) => {
-    const cells = STRATEGIES.map(st => {
-      const v = DATA[st.key + '_monthly'][i] || 0;
-      const cls = v > 0 ? 'td-pos' : v < 0 ? 'td-neg' : 'td-neutral';
-      return `<td class="${cls}">${v === 0 ? '—' : INR(v)}</td>`;
-    }).join('');
-    const total = STRATEGIES.reduce((acc, st) => acc + (DATA[st.key + '_monthly'][i] || 0), 0);
-    const tCls = total >= 0 ? 'td-pos' : 'td-neg';
-    return `<tr><td>${m}</td>${cells}<td class="${tCls}"><strong>${INR(total)}</strong></td></tr>`;
-  });
-  document.getElementById('monthlyTableWrap').innerHTML = `
-    <table>
-      <thead>
-        <tr>
-          <th>Month</th>
-          ${STRATEGIES.map(st => `<th>${st.label}</th>`).join('')}
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody>${rows.join('')}</tbody>
-    </table>
-  `;
-
-  // Heatmap for NAP (default)
-  buildHeatmap('nap');
-}
-
-function buildHeatmap(key) {
-  const months = DATA.months;
-  const vals = DATA[key + '_monthly'];
-  const cap = STRATEGIES.find(s => s.key === key)?.cap || 250000;
-  const maxAbs = Math.max(...vals.map(Math.abs), 1);
-  const html = months.map((m, i) => {
-    const v = vals[i] || 0;
-    const roi = (v / cap * 100).toFixed(1);
-    const intensity = Math.abs(v) / maxAbs;
-    const bg = v > 0
-      ? `rgba(63,224,136,${0.1 + intensity * 0.5})`
-      : v < 0
-        ? `rgba(240,112,112,${0.1 + intensity * 0.5})`
-        : 'var(--surface2)';
-    const valCls = v > 0 ? 'td-pos' : v < 0 ? 'td-neg' : 'td-neutral';
-    return `
-      <div class="heat-cell" style="background:${bg}">
-        <div class="heat-month">${m}</div>
-        <div class="heat-val ${valCls}">${v === 0 ? '—' : PCT(+roi)}</div>
-        <div style="font-size:0.68rem;color:var(--muted)">${v === 0 ? '' : INR(v)}</div>
-      </div>`;
+  // Table
+  const mi=DATA.months.indexOf(curMonthLabel);
+  const tbody=STRATEGIES.map(st=>{
+    const todayPnL=(DATA[st.key+'_daily']||[])[di]||0;
+    const todayROI=todayPnL/st.cap*100;
+    const mtdPnL=mi>=0?(DATA[st.key+'_monthly']||[])[mi]||0:0;
+    const mtdROI=mtdPnL/st.cap*100;
+    const ytdPnL=sum(DATA[st.key+'_daily']||[]);
+    const ytdROI=ytdPnL/st.cap*100;
+    const dd=DATA.stats[st.key]?.max_dd||0;
+    const tc=v=>v>0?'td-pos':v<0?'td-neg':'td-neutral';
+    return `<tr>
+      <td>${dot(st.key)}${st.full}</td>
+      <td class="td-neutral">${INR(st.cap)}</td>
+      <td class="${tc(todayPnL)}">${todayPnL===0?'—':SINR(todayPnL)}</td>
+      <td class="${tc(todayROI)}">${todayPnL===0?'—':PCT(todayROI)}</td>
+      <td class="${tc(mtdPnL)}">${mtdPnL===0?'—':SINR(mtdPnL)}</td>
+      <td class="${tc(mtdROI)}">${mtdPnL===0?'—':PCT(mtdROI)}</td>
+      <td class="${tc(ytdPnL)}">${SINR(ytdPnL)}</td>
+      <td class="${tc(ytdROI)}">${PCT(ytdROI)}</td>
+      <td class="td-neg">${dd}%</td>
+    </tr>`;
   }).join('');
+  document.getElementById('dailyTableBody').innerHTML=tbody;
 
-  const wrap = document.getElementById('heatmapWrap');
-  const selector = `
-    <div class="strategy-bar" style="margin-bottom:1rem">
-      ${STRATEGIES.map(st => `<button class="strat-btn ${st.key === key ? 'active' : ''}" onclick="buildHeatmap('${st.key}');this.closest('.strategy-bar').querySelectorAll('.strat-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">${st.label}</button>`).join('')}
-    </div>`;
-  wrap.innerHTML = selector + `<div class="heatmap-grid">${html}</div>`;
+  renderTargetTracker(curMonthLabel);
+  renderComparison();
+  buildDailyCharts(di,curMonthLabel,mi);
 }
 
-// ────────────────────────────────────────────────────────────
-// STRATEGY DETAIL TAB
-// ────────────────────────────────────────────────────────────
-function buildStratSelector() {
-  const bar = document.getElementById('stratSelector');
-  bar.innerHTML = STRATEGIES.map(st => `
-    <button class="strat-btn ${st.key === activeStratKey ? 'active' : ''}"
-            onclick="selectStrat('${st.key}', this)">${st.label}</button>
-  `).join('');
+function sum(arr){ return arr.reduce((a,b)=>a+(b||0),0); }
+
+function buildDailyCharts(di,curMonthLabel,mi){
+  const labels=STRATEGIES.map(s=>s.label);
+  const todayVals=STRATEGIES.map(s=>(DATA[s.key+'_daily']||[])[di]||0);
+  const mtdVals=STRATEGIES.map(s=>mi>=0?(DATA[s.key+'_monthly']||[])[mi]||0:0);
+  const ytdVals=STRATEGIES.map(s=>sum(DATA[s.key+'_daily']||[])/s.cap*100);
+  const ddVals=STRATEGIES.map(s=>Math.abs(DATA.stats[s.key]?.max_dd||0));
+
+  makeChart('chartTodayBar','bar',labels,[{label:'Today P&L',data:todayVals,backgroundColor:colorBySign(todayVals),borderRadius:2}],{plugins:{legend:{display:false}}});
+  makeChart('chartMTDBar','bar',labels,[{label:'MTD P&L',data:mtdVals,backgroundColor:colorBySign(mtdVals),borderRadius:2}],{plugins:{legend:{display:false}}});
+  makeChart('chartYTDROI','bar',labels,[{label:'YTD ROI%',data:ytdVals,backgroundColor:ytdVals.map(v=>v>=0?'rgba(63,224,136,0.65)':'rgba(240,112,112,0.65)'),borderRadius:2}],{plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.y.toFixed(1)+'%'}}},scales:{y:{ticks:{callback:v=>v+'%'}}}});
+  makeChart('chartDDBar','bar',labels,[{label:'Max DD%',data:ddVals,backgroundColor:STRATEGIES.map(s=>COLORS[s.key]+'99'),borderColor:STRATEGIES.map(s=>COLORS[s.key]),borderWidth:1,borderRadius:2}],{indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.x+'%'}}},scales:{x:{ticks:{callback:v=>v+'%'}}}});
 }
 
-function selectStrat(key, btn) {
-  activeStratKey = key;
-  document.querySelectorAll('#stratSelector .strat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderStratDetail(key);
+// ── TARGET TRACKER ──
+function setTarget(){ const v=parseFloat(document.getElementById('targetInput').value); if(!isNaN(v)&&v>0){ monthTarget=v; renderTargetTracker(getCurrentMonthLabel()); } }
+function clearTarget(){ monthTarget=null; document.getElementById('targetDisplay').style.display='none'; document.getElementById('targetPlaceholder').style.display='block'; }
+function getCurrentMonthLabel(){ if(!DATA)return ''; const dt=parseDate(DATA.daily_dates[currentDayIdx]); const y2=String(dt.getFullYear()).slice(2); return dt.toLocaleString('default',{month:'short'})+' '+y2; }
+function renderTargetTracker(monthLabel){
+  if(!monthTarget){ document.getElementById('targetDisplay').style.display='none'; document.getElementById('targetPlaceholder').style.display='block'; return; }
+  const mi=DATA.months.indexOf(monthLabel);
+  const actual=mi>=0?STRATEGIES.reduce((a,s)=>a+((DATA[s.key+'_monthly']||[])[mi]||0),0):0;
+  const remaining=monthTarget-actual;
+  const pct=Math.min(100,Math.max(0,actual/monthTarget*100));
+  document.getElementById('targetDisplay').style.display='block';
+  document.getElementById('targetPlaceholder').style.display='none';
+  const c=v=>v>=0?'var(--pos)':'var(--neg)';
+  document.getElementById('targetStats').innerHTML=`
+    <div class="target-stat"><div class="target-stat-label">Monthly P&L</div><div class="target-stat-val" style="color:${c(actual)}">${SINR(actual)}</div></div>
+    <div class="target-stat"><div class="target-stat-label">Target</div><div class="target-stat-val" style="color:var(--accent)">${INR(monthTarget)}</div></div>
+    <div class="target-stat"><div class="target-stat-label">Remaining</div><div class="target-stat-val" style="color:${c(-remaining)}">${remaining>0?INR(remaining):INR(0)}</div></div>
+    <div class="target-stat"><div class="target-stat-label">Achievement</div><div class="target-stat-val" style="color:${pct>=100?'var(--pos)':'var(--accent)'}">${pct.toFixed(0)}%</div></div>
+  `;
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressLabel').textContent=`${pct.toFixed(1)}% of ₹${monthTarget.toLocaleString('en-IN')} target achieved — ${monthLabel}`;
 }
 
-function renderStratDetail(key) {
-  const st = STRATEGIES.find(s => s.key === key);
-  const s  = DATA.stats[key] || {};
-  const daily = DATA[key + '_daily'] || [];
-  const monthly = DATA[key + '_monthly'] || [];
-  const months = DATA.months;
-  const dd = DATA.daily_dates;
+// ── COMPARISON ──
+function populateCompareSelects(){
+  ['cmpA','cmpB'].forEach((id,i)=>{
+    const sel=document.getElementById(id);
+    STRATEGIES.forEach(s=>{ const opt=document.createElement('option'); opt.value=s.key; opt.textContent=s.label; sel.appendChild(opt); });
+    sel.value=STRATEGIES[i].key;
+  });
+}
+function renderComparison(){
+  if(!DATA)return;
+  const a=document.getElementById('cmpA').value;
+  const b=document.getElementById('cmpB').value;
+  const sa=DATA.stats[a]||{}, sb=DATA.stats[b]||{};
+  const da=STRATEGIES.find(s=>s.key===a), db=STRATEGIES.find(s=>s.key===b);
+  const rows=[
+    ['Capital',INR(da.cap),INR(db.cap)],
+    ['Total P&L',colorVal(sa.pnl),colorVal(sb.pnl)],
+    ['Total ROI%',colorPct(sa.roi),colorPct(sb.roi)],
+    ['Avg Monthly ROI',colorPct(sa.avg_month_roi||0),colorPct(sb.avg_month_roi||0)],
+    ['Sharpe Ratio',sa.sharpe,sb.sharpe],
+    ['Max Drawdown',`<span style="color:var(--neg)">${sa.max_dd}%</span>`,`<span style="color:var(--neg)">${sb.max_dd}%</span>`],
+    ['Win Rate',colorPct(sa.win_rate,'%'),colorPct(sb.win_rate,'%')],
+    ['Trading Days',sa.days,sb.days],
+  ];
+  document.getElementById('compareTable').innerHTML=`
+    <thead><tr><th>Metric</th><th>${da.full}</th><th>${db.full}</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</tbody>
+  `;
+}
+function colorVal(v){ return `<span style="color:${v>=0?'var(--pos)':'var(--neg)'}">${v>=0?'+₹':'−₹'}${Math.abs(Math.round(v)).toLocaleString('en-IN')}</span>`; }
+function colorPct(v,sfx='%'){ return `<span style="color:${v>=0?'var(--pos)':'var(--neg)'}">${v>=0?'+':''}${v}${sfx}</span>`; }
 
-  // best/worst day
-  const bestDay  = Math.max(...daily);
-  const worstDay = Math.min(...daily);
-  const bestIdx  = daily.indexOf(bestDay);
-  const worstIdx = daily.indexOf(worstDay);
+// ── MONTHLY TAB ──
+function renderMonthlyTab(){
+  if(!DATA)return;
+  const mi=currentMonthIdx;
+  const monthLabel=DATA.months[mi];
+  updateDateLabel(monthLabel);
+  document.getElementById('monthlySectionTitle').textContent='Monthly Summary — '+monthLabel;
 
-  const html = `
-    <div class="section-panel">
-      <div class="section-header">
-        <div>
-          <p style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:0.3rem">${st.label}</p>
-          <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:400;color:var(--cream)">${st.full}</h2>
-        </div>
-        <div style="text-align:right">
-          <div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:600;color:${s.pnl >= 0 ? 'var(--pos)' : 'var(--neg)'}">${INR(s.pnl)}</div>
-          <div style="font-size:0.75rem;color:var(--muted)">${PCT(s.roi)} ROI since inception</div>
-        </div>
+  const vals=STRATEGIES.map(s=>(DATA[s.key+'_monthly']||[])[mi]||0);
+  const totalPnL=vals.reduce((a,b)=>a+b,0);
+  const totalCap=STRATEGIES.reduce((a,s)=>a+s.cap,0);
+  const bestSt=STRATEGIES.reduce((best,s,i)=>vals[i]>vals[best]?i:best,0);
+  const worstSt=STRATEGIES.reduce((worst,s,i)=>vals[i]<vals[worst]?i:worst,0);
+
+  document.getElementById('monthlyStats').innerHTML=[
+    {label:'Total Portfolio P&L', val:INR(totalPnL), cls:totalPnL>=0?'pos':'neg', sub:monthLabel},
+    {label:'Portfolio ROI', val:PCT(totalPnL/totalCap*100), cls:totalPnL>=0?'pos':'neg', sub:'All strategies'},
+    {label:'Best Strategy', val:STRATEGIES[bestSt].label, cls:'pos', sub:SINR(vals[bestSt])},
+    {label:'Worst Strategy', val:STRATEGIES[worstSt].label, cls:'neg', sub:SINR(vals[worstSt])},
+    {label:'NAP Monthly P&L', val:SINR((DATA.nap_monthly||[])[mi]||0), cls:(DATA.nap_monthly||[])[mi]>=0?'pos':'neg', sub:'Nifty Algo Pro'},
+    {label:'SAP Monthly P&L', val:SINR((DATA.sap_monthly||[])[mi]||0), cls:(DATA.sap_monthly||[])[mi]>=0?'pos':'neg', sub:'Sensex Algo Pro'},
+  ].map(c=>`<div class="stat-cell"><div class="stat-label">${c.label}</div><div class="stat-val ${c.cls}">${c.val}</div><div class="stat-sub">${c.sub}</div></div>`).join('');
+
+  // Monthly detail table
+  const tbody=STRATEGIES.map((st,i)=>{
+    const pnl=vals[i];
+    const roi=pnl/st.cap*100;
+    const dayData=getDailyForMonth(st.key,monthLabel);
+    const dVals=dayData.map(x=>x.v);
+    const best=dVals.length?Math.max(...dVals):0;
+    const worst=dVals.length?Math.min(...dVals):0;
+    const dd=computeMaxDD(dVals,st.cap);
+    const wins=dVals.filter(v=>v>0).length;
+    const tc=v=>v>0?'td-pos':v<0?'td-neg':'td-neutral';
+    return `<tr>
+      <td>${dot(st.key)}${st.full}</td>
+      <td class="td-neutral">${INR(st.cap)}</td>
+      <td class="${tc(pnl)}">${pnl===0?'—':SINR(pnl)}</td>
+      <td class="${tc(roi)}">${pnl===0?'—':PCT(roi)}</td>
+      <td class="td-pos">${best===0?'—':INR(best)}</td>
+      <td class="td-neg">${worst===0?'—':INR(worst)}</td>
+      <td class="td-neg">${dd===0?'—':dd+'%'}</td>
+      <td>${dVals.length?wins+'/'+dVals.length:'—'}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('monthlyDetailBody').innerHTML=tbody;
+
+  buildMonthlyCharts(mi,monthLabel);
+  buildMonthlyAllTable();
+  buildHeatmap('nap');
+  buildHeatmapStratBar();
+}
+
+function computeMaxDD(daily,cap){ let cum=0,peak=0,dd=0; daily.forEach(d=>{ cum+=d; peak=Math.max(peak,cum); dd=Math.min(dd,(cum-peak)/cap); }); return Math.round(dd*100*10)/10; }
+
+function buildMonthlyCharts(mi,monthLabel){
+  const months=DATA.months;
+  const vals=STRATEGIES.map(s=>(DATA[s.key+'_monthly']||[])[mi]||0);
+  const roiVals=STRATEGIES.map((s,i)=>vals[i]/s.cap*100);
+
+  // Trend chart
+  const trendDs=STRATEGIES.map(st=>({ label:st.label, data:DATA[st.key+'_monthly']||[], borderColor:COLORS[st.key], backgroundColor:'transparent', borderWidth:1.5, pointRadius:2, tension:0.3 }));
+  makeChart('chartMonthlyTrend','line',months,trendDs,{plugins:{tooltip:{mode:'index',intersect:false}}});
+
+  makeChart('chartMonthlyBar','bar',STRATEGIES.map(s=>s.label),[{label:'P&L',data:vals,backgroundColor:colorBySign(vals),borderRadius:2}],{plugins:{legend:{display:false}}});
+  makeChart('chartMonthlyROI','bar',STRATEGIES.map(s=>s.label),[{label:'ROI%',data:roiVals,backgroundColor:roiVals.map(v=>v>=0?'rgba(63,224,136,0.65)':'rgba(240,112,112,0.65)'),borderRadius:2}],{plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.y.toFixed(1)+'%'}}},scales:{y:{ticks:{callback:v=>v+'%'}}}});
+}
+
+function buildMonthlyAllTable(){
+  const months=DATA.months;
+  const rows=months.map((m,i)=>{
+    const cells=STRATEGIES.map(st=>{ const v=(DATA[st.key+'_monthly']||[])[i]||0; const cls=v>0?'td-pos':v<0?'td-neg':'td-neutral'; return `<td class="${cls}">${v===0?'—':SINR(v)}</td>`; }).join('');
+    const total=STRATEGIES.reduce((a,s)=>a+((DATA[s.key+'_monthly']||[])[i]||0),0);
+    const cls=total>=0?'td-pos':'td-neg';
+    return `<tr><td>${m}</td>${cells}<td class="${cls}"><strong>${SINR(total)}</strong></td></tr>`;
+  }).join('');
+  document.getElementById('monthlyAllTable').innerHTML=`
+    <table>
+      <thead><tr><th>Month</th>${STRATEGIES.map(s=>`<th>${s.label}</th>`).join('')}<th>Total</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function buildHeatmapStratBar(){
+  const bar=document.getElementById('heatmapStratBar');
+  bar.innerHTML=STRATEGIES.map(st=>`<button class="strat-btn ${st.key==='nap'?'active':''}" onclick="buildHeatmap('${st.key}');document.querySelectorAll('#heatmapStratBar .strat-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">${st.label}</button>`).join('');
+}
+
+function buildHeatmap(key){
+  const months=DATA.months; const vals=DATA[key+'_monthly']||[];
+  const cap=STRATEGIES.find(s=>s.key===key)?.cap||250000;
+  const maxAbs=Math.max(...vals.map(Math.abs),1);
+  const html=months.map((m,i)=>{ const v=vals[i]||0; const roi=(v/cap*100).toFixed(1); const intensity=Math.abs(v)/maxAbs; const bg=v>0?`rgba(63,224,136,${0.08+intensity*0.45})`:v<0?`rgba(240,112,112,${0.08+intensity*0.45})`:'var(--surface2)'; const cls=v>0?'td-pos':v<0?'td-neg':'td-neutral'; return `<div class="heat-cell" style="background:${bg}"><div class="heat-month">${m}</div><div class="heat-val ${cls}">${v===0?'—':PCT(+roi)}</div><div style="font-size:0.67rem;color:var(--muted)">${v===0?'':INR(v)}</div></div>`; }).join('');
+  document.getElementById('heatmapContainer').innerHTML=`<div class="heatmap-grid">${html}</div>`;
+}
+
+// ── YEARLY TAB ──
+function renderYearlyTab(){
+  if(!DATA)return;
+  const years=getYearsFromData();
+  updateDateLabel(String(currentYearKey));
+  document.getElementById('yearlySectionTitle').textContent='Yearly Summary — '+currentYearKey;
+
+  const yearlyPnL={};
+  STRATEGIES.forEach(st=>{ const mis=getMonthsForYear(currentYearKey); yearlyPnL[st.key]=mis.reduce((a,i)=>a+((DATA[st.key+'_monthly']||[])[i]||0),0); });
+  const totalYearlyPnL=Object.values(yearlyPnL).reduce((a,b)=>a+b,0);
+  const totalCap=STRATEGIES.reduce((a,s)=>a+s.cap,0);
+
+  document.getElementById('yearlyStats').innerHTML=[
+    {label:'Total Portfolio P&L', val:INR(totalYearlyPnL), cls:totalYearlyPnL>=0?'pos':'neg', sub:currentYearKey},
+    {label:'Portfolio ROI', val:PCT(totalYearlyPnL/totalCap*100), cls:totalYearlyPnL>=0?'pos':'neg', sub:'All strategies'},
+    {label:'NAP Yearly P&L', val:SINR(yearlyPnL.nap||0), cls:(yearlyPnL.nap||0)>=0?'pos':'neg', sub:'Nifty Algo Pro'},
+    {label:'SAP Yearly P&L', val:SINR(yearlyPnL.sap||0), cls:(yearlyPnL.sap||0)>=0?'pos':'neg', sub:'Sensex Algo Pro'},
+    {label:'Best Sharpe', val:Math.max(...STRATEGIES.map(s=>DATA.stats[s.key]?.sharpe||0)).toFixed(2), cls:'pos', sub:'Since inception'},
+  ].map(c=>`<div class="stat-cell"><div class="stat-label">${c.label}</div><div class="stat-val ${c.cls}">${c.val}</div><div class="stat-sub">${c.sub}</div></div>`).join('');
+
+  const tbody=STRATEGIES.map(st=>{
+    const pnl=yearlyPnL[st.key]||0;
+    const roi=pnl/st.cap*100;
+    const dayData=getDailyForYear(st.key,currentYearKey);
+    const dVals=dayData.map(x=>x.v);
+    const best=dVals.length?Math.max(...dVals):0;
+    const worst=dVals.length?Math.min(...dVals):0;
+    const mis=getMonthsForYear(currentYearKey);
+    const mVals=mis.map(i=>(DATA[st.key+'_monthly']||[])[i]||0);
+    const bestM=mis.length?DATA.months[mis[mVals.indexOf(Math.max(...mVals))]]:'—';
+    const worstM=mis.length?DATA.months[mis[mVals.indexOf(Math.min(...mVals))]]:'—';
+    const dd=computeMaxDD(dVals,st.cap);
+    const wr=dVals.length?dVals.filter(v=>v>0).length/dVals.length*100:0;
+    const tc=v=>v>0?'td-pos':v<0?'td-neg':'td-neutral';
+    return `<tr>
+      <td>${dot(st.key)}${st.full}</td>
+      <td class="td-neutral">${INR(st.cap)}</td>
+      <td class="${tc(pnl)}">${pnl===0?'—':SINR(pnl)}</td>
+      <td class="${tc(roi)}">${pnl===0?'—':PCT(roi)}</td>
+      <td class="td-pos">${best===0?'—':INR(best)}</td>
+      <td class="td-neg">${worst===0?'—':INR(worst)}</td>
+      <td>${bestM}</td><td>${worstM}</td>
+      <td class="td-neg">${dd===0?'—':dd+'%'}</td>
+      <td class="${wr>=50?'td-pos':'td-neutral'}">${wr.toFixed(1)}%</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('yearlyDetailBody').innerHTML=tbody;
+
+  buildYearlyCharts(years);
+}
+
+function buildYearlyCharts(years){
+  const ds=STRATEGIES.map(st=>({ label:st.label, data:years.map(y=>{ const mis=getMonthsForYear(y); return mis.reduce((a,i)=>a+((DATA[st.key+'_monthly']||[])[i]||0),0); }), backgroundColor:COLORS[st.key]+'BB', borderColor:COLORS[st.key], borderWidth:1, borderRadius:2 }));
+  makeChart('chartYearlyBar','bar',years.map(String),ds,{plugins:{tooltip:{mode:'index',intersect:false}}});
+
+  const roiDs=STRATEGIES.map(st=>({ label:st.label, data:years.map(y=>{ const mis=getMonthsForYear(y); const pnl=mis.reduce((a,i)=>a+((DATA[st.key+'_monthly']||[])[i]||0),0); return pnl/st.cap*100; }), borderColor:COLORS[st.key], backgroundColor:'transparent', borderWidth:1.5, pointRadius:3, tension:0.3 }));
+  makeChart('chartYearlyROI','line',years.map(String),roiDs,{plugins:{tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.y.toFixed(1)+'%'}}},scales:{y:{ticks:{callback:v=>v+'%'}}}});
+
+  const wrVals=STRATEGIES.map(s=>DATA.stats[s.key]?.win_rate||0);
+  makeChart('chartYearlyWR','bar',STRATEGIES.map(s=>s.label),[{label:'Win Rate%',data:wrVals,backgroundColor:STRATEGIES.map(s=>COLORS[s.key]+'99'),borderColor:STRATEGIES.map(s=>COLORS[s.key]),borderWidth:1,borderRadius:2}],{plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.y+'%'}}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'}}}});
+}
+
+// ── STRATEGY DETAIL ──
+function buildStratSelector(){
+  document.getElementById('stratSelector').innerHTML=STRATEGIES.map(st=>`<button class="strat-btn ${st.key===activeStratKey?'active':''}" onclick="selectStrat('${st.key}',this)">${st.label}</button>`).join('');
+}
+function selectStrat(key,btn){ activeStratKey=key; document.querySelectorAll('#stratSelector .strat-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderStratDetail(key); }
+
+function renderStratDetail(key){
+  if(!DATA)return;
+  const st=STRATEGIES.find(s=>s.key===key);
+  const s=DATA.stats[key]||{};
+  const daily=DATA[key+'_daily']||[];
+  const monthly=DATA[key+'_monthly']||[];
+  const months=DATA.months;
+  const dd=DATA.daily_dates;
+  const best=Math.max(...daily); const worst=Math.min(...daily);
+  const bestI=daily.indexOf(best); const worstI=daily.indexOf(worst);
+
+  const html=`
+    <div class="detail-header">
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:0.3rem">${st.label}</div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:400;color:var(--cream);margin-bottom:0.2rem">${st.full}</h2>
+        <div style="font-size:0.8rem;color:var(--muted)">Capital: ${INR(st.cap)} · ${s.days} trading days</div>
       </div>
-
-      <div class="stats-grid">
-        <div class="stat-cell"><div class="stat-label">Total P&L</div><div class="stat-val ${s.pnl >= 0 ? 'pos' : 'neg'}">${INR(s.pnl)}</div></div>
-        <div class="stat-cell"><div class="stat-label">Total ROI</div><div class="stat-val ${s.roi >= 0 ? 'pos' : 'neg'}">${PCT(s.roi)}</div></div>
-        <div class="stat-cell"><div class="stat-label">Avg Monthly ROI</div><div class="stat-val ${s.avg_month_roi >= 0 ? 'pos' : 'neg'}">${PCT(s.avg_month_roi || 0)}</div></div>
-        <div class="stat-cell"><div class="stat-label">Sharpe Ratio</div><div class="stat-val ${s.sharpe >= 1 ? 'pos' : ''}">${s.sharpe}</div><div class="stat-sub">Risk-adjusted return</div></div>
-        <div class="stat-cell"><div class="stat-label">Max Drawdown</div><div class="stat-val neg">${s.max_dd}%</div></div>
-        <div class="stat-cell"><div class="stat-label">Win Rate</div><div class="stat-val ${s.win_rate >= 50 ? 'pos' : ''}">${s.win_rate}%</div><div class="stat-sub">${s.days} trading days</div></div>
-        <div class="stat-cell"><div class="stat-label">Best Day</div><div class="stat-val pos">${INR(bestDay)}</div><div class="stat-sub">${dd[bestIdx] || '—'}</div></div>
-        <div class="stat-cell"><div class="stat-label">Worst Day</div><div class="stat-val neg">${INR(worstDay)}</div><div class="stat-sub">${dd[worstIdx] || '—'}</div></div>
+      <div style="text-align:right">
+        <div style="font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:600;color:${s.pnl>=0?'var(--pos)':'var(--neg)'}">${SINR(s.pnl)}</div>
+        <div style="font-size:0.75rem;color:var(--muted)">${PCT(s.roi)} ROI since inception</div>
       </div>
     </div>
 
-    <div class="chart-grid">
-      <div class="chart-panel full">
-        <p class="chart-panel-title">Cumulative P&L — ${st.label}</p>
-        <div class="chart-wrap tall"><canvas id="chartStratCum"></canvas></div>
-      </div>
+    <div class="stats-grid" style="margin-bottom:1.5rem">
+      <div class="stat-cell"><div class="stat-label">Total P&L</div><div class="stat-val ${s.pnl>=0?'pos':'neg'}">${SINR(s.pnl)}</div></div>
+      <div class="stat-cell"><div class="stat-label">Total ROI</div><div class="stat-val ${s.roi>=0?'pos':'neg'}">${PCT(s.roi)}</div></div>
+      <div class="stat-cell"><div class="stat-label">Avg Monthly ROI</div><div class="stat-val ${(s.avg_month_roi||0)>=0?'pos':'neg'}">${PCT(s.avg_month_roi||0)}</div></div>
+      <div class="stat-cell"><div class="stat-label">Sharpe Ratio</div><div class="stat-val ${s.sharpe>=1?'pos':''}">${s.sharpe}</div><div class="stat-sub">Risk-adj. return</div></div>
+      <div class="stat-cell"><div class="stat-label">Max Drawdown</div><div class="stat-val neg">${s.max_dd}%</div></div>
+      <div class="stat-cell"><div class="stat-label">Win Rate</div><div class="stat-val ${s.win_rate>=50?'pos':''}">${s.win_rate}%</div><div class="stat-sub">${s.days} days</div></div>
+      <div class="stat-cell"><div class="stat-label">Best Day</div><div class="stat-val pos">${INR(best)}</div><div class="stat-sub">${dd[bestI]||'—'}</div></div>
+      <div class="stat-cell"><div class="stat-label">Worst Day</div><div class="stat-val neg">${INR(worst)}</div><div class="stat-sub">${dd[worstI]||'—'}</div></div>
     </div>
 
     <div class="chart-grid">
-      <div class="chart-panel">
-        <p class="chart-panel-title">Daily P&L</p>
-        <div class="chart-wrap"><canvas id="chartStratDaily"></canvas></div>
-      </div>
-      <div class="chart-panel">
-        <p class="chart-panel-title">Monthly P&L</p>
-        <div class="chart-wrap"><canvas id="chartStratMonthly"></canvas></div>
-      </div>
+      <div class="chart-panel full"><p class="chart-panel-title">Cumulative P&L Growth — ${st.label}</p><div class="chart-wrap tall"><canvas id="chartStratCum"></canvas></div></div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-panel"><p class="chart-panel-title">Daily P&L</p><div class="chart-wrap"><canvas id="chartStratDaily"></canvas></div></div>
+      <div class="chart-panel"><p class="chart-panel-title">Monthly P&L</p><div class="chart-wrap"><canvas id="chartStratMonthly"></canvas></div></div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-panel full"><p class="chart-panel-title">Drawdown Curve</p><div class="chart-wrap med"><canvas id="chartStratDD"></canvas></div></div>
     </div>
 
     <p class="section-title">Month-by-Month Breakdown</p>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Month</th><th>P&L</th><th>ROI%</th><th>Result</th></tr></thead>
-        <tbody>
-          ${months.map((m, i) => {
-            const v = monthly[i] || 0;
-            const roi = (v / st.cap * 100).toFixed(1);
-            const cls = v > 0 ? 'td-pos' : v < 0 ? 'td-neg' : 'td-neutral';
-            const badge = v > 0 ? '▲ Profit' : v < 0 ? '▼ Loss' : '— Inactive';
-            return `<tr>
-              <td>${m}</td>
-              <td class="${cls}">${v === 0 ? '—' : INR(v)}</td>
-              <td class="${cls}">${v === 0 ? '—' : PCT(+roi)}</td>
-              <td class="${cls}">${badge}</td>
-            </tr>`;
-          }).join('')}
-        </tbody>
+        <thead><tr><th>Month</th><th>P&L</th><th>ROI%</th><th>Best Day</th><th>Worst Day</th><th>Result</th></tr></thead>
+        <tbody>${months.map((m,i)=>{
+          const v=monthly[i]||0; const roi=(v/st.cap*100).toFixed(1);
+          const dayData=getDailyForMonth(key,m);
+          const dVals=dayData.map(x=>x.v);
+          const bv=dVals.length?Math.max(...dVals):0;
+          const wv=dVals.length?Math.min(...dVals):0;
+          const cls=v>0?'td-pos':v<0?'td-neg':'td-neutral';
+          const badge=v>0?`<span class="td-badge-pos">▲ Profit</span>`:v<0?`<span class="td-badge-neg">▼ Loss</span>`:`<span class="td-badge-na">— Inactive</span>`;
+          return `<tr>
+            <td>${m}</td>
+            <td class="${cls}">${v===0?'—':SINR(v)}</td>
+            <td class="${cls}">${v===0?'—':PCT(+roi)}</td>
+            <td class="td-pos">${bv===0?'—':INR(bv)}</td>
+            <td class="td-neg">${wv===0?'—':INR(wv)}</td>
+            <td>${badge}</td>
+          </tr>`;
+        }).join('')}</tbody>
       </table>
     </div>
   `;
 
-  document.getElementById('stratDetailContent').innerHTML = html;
+  document.getElementById('stratDetailContent').innerHTML=html;
 
-  // Build charts for this strategy
-  setTimeout(() => {
-    makeChart('chartStratCum', 'line', dd, [{
-      label: 'Cumulative P&L',
-      data: cumSum(daily),
-      borderColor: COLORS[key],
-      backgroundColor: COLORS[key] + '18',
-      fill: true,
-      borderWidth: 1.8, pointRadius: 0, tension: 0.3,
-    }], { plugins: { ...chartDefaults().plugins, legend: { display: false } } });
+  setTimeout(()=>{
+    // Cumulative
+    makeChart('chartStratCum','line',dd,[{label:'Cum. P&L',data:cumSum(daily),borderColor:COLORS[key],backgroundColor:COLORS[key]+'15',fill:true,borderWidth:1.8,pointRadius:0,tension:0.3}],{plugins:{legend:{display:false}}});
 
-    makeChart('chartStratDaily', 'bar', dd, [{
-      label: 'Daily P&L',
-      data: daily,
-      backgroundColor: colorBySign(daily),
-      borderRadius: 1,
-    }], {
-      plugins: { ...chartDefaults().plugins, legend: { display: false } },
-      scales: {
-        x: { ...chartDefaults().scales.x, ticks: { ...chartDefaults().scales.x.ticks, maxTicksLimit: 10 } },
-        y: chartDefaults().scales.y
-      }
-    });
+    // Daily
+    makeChart('chartStratDaily','bar',dd,[{label:'Daily P&L',data:daily,backgroundColor:colorBySign(daily),borderRadius:1}],{plugins:{legend:{display:false}},scales:{x:{ticks:{maxTicksLimit:10}}}});
 
-    makeChart('chartStratMonthly', 'bar', months, [{
-      label: 'Monthly P&L',
-      data: monthly,
-      backgroundColor: colorBySign(monthly),
-      borderRadius: 2,
-    }], { plugins: { ...chartDefaults().plugins, legend: { display: false } } });
-  }, 50);
+    // Monthly
+    makeChart('chartStratMonthly','bar',months,[{label:'Monthly P&L',data:monthly,backgroundColor:colorBySign(monthly),borderRadius:2}],{plugins:{legend:{display:false}}});
+
+    // Drawdown curve
+    let cum=0,peak=0; const ddCurve=daily.map(v=>{ cum+=v; peak=Math.max(peak,cum); return (cum-peak)/st.cap*100; });
+    makeChart('chartStratDD','line',dd,[{label:'Drawdown%',data:ddCurve,borderColor:'rgba(240,112,112,0.8)',backgroundColor:'rgba(240,112,112,0.1)',fill:true,borderWidth:1.5,pointRadius:0,tension:0.3}],{plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.y.toFixed(2)+'%'}}},scales:{y:{ticks:{callback:v=>v+'%'},max:0}}});
+  },50);
 }
 
-// ────────────────────────────────────────────────────────────
-// TABS
-// ────────────────────────────────────────────────────────────
-function switchTab(name, btn) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  btn.classList.add('active');
-  if (DATA) {
-    setTimeout(() => {
-      if (name === 'overview') rebuildOverviewCharts();
-      if (name === 'monthly')  rebuildMonthlyCharts();
-      if (name === 'strategy') renderStratDetail(activeStratKey);
-    }, 50);
-  }
-}
+function rebuildAllCharts(){ if(!DATA)return; setTimeout(()=>{ if(currentTab==='daily')renderDailyTab(); if(currentTab==='monthly')renderMonthlyTab(); if(currentTab==='yearly')renderYearlyTab(); if(currentTab==='strategy')renderStratDetail(activeStratKey); },100); }
 
-function rebuildOverviewCharts() {
-  buildOverviewCharts();
-}
-function rebuildMonthlyCharts() {
-  const months = DATA.months;
-  const datasets = STRATEGIES.map(st => ({
-    label: st.label, data: DATA[st.key + '_monthly'],
-    backgroundColor: COLORS[st.key] + 'BB', borderColor: COLORS[st.key], borderWidth: 1, borderRadius: 2,
-  }));
-  makeChart('chartMonthlyBar', 'bar', months, datasets, {
-    plugins: { ...chartDefaults().plugins, tooltip: { ...chartDefaults().plugins.tooltip, mode: 'index', intersect: false } },
-    scales: { x: chartDefaults().scales.x, y: { ...chartDefaults().scales.y, ticks: { ...chartDefaults().scales.y.ticks, callback: v => INR(v) } } }
-  });
-}
-function rebuildCharts() {
-  if (!DATA) return;
-  setTimeout(() => {
-    buildOverviewCharts();
-    rebuildMonthlyCharts();
-    renderStratDetail(activeStratKey);
-  }, 100);
-}
-
-// ────────────────────────────────────────────────────────────
-// EMBEDDED DEMO DATA (fallback when data.json not present)
-// ────────────────────────────────────────────────────────────
+// ── EMBEDDED FALLBACK DATA ──
 const DEMO_DATA = {"updated":"24/03/26","months":["Feb 25","Mar 25","Apr 25","May 25","Jun 25","Jul 25","Aug 25","Sep 25","Oct 25","Nov 25","Dec 25","Jan 26","Feb 26","Mar 26"],"nap_monthly":[21674.0,-13125.0,-2368.0,41408.0,21632.0,3693.0,18159.0,10466.0,3346.0,9246.0,16514.0,24989.0,8327.0,-6673.0],"sap_monthly":[12824.0,2846.0,-15970.0,8268.0,25972.0,16376.0,15001.0,2290.0,4470.0,2548.0,14746.0,13953.0,1332.0,-18867.0],"cap_monthly":[0,0,0,0,0,0,0,0,7810.0,9690.0,5040.0,-20180.0,0.0,0.0],"napv2_monthly":[0,0,0,0,0,0,0,0,9232.0,9137.0,5881.0,30528.0,5558.0,-5915.0],"napv3_monthly":[0,0,0,0,0,0,0,0,12686.0,12699.0,9244.0,17889.0,6380.0,-11848.0],"sapv2_monthly":[0,0,0,0,0,0,0,0,3862.0,6228.0,5281.0,11088.0,1986.0,-4669.0],"sapv3_monthly":[0,0,0,0,0,0,0,0,1046.0,-3282.0,-3694.0,-2424.0,-2176.0,-965.0],"nap_daily":[-2370.0,2137.0,1541.0,3622.0,-4898.0,1285.0,-1247.0,2100.0,3500.0,-800.0,1200.0,2300.0,-1500.0,4100.0,2800.0,-600.0,1900.0,3200.0,-2100.0,1400.0,2600.0,-900.0,1700.0,3000.0,-1200.0,2400.0,-700.0,1800.0,3500.0,-1600.0,2200.0,1100.0,-800.0,2800.0,1500.0,-1300.0,3100.0,2000.0,-500.0,1600.0,2900.0,-1100.0,2300.0,1200.0,-900.0,2500.0,1800.0,-1400.0,3200.0,1000.0,-700.0,2100.0,1600.0,-1200.0,2800.0,1400.0,-1000.0,2600.0,1900.0,-800.0,3000.0,1700.0,-1300.0,2400.0,1500.0,-600.0,2200.0,1100.0,-1100.0,2900.0,1800.0,-900.0,3100.0,1600.0,-1500.0,2700.0,1300.0,-700.0,2000.0,1400.0,-1200.0,2800.0,1700.0,-800.0,3200.0,1500.0,-1000.0,2400.0,1200.0,-600.0,2600.0,1800.0,-1400.0,2900.0,1600.0,-1100.0,3300.0,1400.0,-700.0,2100.0,1900.0,-900.0,3000.0,1700.0,-1200.0,2500.0,1100.0,-800.0,2800.0,1600.0,-1000.0,3100.0,1400.0,-600.0,2300.0,1800.0,-1300.0,2700.0,1200.0,-900.0,2900.0,1700.0,-1100.0,3200.0,1500.0,-700.0,2200.0,1400.0,-800.0,2600.0,1900.0,-1200.0,3000.0,1600.0,-1000.0,2400.0,1100.0,-600.0,2800.0,1700.0,-1400.0,3100.0,1500.0,-900.0,2300.0,1800.0,-700.0,2700.0,1400.0,-1100.0,2900.0,1200.0,-800.0,3200.0,1600.0,-1000.0,2400.0,1900.0,-1300.0,2600.0,1100.0,-600.0,2800.0,1700.0,-900.0,3000.0,1500.0,-1200.0,2200.0,1400.0,-700.0,2900.0,1800.0,-1000.0,3100.0,1600.0,-800.0,2400.0,1300.0,-1100.0,2700.0,1900.0,-600.0,3200.0,1500.0,-900.0,2300.0,1200.0,-1300.0,2800.0,1700.0,-700.0,3000.0,1600.0,-1000.0,2500.0,1400.0,-800.0,2900.0,1100.0,-1200.0,3100.0,1800.0,-600.0,2600.0,1500.0,-900.0,2400.0,1700.0,-1100.0,2800.0,1300.0,-700.0,3200.0,1600.0,-1000.0,2200.0,1900.0,-1300.0,2700.0,1400.0,-800.0,3000.0,1500.0,-600.0,2400.0,1200.0,-900.0,2900.0,1800.0,-1100.0,3100.0,1700.0,-700.0,2600.0,1400.0,-1000.0,2300.0,1600.0,-800.0,2800.0,1500.0,-1200.0,3200.0,1900.0,-600.0,2500.0,1100.0,-900.0,2700.0,1700.0,-1100.0,3000.0,1400.0,-700.0,2200.0,1800.0,-1000.0,2900.0,1600.0,-800.0,3100.0,1300.0,-1200.0,2600.0,1500.0,-600.0],"sap_daily":[1200.0,-800.0,2300.0,1500.0,-1100.0,2700.0,900.0,-600.0,1800.0,2400.0,-1300.0,1600.0,3000.0,-900.0,2100.0,1400.0,-700.0,2800.0,1200.0,-1000.0,2500.0,1700.0,-800.0,3100.0,1300.0,-1200.0,2200.0,1600.0,-600.0,2900.0,1400.0,-900.0,2600.0,1100.0,-700.0,2400.0,1800.0,-1100.0,3000.0,1500.0,-800.0,2200.0,1300.0,-1000.0,2700.0,1600.0,-600.0,2900.0,1200.0,-900.0,2400.0,1800.0,-1300.0,3100.0,1400.0,-700.0,2600.0,1100.0,-1000.0,2800.0,1700.0,-800.0,3000.0,1500.0,-600.0,2300.0,1200.0,-900.0,2700.0,1600.0,-1100.0,2400.0,1800.0,-700.0,3100.0,1300.0,-1000.0,2900.0,1400.0,-800.0,2200.0,1600.0,-1200.0,2600.0,1100.0,-600.0,2800.0,1900.0,-900.0,3000.0,1500.0,-700.0,2400.0,1200.0,-1100.0,2700.0,1700.0,-800.0,3100.0,1400.0,-1000.0,2300.0,1600.0,-600.0,2900.0,1100.0,-900.0,2500.0,1800.0,-1200.0,3000.0,1500.0,-700.0,2200.0,1300.0,-800.0,2700.0,1600.0,-1100.0,2400.0,1900.0,-600.0,3100.0,1400.0,-900.0,2800.0,1200.0,-700.0,2600.0,1700.0,-1000.0,3000.0,1500.0,-800.0,2300.0,1100.0,-1200.0,2900.0,1600.0,-600.0,2500.0,1800.0,-900.0,2700.0,1400.0,-700.0,3100.0,1200.0,-1000.0,2400.0,1700.0,-800.0,2900.0,1500.0,-1100.0,2200.0,1300.0,-600.0,2800.0,1600.0,-900.0,3000.0,1200.0,-700.0,2600.0,1800.0,-1000.0,2400.0,1100.0,-800.0,2900.0,1500.0,-1200.0,3100.0,1600.0,-600.0,2300.0,1400.0,-900.0,2700.0,1200.0,-700.0,2500.0,1800.0,-1100.0,3000.0,1600.0,-800.0,2200.0,1300.0,-1000.0,2800.0,1500.0,-600.0,2600.0,1100.0,-900.0,3100.0,1700.0,-700.0,2400.0,1400.0,-1200.0,2900.0,1200.0,-800.0,2700.0,1600.0,-1000.0,3000.0,1300.0,-600.0,2200.0,1800.0,-900.0,2500.0,1500.0,-700.0,2800.0,1100.0,-1100.0,3100.0,1600.0,-800.0,2400.0,1400.0,-1000.0,2700.0,1200.0,-600.0,2900.0,1700.0,-900.0,3000.0,1500.0,-700.0,2300.0,1100.0,-1200.0,2600.0,1600.0,-800.0,2800.0,1400.0,-1000.0,3100.0,1200.0,-600.0,2400.0,1800.0,-900.0,2700.0,1500.0,-700.0,3000.0,1300.0,-1100.0],"cap_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,800,1200,-500,1800,900,-700,2000,1500,-1100,1300,1700,-900,2200,1100,-600,1900,1400,-800,2400,1600,-1000,2100,1200,-700,1800,1000,-500,2300,1500,-900,2000,1700,-600,1400,1100,-800,1900,1300,-700,2100,1600,-500,1800,1200,-900,2200,1400,-700,2000,1000,-600,1700,1500,-800,2400,1300,-1000,1900,1100,-700,2100,1600,-500],"napv2_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,900,1100,-600,1700,1300,-800,2000,1200,-700,1600,1800,-500,2200,1000,-900,1900,1400,-600,2400,1100,-800,1700,1500,-1000,2100,1200,-700,1800,1600,-500,2300,1000,-900,2000,1400,-600,1700,1100,-800,2200,1500,-700,1900,1300,-500,2100,1600,-900,1800,1000,-600,2400,1400,-800,2000,1200,-700,1700,1600,-500,2200,1100,-900,1900,1500,-600],"napv3_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1100,1400,-700,2100,1200,-900,1800,1600,-600,2300,1000,-800,1900,1500,-700,2400,1300,-500,2000,1100,-900,1700,1600,-600,2200,1200,-800,1900,1400,-700,2500,1000,-500,2100,1600,-900,1800,1300,-600,2300,1100,-800,2000,1500,-700,1700,1400,-500,2200,1200,-900,1900,1600,-600,2400,1000,-800,2100,1400,-700,1800,1500,-500],"sapv2_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,700,1000,-500,1600,1200,-700,1900,900,-600,1500,1400,-800,2000,1100,-500,1700,1300,-700,2100,900,-900,1600,1400,-600,1900,1100,-800,2200,1000,-500,1800,1300,-700,2000,900,-600,1600,1200,-800,1900,1400,-500,1700,1000,-700,2100,1300,-900,1800,900,-600,2000,1200,-800,1700,1400,-500],"sapv3_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-300,600,-800,900,-500,500,-700,1100,-900,300,-600,800,-400,1000,-700,600,-500,900,-800,400,-600,1100,-500,700,-900,500,-700,1000,-400,600,-800,900,-500,800,-600,1100,-700,400,-500,800,-900,600,-700,1000,-400],"daily_dates":["13/02/25","14/02/25","17/02/25","18/02/25","19/02/25","20/02/25","21/02/25","24/02/25","25/02/25","26/02/25","27/02/25","28/02/25","03/03/25","04/03/25","05/03/25","06/03/25","07/03/25","10/03/25","11/03/25","12/03/25","13/03/25","14/03/25","17/03/25","18/03/25","19/03/25","20/03/25","21/03/25","24/03/25","25/03/25","26/03/25","27/03/25","28/03/25","01/04/25","02/04/25","03/04/25","04/04/25","07/04/25","08/04/25","09/04/25","10/04/25","11/04/25","14/04/25","15/04/25","16/04/25","17/04/25","22/04/25","23/04/25","24/04/25","25/04/25","28/04/25","29/04/25","30/04/25","01/05/25","02/05/25","05/05/25","06/05/25","07/05/25","08/05/25","09/05/25","12/05/25","13/05/25","14/05/25","15/05/25","16/05/25","19/05/25","20/05/25","21/05/25","22/05/25","23/05/25","26/05/25","27/05/25","28/05/25","29/05/25","30/05/25","02/06/25","03/06/25","04/06/25","05/06/25","06/06/25","09/06/25","10/06/25","11/06/25","12/06/25","13/06/25","16/06/25","17/06/25","18/06/25","19/06/25","20/06/25","23/06/25","24/06/25","25/06/25","26/06/25","27/06/25","30/06/25","01/07/25","02/07/25","03/07/25","04/07/25","07/07/25","08/07/25","09/07/25","10/07/25","11/07/25","14/07/25","15/07/25","16/07/25","17/07/25","18/07/25","21/07/25","22/07/25","23/07/25","24/07/25","25/07/25","28/07/25","29/07/25","30/07/25","31/07/25","01/08/25","04/08/25","05/08/25","06/08/25","07/08/25","08/08/25","11/08/25","12/08/25","13/08/25","14/08/25","15/08/25","18/08/25","19/08/25","20/08/25","21/08/25","22/08/25","25/08/25","26/08/25","27/08/25","28/08/25","29/08/25","01/09/25","02/09/25","03/09/25","04/09/25","05/09/25","08/09/25","09/09/25","10/09/25","11/09/25","12/09/25","15/09/25","16/09/25","17/09/25","18/09/25","19/09/25","22/09/25","23/09/25","24/09/25","25/09/25","26/09/25","29/09/25","30/09/25","01/10/25","02/10/25","03/10/25","07/10/25","08/10/25","09/10/25","10/10/25","13/10/25","14/10/25","15/10/25","16/10/25","17/10/25","20/10/25","21/10/25","22/10/25","23/10/25","24/10/25","27/10/25","28/10/25","29/10/25","30/10/25","31/10/25","03/11/25","04/11/25","05/11/25","06/11/25","07/11/25","10/11/25","11/11/25","12/11/25","13/11/25","14/11/25","17/11/25","18/11/25","19/11/25","20/11/25","21/11/25","24/11/25","25/11/25","26/11/25","27/11/25","28/11/25","01/12/25","02/12/25","03/12/25","04/12/25","05/12/25","08/12/25","09/12/25","10/12/25","11/12/25","12/12/25","15/12/25","16/12/25","17/12/25","18/12/25","19/12/25","22/12/25","23/12/25","24/12/25","26/12/25","29/12/25","30/12/25","31/12/25","01/01/26","02/01/26","05/01/26","06/01/26","07/01/26","08/01/26","09/01/26","12/01/26","13/01/26","14/01/26","15/01/26","16/01/26","19/01/26","20/01/26","21/01/26","22/01/26","23/01/26","27/01/26","28/01/26","29/01/26","30/01/26","31/01/26","02/02/26","03/02/26","04/02/26","05/02/26","06/02/26","09/02/26","10/02/26","11/02/26","12/02/26","13/02/26","16/02/26","17/02/26","18/02/26","19/02/26","20/02/26","23/02/26","24/02/26","25/02/26","26/02/26","27/02/26","02/03/26","03/03/26","04/03/26","05/03/26","06/03/26","09/03/26","10/03/26","11/03/26","12/03/26","13/03/26","16/03/26","17/03/26","18/03/26","19/03/26","20/03/26","23/03/26","23/03/26"],"stats":{"nap":{"roi":62.9,"avg_month_roi":5.0,"pnl":157288,"sharpe":2.99,"max_dd":-11.4,"win_rate":61.2,"days":273},"sap":{"roi":34.3,"avg_month_roi":3.2,"pnl":85789,"sharpe":1.96,"max_dd":-15.6,"win_rate":55.7,"days":273},"cap":{"roi":0.5,"avg_month_roi":0.1,"pnl":2360,"sharpe":0.15,"max_dd":-4.2,"win_rate":17.6,"days":76},"napv2":{"roi":21.8,"avg_month_roi":4.8,"pnl":54421,"sharpe":1.86,"max_dd":-8.6,"win_rate":23.1,"days":102},"napv3":{"roi":18.8,"avg_month_roi":4.7,"pnl":47050,"sharpe":1.58,"max_dd":-12.3,"win_rate":21.2,"days":101},"sapv2":{"roi":9.5,"avg_month_roi":2.8,"pnl":23776,"sharpe":1.09,"max_dd":-10.9,"win_rate":19.4,"days":83},"sapv3":{"roi":-4.6,"avg_month_roi":0.8,"pnl":-11495,"sharpe":-0.49,"max_dd":-13.9,"win_rate":22.0,"days":102},"comb":{"roi":48.6,"pnl":243077,"sharpe":2.8,"max_dd":-11.3,"win_rate":58.6}}};
 
-// ────────────────────────────────────────────────────────────
-// INIT
-// ────────────────────────────────────────────────────────────
 loadData();
-// Auto-refresh every 5 minutes
 setInterval(loadData, 5 * 60 * 1000);
 </script>
-
 </body>
 </html>
