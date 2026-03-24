@@ -28,7 +28,6 @@
     }
     body { background: var(--ink); color: var(--cream); font-family: 'Jost', sans-serif; font-size: 15px; line-height: 1.65; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
-    /* ── NAV ── */
     nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 2.5rem; background: var(--nav-bg); backdrop-filter: blur(20px); border-bottom: 1px solid var(--rule); }
     .nav-logo { font-family: 'DM Mono', monospace; font-size: 1rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cream); text-decoration: none; }
     .nav-logo span { color: var(--accent); }
@@ -40,15 +39,16 @@
     .theme-btn { background: transparent; border: 1px solid var(--rule); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; padding: 0.35rem 0.8rem; cursor: pointer; transition: all 0.2s; }
     .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-    main { max-width: 1340px; margin: 0 auto; padding: 88px 2rem 5rem; }
+    main { max-width: 1380px; margin: 0 auto; padding: 88px 2rem 5rem; }
     .page-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.7rem; }
     .page-title { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem, 3vw, 2.5rem); font-weight: 400; color: var(--cream); margin-bottom: 0.4rem; }
     .page-subtitle { font-size: 0.88rem; color: var(--muted); max-width: 56ch; margin-bottom: 1.5rem; line-height: 1.7; }
     .updated-tag { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 1.5rem; }
+    .section-title { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; margin-top: 0.5rem; }
+    .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
     /* ── CONTROLS ── */
     .top-controls { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--rule); padding-bottom: 1.25rem; }
-    .date-nav { display: flex; align-items: center; gap: 0.4rem; margin-left: auto; }
     .nav-btn { background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.65rem; padding: 0.38rem 0.7rem; cursor: pointer; transition: all 0.18s; }
     .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
     .nav-btn.active-today { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
@@ -57,57 +57,97 @@
     .range-btn { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.08em; background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); padding: 0.38rem 0.85rem; cursor: pointer; margin-right: -1px; transition: all 0.18s; }
     .range-btn:hover { color: var(--cream); border-color: var(--accent-dim); z-index:1; }
     .range-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); z-index: 2; }
+    .view-toggle { display: flex; gap: 0; }
+    .view-btn { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.08em; background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); padding: 0.35rem 0.8rem; cursor: pointer; margin-right: -1px; transition: all 0.15s; }
+    .view-btn:hover { color: var(--cream); }
+    .view-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); z-index: 1; }
+    .date-nav { display: flex; align-items: center; gap: 0.4rem; margin-left: auto; }
 
-    /* ── STRATEGY FILTER ── */
-    .strategy-bar { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.5rem; align-items: center; }
-    .strat-btn { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); padding: 0.38rem 0.85rem; cursor: pointer; transition: all 0.18s; display: flex; align-items: center; gap: 5px; }
-    .strat-btn:hover { border-color: var(--accent-dim); color: var(--cream); }
-    .strat-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
-    .strat-label { font-family: 'DM Mono', monospace; font-size: 0.56rem; letter-spacing: 0.1em; color: var(--muted); padding: 0.38rem 0; margin-right: 0.5rem; }
+    /* ════════════════════════════════
+       STRATEGY BREAKDOWN TABLE
+    ════════════════════════════════ */
+    .breakdown-wrap { margin-bottom: 2.5rem; }
+    .breakdown-toolbar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .search-box { position: relative; flex: 1; min-width: 200px; max-width: 320px; }
+    .search-box input { width: 100%; background: var(--surface); border: 1px solid var(--rule); color: var(--cream); font-family: 'DM Mono', monospace; font-size: 0.7rem; padding: 0.5rem 0.75rem 0.5rem 2.2rem; outline: none; transition: border-color 0.18s; }
+    .search-box input:focus { border-color: var(--accent); }
+    .search-box input::placeholder { color: var(--muted); }
+    .search-icon { position: absolute; left: 0.7rem; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.75rem; pointer-events: none; }
+    .export-btn { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.08em; background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); padding: 0.45rem 1rem; cursor: pointer; transition: all 0.18s; display: flex; align-items: center; gap: 5px; }
+    .export-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-    /* ── SECTION TITLE ── */
-    .section-title { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; margin-top: 0.5rem; }
+    /* Header bar */
+    .bd-header { background: var(--surface2); border: 1px solid var(--rule); border-bottom: none; padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; }
+    .bd-header-left { display: flex; align-items: center; gap: 1rem; }
+    .bd-icon { width: 32px; height: 32px; background: var(--accent-glow); border: 1px solid var(--accent-dim); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+    .bd-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 500; color: var(--cream); line-height: 1.2; }
+    .bd-sub { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.1em; color: var(--muted); margin-top: 0.1rem; }
+    .bd-date-pill { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.08em; background: var(--accent); color: var(--ink); padding: 0.28rem 0.8rem; font-weight: 700; }
+
+    /* Table */
+    .bd-table-wrap { overflow-x: auto; border: 1px solid var(--rule); }
+    .bd-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 900px; }
+    .bd-table thead tr { background: var(--surface2); border-bottom: 1px solid var(--rule); }
+    .bd-table thead th { font-family: 'DM Mono', monospace; font-size: 0.54rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); padding: 0.7rem 1rem; text-align: right; white-space: nowrap; border-right: 1px solid var(--rule); cursor: pointer; user-select: none; transition: color 0.15s; }
+    .bd-table thead th:hover { color: var(--cream); }
+    .bd-table thead th:first-child { text-align: left; width: 240px; }
+    .bd-table thead th:nth-child(2) { text-align: right; }
+    .bd-table thead th.sorted { color: var(--accent); }
+
+    .bd-table tbody tr { border-bottom: 1px solid var(--rule); transition: background 0.12s; }
+    .bd-table tbody tr:hover { background: var(--surface2); }
+    .bd-table tbody tr.total-row { background: var(--surface2); border-top: 2px solid var(--rule); }
+    .bd-table tbody tr.total-row td { font-family: 'DM Mono', monospace; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; }
+
+    .bd-table td { padding: 0.85rem 1rem; text-align: right; border-right: 1px solid var(--rule); vertical-align: middle; }
+    .bd-table td:first-child { text-align: left; }
+    .bd-table td:last-child { border-right: none; }
+    .bd-table thead th:last-child { border-right: none; }
+
+    /* Strategy name cell */
+    .strat-name-cell { display: flex; align-items: center; gap: 0.65rem; }
+    .strat-name-text { font-family: 'Jost', sans-serif; font-size: 0.82rem; font-weight: 500; color: var(--cream); }
+
+    /* Capital cell */
+    .cap-cell { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--mid); }
+
+    /* PNL pill */
+    .pnl-pill { display: inline-flex; align-items: center; justify-content: space-between; gap: 0.4rem; padding: 0.28rem 0.75rem; font-family: 'DM Mono', monospace; font-size: 0.68rem; font-weight: 500; min-width: 170px; }
+    .pnl-pill.pos { background: var(--pos-bg); color: var(--pos); border: 1px solid rgba(63,224,136,0.2); }
+    .pnl-pill.neg { background: var(--neg-bg); color: var(--neg); border: 1px solid rgba(240,112,112,0.2); }
+    .pnl-pill.zero { background: rgba(200,184,154,0.07); color: var(--muted); border: 1px solid transparent; }
+    .pnl-amount { font-weight: 600; white-space: nowrap; }
+    .pnl-pct { opacity: 0.8; white-space: nowrap; font-size: 0.62rem; }
+
+    /* Drawdown cell */
+    .dd-cell { min-width: 160px; }
+    .dd-pct { font-family: 'DM Mono', monospace; font-size: 0.8rem; font-weight: 700; color: var(--neg); }
+    .dd-max { font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--muted); margin-top: 0.15rem; }
+    .dd-bar-bg { background: var(--neg-bg); height: 4px; width: 100%; margin-top: 0.35rem; border-radius: 1px; }
+    .dd-bar-fill { background: var(--neg); height: 100%; border-radius: 1px; transition: width 0.5s ease; }
+    .dd-zero { color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.72rem; }
 
     /* ── TODAY BANNER ── */
     .today-banner { background: var(--surface); border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 1rem 1.5rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-    .today-date { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--cream); }
-    .today-day { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; margin-top: 0.15rem; }
+    .today-date-label { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--cream); }
+    .today-day-sub { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; margin-top: 0.15rem; }
     .today-totals { display: flex; gap: 2rem; flex-wrap: wrap; }
     .today-total-item { text-align: right; }
-    .today-total-label { font-family: 'DM Mono', monospace; font-size: 0.54rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .today-total-lbl { font-family: 'DM Mono', monospace; font-size: 0.54rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
     .today-total-val { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 600; }
 
-    /* ── STATS GRID ── */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 2rem; }
-    .stat-cell { background: var(--surface); padding: 1.1rem 1.3rem; transition: background 0.15s; }
-    .stat-cell:hover { background: var(--surface2); }
-    .stat-label { font-family: 'DM Mono', monospace; font-size: 0.56rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 5px; }
-    .stat-val { font-family: 'Playfair Display', serif; font-size: 1.45rem; font-weight: 600; color: var(--cream); line-height: 1.1; }
-    .stat-val.pos { color: var(--pos); }
-    .stat-val.neg { color: var(--neg); }
-    .stat-sub { font-size: 0.68rem; color: var(--muted); margin-top: 0.15rem; }
-    .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-
-    /* ── TABLE ── */
-    .table-wrap { overflow-x: auto; margin-bottom: 2rem; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.81rem; }
-    thead th { font-family: 'DM Mono', monospace; font-size: 0.56rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); text-align: right; padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--rule); white-space: nowrap; }
-    thead th:first-child { text-align: left; }
-    tbody tr { border-bottom: 1px solid var(--rule); transition: background 0.12s; cursor: pointer; }
-    tbody tr:hover { background: var(--surface2); }
-    tbody tr.today-row { background: var(--accent-glow); }
-    tbody tr.today-row td:first-child { color: var(--accent); }
-    tbody td { padding: 0.7rem 0.9rem; text-align: right; color: var(--mid); white-space: nowrap; }
-    tbody td:first-child { text-align: left; color: var(--cream); font-weight: 500; font-family: 'DM Mono', monospace; font-size: 0.75rem; }
+    /* ── ROLLING STATS ── */
+    .rolling-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 2rem; }
+    @media (max-width: 700px) { .rolling-grid { grid-template-columns: repeat(2,1fr); } }
+    .roll-cell { background: var(--surface); padding: 1rem 1.2rem; }
+    .roll-label { font-family: 'DM Mono', monospace; font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+    .roll-val { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 600; }
+    .roll-sub { font-size: 0.65rem; color: var(--muted); margin-top: 0.1rem; }
     .td-pos { color: var(--pos) !important; }
     .td-neg { color: var(--neg) !important; }
-    .td-neutral { color: var(--muted) !important; }
     .td-zero { color: var(--muted) !important; opacity: 0.5; }
-    .td-badge-pos { display: inline-block; background: var(--pos-bg); color: var(--pos); font-family: 'DM Mono', monospace; font-size: 0.56rem; padding: 0.15rem 0.5rem; letter-spacing: 0.08em; }
-    .td-badge-neg { display: inline-block; background: var(--neg-bg); color: var(--neg); font-family: 'DM Mono', monospace; font-size: 0.56rem; padding: 0.15rem 0.5rem; letter-spacing: 0.08em; }
-    .td-badge-na { display: inline-block; background: rgba(200,184,154,0.08); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.56rem; padding: 0.15rem 0.5rem; }
 
-    /* ── CHART PANELS ── */
+    /* ── CHARTS ── */
     .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem; }
     @media (max-width: 860px) { .chart-grid { grid-template-columns: 1fr; } }
     .chart-panel { background: var(--surface); border: 1px solid var(--rule); padding: 1.4rem; }
@@ -118,22 +158,11 @@
     .chart-wrap.h260 { height: 260px; }
     .chart-wrap.h300 { height: 300px; }
 
-    /* ── STREAK BADGE ── */
-    .streak-pill { display: inline-flex; align-items: center; gap: 5px; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.08em; padding: 0.2rem 0.7rem; border: 1px solid; }
-    .streak-pos { background: var(--pos-bg); border-color: rgba(63,224,136,0.3); color: var(--pos); }
-    .streak-neg { background: var(--neg-bg); border-color: rgba(240,112,112,0.3); color: var(--neg); }
-
-    /* ── HEAT BAR ── */
+    /* ── HEATMAP ── */
     .heat-bar { display: flex; gap: 2px; flex-wrap: wrap; margin-bottom: 0.5rem; }
     .heat-day { width: 18px; height: 18px; border-radius: 2px; cursor: pointer; transition: transform 0.12s; position: relative; }
     .heat-day:hover { transform: scale(1.3); z-index: 10; }
     .heat-day[data-tip]:hover::after { content: attr(data-tip); position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); background: var(--surface2); border: 1px solid var(--rule); color: var(--cream); font-family: 'DM Mono', monospace; font-size: 0.55rem; white-space: nowrap; padding: 0.3rem 0.6rem; z-index: 99; pointer-events: none; }
-
-    /* ── PAGINATION ── */
-    .pagination { display: flex; align-items: center; gap: 0.5rem; justify-content: flex-end; margin-top: -1rem; margin-bottom: 2rem; }
-    .page-btn { font-family: 'DM Mono', monospace; font-size: 0.6rem; background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); padding: 0.3rem 0.65rem; cursor: pointer; transition: all 0.18s; }
-    .page-btn:hover, .page-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
-    .page-info { font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--muted); }
 
     /* ── SUMMARY STRIP ── */
     .summary-strip { display: flex; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 2rem; }
@@ -141,8 +170,7 @@
     .sum-label { font-family: 'DM Mono', monospace; font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.15rem; }
     .sum-val { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 600; }
 
-    /* ── CALENDAR VIEW ── */
-    .calendar-wrap { margin-bottom: 2rem; }
+    /* ── CALENDAR ── */
     .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
     .cal-month-nav { display: flex; align-items: center; gap: 1rem; }
     .cal-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--cream); }
@@ -155,38 +183,17 @@
     .cal-day-num { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); margin-bottom: 0.3rem; }
     .cal-day.today-cal .cal-day-num { color: var(--accent); }
     .cal-day-pnl { font-family: 'Playfair Display', serif; font-size: 0.85rem; font-weight: 600; }
-    .cal-day-strats { font-size: 0.55rem; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 0.15rem; line-height: 1.4; }
 
-    /* ── ROLLING STATS ── */
-    .rolling-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 2rem; }
-    @media (max-width: 700px) { .rolling-grid { grid-template-columns: repeat(2, 1fr); } }
-    .roll-cell { background: var(--surface); padding: 1rem 1.2rem; }
-    .roll-label { font-family: 'DM Mono', monospace; font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
-    .roll-val { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 600; }
-    .roll-sub { font-size: 0.65rem; color: var(--muted); margin-top: 0.1rem; }
+    /* ── PAGINATION ── */
+    .pagination { display: flex; align-items: center; gap: 0.5rem; justify-content: flex-end; margin-top: 0.75rem; margin-bottom: 2rem; }
+    .page-btn { font-family: 'DM Mono', monospace; font-size: 0.6rem; background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); padding: 0.3rem 0.65rem; cursor: pointer; transition: all 0.18s; }
+    .page-btn:hover, .page-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+    .page-info { font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--muted); }
 
-    /* ── VIEW TOGGLE ── */
-    .view-toggle { display: flex; gap: 0; margin-left: auto; }
-    .view-btn { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.08em; background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); padding: 0.35rem 0.8rem; cursor: pointer; margin-right: -1px; transition: all 0.15s; }
-    .view-btn:hover { color: var(--cream); }
-    .view-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); z-index: 1; }
-
-    /* ── FOOTER ── */
-    footer { border-top: 1px solid var(--rule); padding: 1.8rem 2.5rem; max-width: 1340px; margin: 0 auto; }
+    footer { border-top: 1px solid var(--rule); padding: 1.8rem 2.5rem; max-width: 1380px; margin: 0 auto; }
     .disclaimer { font-size: 0.73rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.8rem; }
     .footer-bottom { display: flex; justify-content: space-between; font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; color: var(--muted); }
-
-    @media (max-width: 768px) {
-      nav { padding: 1rem 1.2rem; }
-      .nav-links { display: none; }
-      .today-banner { flex-direction: column; }
-      .today-totals { justify-content: flex-start; }
-      .rolling-grid { grid-template-columns: repeat(2,1fr); }
-    }
-
-    /* ── ANIMATIONS ── */
-    .fade-in { animation: fadeIn 0.3s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) { nav { padding: 1rem 1.2rem; } .nav-links { display: none; } }
   </style>
 </head>
 <body>
@@ -195,21 +202,61 @@
   <a class="nav-logo" href="./index.html">APEX <span>ALGOS</span></a>
   <ul class="nav-links">
     <li><a href="./index.html">Analytics</a></li>
-    <li><a href="#" class="active">Daily P&L</a></li>
+    <li><a href="#" class="active">Daily P&amp;L</a></li>
     <li><a href="./strategies.html">Strategies</a></li>
     <li><a href="https://t.me/apexalgoschat" target="_blank">Telegram</a></li>
   </ul>
   <div class="nav-right">
-    <span class="live-badge" id="liveBadge">LIVE · —</span>
-    <button class="theme-btn" onclick="toggleTheme()"><span id="themeIcon">☀</span> <span id="themeLabel">Light</span></button>
+    <span class="live-badge" id="liveBadge">LIVE &middot; &mdash;</span>
+    <button class="theme-btn" onclick="toggleTheme()"><span id="themeIcon">&#9728;</span> <span id="themeLabel">Light</span></button>
   </div>
 </nav>
 
 <main>
-  <p class="page-eyebrow">Apex Algos · Daily P&L Dashboard</p>
+  <p class="page-eyebrow">Apex Algos &middot; Daily P&amp;L Dashboard</p>
   <h1 class="page-title">Daily Performance Log</h1>
-  <p class="page-subtitle">Day-by-day P&L breakdown across all algo strategies. Navigate dates, filter by strategy, and track cumulative growth.</p>
-  <p class="updated-tag" id="updatedTag">Last updated: —</p>
+  <p class="page-subtitle">Strategy-by-strategy breakdown with daily, monthly, and all-time P&amp;L. Updated from live trading records.</p>
+  <p class="updated-tag" id="updatedTag">Last updated: &mdash;</p>
+
+  <!-- ════════════ STRATEGY BREAKDOWN TABLE ════════════ -->
+  <p class="section-title">Strategy Breakdown</p>
+  <div class="breakdown-wrap">
+    <div class="breakdown-toolbar">
+      <div class="search-box">
+        <span class="search-icon">&#128269;</span>
+        <input type="text" id="searchInput" placeholder="Search strategies..." oninput="filterBreakdown()" />
+      </div>
+      <button class="export-btn" onclick="exportCSV()">&#8595; Export CSV</button>
+      <button class="export-btn" onclick="exportExcel()">&#8595; Export Excel</button>
+    </div>
+
+    <div class="bd-header">
+      <div class="bd-header-left">
+        <div class="bd-icon">&#9783;</div>
+        <div>
+          <div class="bd-title">All Strategies &mdash; Detailed View</div>
+          <div class="bd-sub">Daily &middot; Monthly &middot; Yearly Performance</div>
+        </div>
+      </div>
+      <div class="bd-date-pill" id="bdDatePill">&mdash;</div>
+    </div>
+
+    <div class="bd-table-wrap">
+      <table class="bd-table" id="bdTable">
+        <thead>
+          <tr>
+            <th onclick="sortBd('name')" id="th-name">Strategy</th>
+            <th onclick="sortBd('capital')" id="th-capital">Capital</th>
+            <th onclick="sortBd('today')" id="th-today">Today PNL (ROI%)</th>
+            <th onclick="sortBd('monthly')" id="th-monthly">Monthly PNL (ROI%)</th>
+            <th onclick="sortBd('yearly')" id="th-yearly">Yearly PNL (YTD%)</th>
+            <th onclick="sortBd('drawdown')" id="th-drawdown">Drawdown</th>
+          </tr>
+        </thead>
+        <tbody id="bdBody"></tbody>
+      </table>
+    </div>
+  </div>
 
   <!-- ── TOP CONTROLS ── -->
   <div class="top-controls">
@@ -221,151 +268,101 @@
       <button class="range-btn" onclick="setRange('1m',this)">1M</button>
     </div>
     <div class="view-toggle">
-      <button class="view-btn active" onclick="setDisplayView('table',this)">≡ Table</button>
-      <button class="view-btn" onclick="setDisplayView('calendar',this)">⊞ Calendar</button>
+      <button class="view-btn active" onclick="setDisplayView('calendar',this)">&#10727; Calendar</button>
     </div>
     <div class="date-nav">
-      <button class="nav-btn" onclick="navDate(-1)" title="Previous day">←</button>
-      <div class="date-label" id="dateLabel">—</div>
-      <button class="nav-btn" onclick="navDate(1)" title="Next day">→</button>
-      <button class="nav-btn active-today" onclick="navToday()">● Today</button>
+      <button class="nav-btn" onclick="navDate(-1)">&#8592;</button>
+      <div class="date-label" id="dateLabel">&mdash;</div>
+      <button class="nav-btn" onclick="navDate(1)">&#8594;</button>
+      <button class="nav-btn active-today" onclick="navToday()">&#9679; Today</button>
     </div>
-  </div>
-
-  <!-- ── STRATEGY FILTER ── -->
-  <div class="strategy-bar">
-    <span class="strat-label">FILTER:</span>
-    <button class="strat-btn active" onclick="setStrat('all',this)" data-strat="all">All Strategies</button>
-    <button class="strat-btn" onclick="setStrat('nap',this)" data-strat="nap"><span class="dot" style="background:#D4A840"></span>NAP</button>
-    <button class="strat-btn" onclick="setStrat('sap',this)" data-strat="sap"><span class="dot" style="background:#3FE088"></span>SAP</button>
-    <button class="strat-btn" onclick="setStrat('cap',this)" data-strat="cap"><span class="dot" style="background:#6DA8E0"></span>CAP</button>
-    <button class="strat-btn" onclick="setStrat('napv2',this)" data-strat="napv2"><span class="dot" style="background:#B06FE0"></span>NAPv2</button>
-    <button class="strat-btn" onclick="setStrat('napv3',this)" data-strat="napv3"><span class="dot" style="background:#E06F6F"></span>NAPv3</button>
-    <button class="strat-btn" onclick="setStrat('sapv2',this)" data-strat="sapv2"><span class="dot" style="background:#E0B06F"></span>SAPv2</button>
-    <button class="strat-btn" onclick="setStrat('sapv3',this)" data-strat="sapv3"><span class="dot" style="background:#6FE0D4"></span>SAPv3</button>
   </div>
 
   <!-- ── TODAY BANNER ── -->
-  <div class="today-banner" id="todayBanner">
+  <div class="today-banner">
     <div>
-      <div class="today-date" id="bannerDate">—</div>
-      <div class="today-day" id="bannerDay">—</div>
+      <div class="today-date-label" id="bannerDate">&mdash;</div>
+      <div class="today-day-sub" id="bannerDay">&mdash;</div>
     </div>
     <div class="today-totals" id="bannerTotals"></div>
   </div>
 
   <!-- ── ROLLING STATS ── -->
-  <p class="section-title">Rolling Performance — <span id="rollingPeriodLabel">All Time</span></p>
+  <p class="section-title">Rolling Performance &mdash; <span id="rollingPeriodLabel">All Time</span></p>
   <div class="rolling-grid" id="rollingGrid"></div>
 
   <!-- ── CHARTS ── -->
   <div class="chart-grid">
     <div class="chart-panel full">
-      <div class="chart-panel-title">Cumulative P&L — All Strategies</div>
+      <div class="chart-panel-title">Cumulative P&amp;L &mdash; All Strategies</div>
       <div class="chart-wrap h300"><canvas id="cumulChart"></canvas></div>
     </div>
     <div class="chart-panel">
-      <div class="chart-panel-title">Daily P&L Bar — Selected Range</div>
+      <div class="chart-panel-title">Daily P&amp;L Bar &mdash; Selected Range</div>
       <div class="chart-wrap h260"><canvas id="dailyBarChart"></canvas></div>
     </div>
     <div class="chart-panel">
-      <div class="chart-panel-title">Strategy Contribution — Selected Date</div>
+      <div class="chart-panel-title">Strategy Contribution &mdash; <span id="pieDate">&mdash;</span></div>
       <div class="chart-wrap h260"><canvas id="stratPieChart"></canvas></div>
     </div>
   </div>
 
   <!-- ── ACTIVITY HEATMAP ── -->
-  <p class="section-title">Trading Activity — Win/Loss Heatmap</p>
-  <div id="heatmapWrap" style="background:var(--surface);border:1px solid var(--rule);padding:1.2rem 1.4rem;margin-bottom:2rem;">
+  <p class="section-title">Trading Activity &mdash; Win/Loss Heatmap</p>
+  <div style="background:var(--surface);border:1px solid var(--rule);padding:1.2rem 1.4rem;margin-bottom:2rem;">
     <div class="heat-bar" id="heatBar"></div>
     <div style="display:flex;gap:1.5rem;margin-top:0.75rem;align-items:center;">
-      <div style="font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--muted);">↑ Each square = 1 trading day · Hover for P&L</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--muted);">&uarr; Each square = 1 trading day &middot; Hover for P&amp;L</div>
       <div style="display:flex;align-items:center;gap:0.4rem;">
-        <div style="width:12px;height:12px;background:rgba(63,224,136,0.8);border-radius:2px;"></div>
-        <span style="font-family:'DM Mono',monospace;font-size:0.54rem;color:var(--muted);">Profit</span>
-        <div style="width:12px;height:12px;background:rgba(240,112,112,0.8);border-radius:2px;margin-left:0.8rem;"></div>
-        <span style="font-family:'DM Mono',monospace;font-size:0.54rem;color:var(--muted);">Loss</span>
-        <div style="width:12px;height:12px;background:var(--surface2);border:1px solid var(--rule);border-radius:2px;margin-left:0.8rem;"></div>
-        <span style="font-family:'DM Mono',monospace;font-size:0.54rem;color:var(--muted);">Zero</span>
+        <div style="width:12px;height:12px;background:rgba(63,224,136,0.8);border-radius:2px;"></div><span style="font-family:'DM Mono',monospace;font-size:0.54rem;color:var(--muted);">Profit</span>
+        <div style="width:12px;height:12px;background:rgba(240,112,112,0.8);border-radius:2px;margin-left:0.8rem;"></div><span style="font-family:'DM Mono',monospace;font-size:0.54rem;color:var(--muted);">Loss</span>
+        <div style="width:12px;height:12px;background:var(--surface2);border:1px solid var(--rule);border-radius:2px;margin-left:0.8rem;"></div><span style="font-family:'DM Mono',monospace;font-size:0.54rem;color:var(--muted);">Zero</span>
       </div>
     </div>
-  </div>
-
-  <!-- ── TABLE VIEW ── -->
-  <div id="tableView">
-    <p class="section-title">Daily P&L Ledger — <span id="tableRangeLabel">All Records</span></p>
-    <div class="table-wrap">
-      <table id="dailyTable">
-        <thead>
-          <tr>
-            <th onclick="sortTable('date')" style="cursor:pointer;">Date ↕</th>
-            <th onclick="sortTable('nap')" style="cursor:pointer;"><span class="dot" style="background:#D4A840;margin-right:4px;"></span>NAP ↕</th>
-            <th onclick="sortTable('sap')" style="cursor:pointer;"><span class="dot" style="background:#3FE088;margin-right:4px;"></span>SAP ↕</th>
-            <th onclick="sortTable('cap')" style="cursor:pointer;"><span class="dot" style="background:#6DA8E0;margin-right:4px;"></span>CAP ↕</th>
-            <th onclick="sortTable('napv2')" style="cursor:pointer;"><span class="dot" style="background:#B06FE0;margin-right:4px;"></span>NAPv2 ↕</th>
-            <th onclick="sortTable('napv3')" style="cursor:pointer;"><span class="dot" style="background:#E06F6F;margin-right:4px;"></span>NAPv3 ↕</th>
-            <th onclick="sortTable('sapv2')" style="cursor:pointer;"><span class="dot" style="background:#E0B06F;margin-right:4px;"></span>SAPv2 ↕</th>
-            <th onclick="sortTable('sapv3')" style="cursor:pointer;"><span class="dot" style="background:#6FE0D4;margin-right:4px;"></span>SAPv3 ↕</th>
-            <th onclick="sortTable('total')" style="cursor:pointer;">Total ↕</th>
-            <th>Result</th>
-          </tr>
-        </thead>
-        <tbody id="dailyTableBody"></tbody>
-      </table>
-    </div>
-    <div class="pagination" id="pagination"></div>
   </div>
 
   <!-- ── CALENDAR VIEW ── -->
-  <div id="calendarView" style="display:none;">
+  <div id="calendarView">
     <div class="cal-header">
       <div class="cal-month-nav">
-        <button class="nav-btn" onclick="calNav(-1)">← Prev</button>
-        <h2 class="cal-title" id="calTitle">—</h2>
-        <button class="nav-btn" onclick="calNav(1)">Next →</button>
+        <button class="nav-btn" onclick="calNav(-1)">&#8592; Prev</button>
+        <h2 class="cal-title" id="calTitle">&mdash;</h2>
+        <button class="nav-btn" onclick="calNav(1)">Next &#8594;</button>
       </div>
     </div>
-    <div class="calendar-wrap">
-      <div class="cal-grid" id="calGrid"></div>
-    </div>
+    <div class="cal-grid" id="calGrid"></div>
   </div>
+  <div style="margin-bottom:2rem;"></div>
 
   <!-- ── SUMMARY STRIP ── -->
-  <p class="section-title">Period Summary — <span id="summaryPeriodLabel">All Time</span></p>
+  <p class="section-title">Period Summary &mdash; <span id="summaryPeriodLabel">All Time</span></p>
   <div class="summary-strip" id="summaryStrip"></div>
 
 </main>
 
 <footer>
-  <p class="disclaimer">Past performance is not indicative of future results. All P&L figures shown are before brokerage, slippage, and taxes. Capital figures used: NAP ₹2.5L, SAP ₹2.5L, CAP ₹5L, NAPv2/v3 ₹2.5L each, SAPv2/v3 ₹2.5L each. This dashboard is for informational purposes only and does not constitute financial advice.</p>
+  <p class="disclaimer">Past performance is not indicative of future results. All P&amp;L figures shown are before brokerage, slippage, and taxes. Capital figures: NAP &#8377;2.5L, SAP &#8377;2.5L, CAP &#8377;5L, NAPv2/v3 &#8377;2.5L each, SAPv2/v3 &#8377;2.5L each. This dashboard is for informational purposes only and does not constitute financial advice.</p>
   <div class="footer-bottom">
-    <span>© 2025 Apex Algos. All rights reserved.</span>
-    <span id="footerUpdated">—</span>
+    <span>&copy; 2025 Apex Algos. All rights reserved.</span>
+    <span id="footerUpdated">&mdash;</span>
   </div>
 </footer>
 
 <script>
-// ── DATA ──
-const RAW = {"updated":"24/03/26","months":["Feb 25","Mar 25","Apr 25","May 25","Jun 25","Jul 25","Aug 25","Sep 25","Oct 25","Nov 25","Dec 25","Jan 26","Feb 26","Mar 26"],"nap_monthly":[21674.0,-13125.0,-2368.0,41408.0,21632.0,3693.0,18159.0,10466.0,3346.0,9246.0,16514.0,24989.0,8327.0,-6673.0],"sap_monthly":[12824.0,2846.0,-15970.0,8268.0,25972.0,16376.0,15001.0,2290.0,4470.0,2548.0,14746.0,13953.0,1332.0,-18867.0],"cap_monthly":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2360.0,0.0],"napv2_monthly":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,54421.0,0.0],"napv3_monthly":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,47050.0,0.0],"sapv2_monthly":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,23776.0,0.0],"sapv3_monthly":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-11495.0,0.0]};
+const DATA = {"updated":"24/03/26","months":["Feb 25","Mar 25","Apr 25","May 25","Jun 25","Jul 25","Aug 25","Sep 25","Oct 25","Nov 25","Dec 25","Jan 26","Feb 26","Mar 26"],"nap_monthly":[21674.0,-13125.0,-2368.0,41408.0,21632.0,3693.0,18159.0,10466.0,3346.0,9246.0,16514.0,24989.0,8327.0,-6673.0],"sap_monthly":[12824.0,2846.0,-15970.0,8268.0,25972.0,16376.0,15001.0,2290.0,4470.0,2548.0,14746.0,13953.0,1332.0,-18867.0],"cap_monthly":[0,0,0,0,0,0,0,0,7810.0,9690.0,5040.0,-20180.0,0.0,0.0],"napv2_monthly":[0,0,0,0,0,0,0,0,9232.0,9137.0,5881.0,30528.0,5558.0,-5915.0],"napv3_monthly":[0,0,0,0,0,0,0,0,12686.0,12699.0,9244.0,17889.0,6380.0,-11848.0],"sapv2_monthly":[0,0,0,0,0,0,0,0,0,5649.0,2426.0,15044.0,4666.0,-4009.0],"sapv3_monthly":[0,0,0,0,0,0,0,0,4367.0,-7757.0,6686.0,2191.0,4851.0,-21833.0],"nap_daily":[-2370.0,2137.0,1541.0,3622.0,-4898.0,5974.0,1973.0,3667.0,3814.0,1988.0,4226.0,506.0,1613.0,-431.0,-6330.0,-1523.0,97.0,-4631.0,-2010.0,-2430.0,-1511.0,-1421.0,-1511.0,3131.0,-4931.0,-4958.0,5411.0,-607.0,2141.0,6270.0,-1849.0,1766.0,5501.0,2366.0,-5134.0,5325.0,-3454.0,2842.0,-1954.0,-4916.0,5550.0,682.0,-4890.0,-221.0,5790.0,345.0,-4852.0,-5265.0,10140.0,2546.0,848.0,0.0,3480.0,6585.0,-5220.0,3787.0,1129.0,-5115.0,2081.0,2797.0,-5160.0,4433.0,7020.0,131.0,405.0,5449.0,12829.0,-4961.0,-1796.0,0.0,7751.0,5138.0,4301.0,-885.0,705.0,3676.0,-135.0,-5306.0,-1842.0,1018.0,4427.0,1776.0,353.0,-2408.0,3217.0,-4890.0,782.0,551.0,1260.0,2143.0,4745.0,-1675.0,-4974.0,2841.0,-185.0,3589.0,1426.0,-5328.0,-1301.0,1810.0,3289.0,155.0,1950.0,1095.0,1508.0,-291.0,-695.0,4088.0,-2734.0,-1575.0,1237.0,-360.0,-4922.0,-1774.0,2509.0,965.0,458.0,5098.0,-3138.0,-1350.0,2614.0,300.0,3476.0,5798.0,3060.0,131.0,-41.0,-502.0,1155.0,660.0,0.0,-2028.0,768.0,-2134.0,880.0,-1606.0,-13.0,1828.0,1133.0,4388.0,2166.0,636.0,135.0,1467.0,1348.0,-1568.0,1286.0,1703.0,2640.0,-5208.0,-1669.0,-830.0,2119.0,1176.0,589.0,1931.0,375.0,-2646.0,834.0,2350.0,-448.0,2768.0,2385.0,-4972.0,-543.0,-1854.0,-5041.0,-4867.0,0.0,3342.0,572.0,3304.0,2703.0,-1320.0,4582.0,-109.0,-53.0,4335.0,0.0,1463.0,308.0,728.0,2729.0,-757.0,-3541.0,-232.0,2419.0,1088.0,-4957.0,1084.0,1331.0,-2490.0,3390.0,491.0,833.0,1077.0,686.0,3168.0,-581.0,546.0,-1497.0,-503.0,1197.0,-4102.0,-2020.0,3094.0,2663.0,4069.0,604.0,934.0,1444.0,1032.0,3634.0,2055.0,1425.0,-475.0,2417.0,-3276.0,1317.0,335.0,828.0,-19.0,-667.0,423.0,-1651.0,958.0,-4866.0,1892.0,0.0,943.0,3198.0,2637.0,5616.0,2116.0,4523.0,5301.0,4455.0,-2350.0,782.0,5012.0,2656.0,2381.0,842.0,1032.0,1762.0,-845.0,1723.0,923.0,-3601.0,-1635.0,-274.0,-5068.0,-2286.0,1401.0,-554.0,3391.0,351.0,334.0,-6085.0,4382.0,-3225.0,-4953.0,1636.0,-5014.0,1551.0,1608.0,3856.0,-720.0,-957.0,-2428.0,-2117.0,703.0,5090.0],"sap_daily":[0,0,0,0,-3694.0,3248.0,2536.0,3960.0,1710.0,255.0,4809.0,-11.0,4726.0,1412.0,-3262.0,-291.0,1310.0,-1867.0,-611.0,340.0,252.0,1645.0,-361.0,1255.0,-5075.0,-3473.0,2034.0,1816.0,-437.0,3444.0,-5166.0,-879.0,1918.0,1506.0,-5286.0,-432.0,-2207.0,4829.0,-1660.0,-5150.0,1573.0,4471.0,-4976.0,-138.0,3298.0,-573.0,-4916.0,-2182.0,3298.0,5882.0,3390.0,0.0,-3213.0,5014.0,-5112.0,-4467.0,2200.0,-5043.0,3482.0,5732.0,-5034.0,1305.0,498.0,958.0,205.0,-7151.0,6557.0,661.0,-894.0,0.0,6524.0,3873.0,1859.0,-323.0,2286.0,5467.0,-25.0,-867.0,1216.0,584.0,5329.0,-2275.0,-1806.0,1753.0,4218.0,-4923.0,707.0,-483.0,2123.0,735.0,6841.0,-458.0,-2528.0,2736.0,963.0,4765.0,1393.0,-900.0,588.0,3241.0,4285.0,242.0,124.0,862.0,216.0,-607.0,-324.0,1867.0,-1943.0,-1036.0,1143.0,-40.0,-5054.0,-2814.0,2107.0,4086.0,-571.0,4862.0,-444.0,-895.0,-1781.0,-1317.0,-690.0,4746.0,645.0,-2796.0,1092.0,297.0,1090.0,5099.0,0.0,802.0,1483.0,-28.0,2646.0,176.0,-939.0,384.0,-1648.0,298.0,2647.0,2949.0,278.0,150.0,-1639.0,140.0,1849.0,-848.0,1089.0,-5134.0,1039.0,421.0,132.0,-1362.0,-310.0,5852.0,-864.0,-1427.0,-494.0,-324.0,-464.0,-2270.0,540.0,-601.0,-927.0,2335.0,-1350.0,-97.0,0.0,764.0,1060.0,283.0,1643.0,-695.0,2890.0,-1384.0,-1550.0,1179.0,0.0,-2242.0,-676.0,638.0,-1928.0,-1874.0,-804.0,1019.0,1257.0,-146.0,-2549.0,3155.0,1524.0,-428.0,4379.0,-1197.0,1687.0,1104.0,113.0,2125.0,709.0,-1487.0,-2511.0,686.0,3143.0,-3123.0,1271.0,1147.0,951.0,2455.0,1427.0,-11.0,1443.0,274.0,1155.0,3106.0,1205.0,345.0,557.0,-234.0,1494.0,-666.0,289.0,3572.0,1917.0,570.0,520.0,875.0,-19.0,2670.0,0.0,1576.0,-1255.0,-2149.0,2903.0,1300.0,2368.0,-1489.0,3054.0,-3577.0,325.0,3135.0,4234.0,2791.0,-246.0,449.0,631.0,757.0,1542.0,-2047.0,-2431.0,-1199.0,-2290.0,-5235.0,-2816.0,1025.0,628.0,2936.0,-27.0,-830.0,-4986.0,718.0,-4895.0,-5378.0,1347.0,-4735.0,-4603.0,-3039.0,56.0,-1173.0,1031.0,3223.0,-2152.0,2244.0,3475.0],"cap_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-2690.0,350.0,2830.0,2910.0,1580.0,1340.0,300.0,930.0,-2470.0,500.0,1530.0,940.0,1340.0,770.0,-2350.0,1950.0,1230.0,50.0,180.0,1240.0,1730.0,760.0,-2490.0,3040.0,2060.0,2870.0,750.0,-2370.0,-2580.0,1120.0,1320.0,-3610.0,1990.0,0.0,450.0,740.0,140.0,1300.0,550.0,-670.0,170.0,720.0,960.0,720.0,1320.0,-2540.0,1980.0,-740.0,330.0,580.0,-910.0,-290.0,-390.0,-1340.0,410.0,1050.0,950.0,-780.0,560.0,440.0,-790.0,-90.0,860.0,-2590.0,910.0,-2640.0,-2330.0,2710.0,-870.0,-830.0,-2510.0,-3710.0,2390.0,-2820.0,-2770.0,-2560.0,-2760.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"napv2_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2775.0,-596.0,3247.0,1226.0,-1399.0,3266.0,713.0,675.0,2441.0,0.0,-1489.0,-2111.0,510.0,4496.0,-3405.0,-3454.0,311.0,2029.0,3772.0,-3623.0,281.0,2366.0,-1410.0,4665.0,-322.0,2149.0,1256.0,105.0,1905.0,-75.0,38.0,-3499.0,-919.0,-3045.0,-3634.0,-3544.0,3082.0,2745.0,1470.0,439.0,2632.0,1950.0,1005.0,2284.0,2509.0,836.0,244.0,2951.0,-3598.0,1063.0,-224.0,1076.0,1976.0,-1082.0,-1358.0,-1245.0,2220.0,-3400.0,2233.0,0.0,468.0,3351.0,2353.0,7030.0,3354.0,3214.0,6214.0,5658.0,-2373.0,1521.0,3247.0,2841.0,2178.0,2652.0,767.0,1852.0,-929.0,1700.0,13.0,-3991.0,-3481.0,1128.0,-3715.0,-2444.0,1982.0,-3452.0,5070.0,608.0,-1989.0,-2876.0,7283.0,-3276.0,-3673.0,140.0,-3776.0,4453.0,-718.0,3273.0,-2355.0,-3442.0,-913.0,-1683.0,-3591.0,5239.0],"napv3_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4466.0,2509.0,3345.0,-3555.0,-165.0,3671.0,2415.0,180.0,2546.0,0.0,4856.0,-3971.0,1560.0,3874.0,-1384.0,-3581.0,2816.0,2618.0,1714.0,-2119.0,-1020.0,2089.0,604.0,2753.0,-409.0,-630.0,203.0,-142.0,1148.0,2096.0,-1297.0,-3563.0,-1804.0,1867.0,-1987.0,-3484.0,2209.0,2655.0,1699.0,840.0,1954.0,1879.0,1939.0,3956.0,1706.0,623.0,60.0,364.0,-3474.0,1316.0,-400.0,0.0,1602.0,-120.0,484.0,-3526.0,-1305.0,-3516.0,2220.0,0.0,1245.0,4563.0,1684.0,7764.0,3133.0,3952.0,-3634.0,3100.0,-673.0,1417.0,5870.0,1534.0,2460.0,2408.0,1917.0,2502.0,-962.0,1609.0,-335.0,-3734.0,-3708.0,683.0,-3438.0,-2980.0,2519.0,-1944.0,5356.0,-3604.0,-1190.0,-4154.0,5905.0,-3117.0,-3315.0,-3309.0,-3442.0,4813.0,582.0,-3595.0,-117.0,-3630.0,-962.0,-546.0,-3406.0,6445.0],"sapv2_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2239.0,2173.0,-1073.0,3990.0,-3522.0,596.0,1246.0,-3072.0,1096.0,650.0,230.0,-3607.0,798.0,2450.0,-3600.0,185.0,1014.0,-61.0,2327.0,314.0,-84.0,321.0,485.0,597.0,3088.0,1196.0,99.0,36.0,-2036.0,2361.0,-404.0,837.0,3260.0,1280.0,614.0,538.0,566.0,95.0,1102.0,0.0,-467.0,-1785.0,-1332.0,2347.0,2297.0,2448.0,844.0,3958.0,-3515.0,1129.0,2733.0,3957.0,2545.0,3098.0,-719.0,2794.0,544.0,1245.0,-1894.0,-3741.0,-1095.0,-1596.0,-3300.0,-2975.0,-249.0,611.0,2488.0,719.0,-1628.0,-3578.0,4145.0,-3488.0,-3554.0,2388.0,-3360.0,-358.0,-3253.0,-3504.0,1427.0,1159.0,3418.0,-3484.0,2877.0,5156.0],"sapv3_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,496.0,635.0,328.0,10.0,204.0,2540.0,154.0,-3520.0,387.0,0.0,-3678.0,-1762.0,90.0,1012.0,338.0,-3480.0,1810.0,1125.0,1061.0,-2574.0,1589.0,2032.0,-939.0,3288.0,-2286.0,-3487.0,1237.0,-2294.0,920.0,1489.0,113.0,-3485.0,801.0,2751.0,-3530.0,2662.0,968.0,461.0,2793.0,696.0,-2296.0,1055.0,165.0,1717.0,1913.0,702.0,-228.0,429.0,-1116.0,1914.0,-1503.0,-145.0,2412.0,1404.0,2513.0,-3639.0,-1766.0,-127.0,-1837.0,0.0,3631.0,222.0,-2615.0,-4234.0,1208.0,2182.0,1881.0,2310.0,-1620.0,1530.0,5094.0,1588.0,1777.0,429.0,-284.0,1923.0,606.0,1881.0,-918.0,-957.0,-230.0,-876.0,-3293.0,-2776.0,1254.0,980.0,928.0,-1923.0,-1882.0,-3490.0,616.0,-4530.0,-3426.0,724.0,-3464.0,-2570.0,-3254.0,-3534.0,2335.0,-4380.0,6007.0,-3499.0,2179.0,-1547.0],"daily_dates":["13/02/25","14/02/25","17/02/25","18/02/25","19/02/25","20/02/25","21/02/25","24/02/25","25/02/25","27/02/25","28/02/25","03/03/25","04/03/25","05/03/25","06/03/25","07/03/25","10/03/25","11/03/25","12/03/25","13/03/25","17/03/25","18/03/25","19/03/25","20/03/25","21/03/25","24/03/25","25/03/25","26/03/25","27/03/25","28/03/25","01/04/25","02/04/25","03/04/25","04/04/25","08/04/25","09/04/25","11/04/25","15/04/25","16/04/25","17/04/25","21/04/25","22/04/25","23/04/25","24/04/25","25/04/25","28/04/25","29/04/25","30/04/25","02/05/25","05/05/25","06/05/25","07/05/25","08/05/25","09/05/25","12/05/25","13/05/25","14/05/25","15/05/25","16/05/25","19/05/25","20/05/25","21/05/25","22/05/25","23/05/25","26/05/25","27/05/25","28/05/25","29/05/25","30/05/25","02/06/25","03/06/25","04/06/25","05/06/25","06/06/25","09/06/25","10/06/25","11/06/25","12/06/25","13/06/25","16/06/25","17/06/25","18/06/25","19/06/25","20/06/25","23/06/25","24/06/25","25/06/25","26/06/25","27/06/25","30/06/25","01/07/25","02/07/25","03/07/25","04/07/25","07/07/25","08/07/25","09/07/25","10/07/25","11/07/25","14/07/25","15/07/25","16/07/25","17/07/25","18/07/25","21/07/25","22/07/25","23/07/25","24/07/25","25/07/25","28/07/25","29/07/25","30/07/25","31/07/25","01/08/25","04/08/25","05/08/25","06/08/25","07/08/25","08/08/25","11/08/25","12/08/25","13/08/25","14/08/25","18/08/25","19/08/25","20/08/25","21/08/25","22/08/25","25/08/25","26/08/25","27/08/25","28/08/25","29/08/25","01/09/25","02/09/25","03/09/25","04/09/25","05/09/25","08/09/25","09/09/25","10/09/25","11/09/25","12/09/25","15/09/25","16/09/25","17/09/25","18/09/25","19/09/25","22/09/25","23/09/25","24/09/25","25/09/25","26/09/25","29/09/25","30/09/25","01/10/25","03/10/25","06/10/25","07/10/25","08/10/25","09/10/25","10/10/25","13/10/25","14/10/25","15/10/25","16/10/25","17/10/25","20/10/25","22/10/25","23/10/25","24/10/25","27/10/25","28/10/25","29/10/25","30/10/25","31/10/25","03/11/25","04/11/25","05/11/25","06/11/25","07/11/25","10/11/25","11/11/25","12/11/25","13/11/25","14/11/25","17/11/25","18/11/25","19/11/25","20/11/25","21/11/25","24/11/25","25/11/25","26/11/25","27/11/25","28/11/25","01/12/25","02/12/25","03/12/25","04/12/25","05/12/25","08/12/25","09/12/25","10/12/25","11/12/25","12/12/25","15/12/25","16/12/25","17/12/25","18/12/25","19/12/25","22/12/25","23/12/25","24/12/25","26/12/25","29/12/25","30/12/25","31/12/25","01/01/26","02/01/26","05/01/26","06/01/26","07/01/26","08/01/26","09/01/26","12/01/26","13/01/26","14/01/26","15/01/26","16/01/26","19/01/26","20/01/26","21/01/26","22/01/26","23/01/26","27/01/26","28/01/26","29/01/26","02/02/26","03/02/26","04/02/26","05/02/26","06/02/26","09/02/26","10/02/26","11/02/26","12/02/26","13/02/26","16/02/26","17/02/26","18/02/26","19/02/26","20/02/26","23/02/26","24/02/26","25/02/26","26/02/26","27/02/26","02/03/26","05/03/26","06/03/26","09/03/26","10/03/26","11/03/26","12/03/26","13/03/26","16/03/26","17/03/26","18/03/26","19/03/26","20/03/26","23/03/26","23/03/26"],"stats":{"nap":{"roi":62.9,"avg_month_roi":5.0,"pnl":157288,"sharpe":2.99,"max_dd":-11.4,"win_rate":61.2,"days":273},"sap":{"roi":34.3,"avg_month_roi":3.2,"pnl":85789,"sharpe":1.96,"max_dd":-15.6,"win_rate":55.7,"days":273},"cap":{"roi":0.5,"avg_month_roi":0.1,"pnl":2360,"sharpe":0.15,"max_dd":-4.2,"win_rate":17.6,"days":76},"napv2":{"roi":21.8,"avg_month_roi":4.8,"pnl":54421,"sharpe":1.86,"max_dd":-8.6,"win_rate":23.1,"days":102},"napv3":{"roi":18.8,"avg_month_roi":4.7,"pnl":47050,"sharpe":1.58,"max_dd":-12.3,"win_rate":21.2,"days":101},"sapv2":{"roi":9.5,"avg_month_roi":2.8,"pnl":23776,"sharpe":1.09,"max_dd":-10.9,"win_rate":19.4,"days":83},"sapv3":{"roi":-4.6,"avg_month_roi":0.8,"pnl":-11495,"sharpe":-0.49,"max_dd":-13.9,"win_rate":22.0,"days":102},"comb":{"roi":48.6,"pnl":243077,"sharpe":2.8,"max_dd":-11.3,"win_rate":58.6}}};
 
-// Real data embedded
-let DATA = {"updated":"24/03/26","months":["Feb 25","Mar 25","Apr 25","May 25","Jun 25","Jul 25","Aug 25","Sep 25","Oct 25","Nov 25","Dec 25","Jan 26","Feb 26","Mar 26"],"nap_monthly":[21674.0,-13125.0,-2368.0,41408.0,21632.0,3693.0,18159.0,10466.0,3346.0,9246.0,16514.0,24989.0,8327.0,-6673.0],"sap_monthly":[12824.0,2846.0,-15970.0,8268.0,25972.0,16376.0,15001.0,2290.0,4470.0,2548.0,14746.0,13953.0,1332.0,-18867.0],"cap_monthly":[0,0,0,0,0,0,0,0,7810.0,9690.0,5040.0,-20180.0,0.0,0.0],"napv2_monthly":[0,0,0,0,0,0,0,0,9232.0,9137.0,5881.0,30528.0,5558.0,-5915.0],"napv3_monthly":[0,0,0,0,0,0,0,0,12686.0,12699.0,9244.0,17889.0,6380.0,-11848.0],"sapv2_monthly":[0,0,0,0,0,0,0,0,0,5649.0,2426.0,15044.0,4666.0,-4009.0],"sapv3_monthly":[0,0,0,0,0,0,0,0,4367.0,-7757.0,6686.0,2191.0,4851.0,-21833.0],"nap_daily":[-2370.0,2137.0,1541.0,3622.0,-4898.0,5974.0,1973.0,3667.0,3814.0,1988.0,4226.0,506.0,1613.0,-431.0,-6330.0,-1523.0,97.0,-4631.0,-2010.0,-2430.0,-1511.0,-1421.0,-1511.0,3131.0,-4931.0,-4958.0,5411.0,-607.0,2141.0,6270.0,-1849.0,1766.0,5501.0,2366.0,-5134.0,5325.0,-3454.0,2842.0,-1954.0,-4916.0,5550.0,682.0,-4890.0,-221.0,5790.0,345.0,-4852.0,-5265.0,10140.0,2546.0,848.0,0.0,3480.0,6585.0,-5220.0,3787.0,1129.0,-5115.0,2081.0,2797.0,-5160.0,4433.0,7020.0,131.0,405.0,5449.0,12829.0,-4961.0,-1796.0,0.0,7751.0,5138.0,4301.0,-885.0,705.0,3676.0,-135.0,-5306.0,-1842.0,1018.0,4427.0,1776.0,353.0,-2408.0,3217.0,-4890.0,782.0,551.0,1260.0,2143.0,4745.0,-1675.0,-4974.0,2841.0,-185.0,3589.0,1426.0,-5328.0,-1301.0,1810.0,3289.0,155.0,1950.0,1095.0,1508.0,-291.0,-695.0,4088.0,-2734.0,-1575.0,1237.0,-360.0,-4922.0,-1774.0,2509.0,965.0,458.0,5098.0,-3138.0,-1350.0,2614.0,300.0,3476.0,5798.0,3060.0,131.0,-41.0,-502.0,1155.0,660.0,0.0,-2028.0,768.0,-2134.0,880.0,-1606.0,-13.0,1828.0,1133.0,4388.0,2166.0,636.0,135.0,1467.0,1348.0,-1568.0,1286.0,1703.0,2640.0,-5208.0,-1669.0,-830.0,2119.0,1176.0,589.0,1931.0,375.0,-2646.0,834.0,2350.0,-448.0,2768.0,2385.0,-4972.0,-543.0,-1854.0,-5041.0,-4867.0,0.0,3342.0,572.0,3304.0,2703.0,-1320.0,4582.0,-109.0,-53.0,4335.0,0.0,1463.0,308.0,728.0,2729.0,-757.0,-3541.0,-232.0,2419.0,1088.0,-4957.0,1084.0,1331.0,-2490.0,3390.0,491.0,833.0,1077.0,686.0,3168.0,-581.0,546.0,-1497.0,-503.0,1197.0,-4102.0,-2020.0,3094.0,2663.0,4069.0,604.0,934.0,1444.0,1032.0,3634.0,2055.0,1425.0,-475.0,2417.0,-3276.0,1317.0,335.0,828.0,-19.0,-667.0,423.0,-1651.0,958.0,-4866.0,1892.0,0.0,943.0,3198.0,2637.0,5616.0,2116.0,4523.0,5301.0,4455.0,-2350.0,782.0,5012.0,2656.0,2381.0,842.0,1032.0,1762.0,-845.0,1723.0,923.0,-3601.0,-1635.0,-274.0,-5068.0,-2286.0,1401.0,-554.0,3391.0,351.0,334.0,-6085.0,4382.0,-3225.0,-4953.0,1636.0,-5014.0,1551.0,1608.0,3856.0,-720.0,-957.0,-2428.0,-2117.0,703.0,5090.0],"sap_daily":[0,0,0,0,-3694.0,3248.0,2536.0,3960.0,1710.0,255.0,4809.0,-11.0,4726.0,1412.0,-3262.0,-291.0,1310.0,-1867.0,-611.0,340.0,252.0,1645.0,-361.0,1255.0,-5075.0,-3473.0,2034.0,1816.0,-437.0,3444.0,-5166.0,-879.0,1918.0,1506.0,-5286.0,-432.0,-2207.0,4829.0,-1660.0,-5150.0,1573.0,4471.0,-4976.0,-138.0,3298.0,-573.0,-4916.0,-2182.0,3298.0,5882.0,3390.0,0.0,-3213.0,5014.0,-5112.0,-4467.0,2200.0,-5043.0,3482.0,5732.0,-5034.0,1305.0,498.0,958.0,205.0,-7151.0,6557.0,661.0,-894.0,0.0,6524.0,3873.0,1859.0,-323.0,2286.0,5467.0,-25.0,-867.0,1216.0,584.0,5329.0,-2275.0,-1806.0,1753.0,4218.0,-4923.0,707.0,-483.0,2123.0,735.0,6841.0,-458.0,-2528.0,2736.0,963.0,4765.0,1393.0,-900.0,588.0,3241.0,4285.0,242.0,124.0,862.0,216.0,-607.0,-324.0,1867.0,-1943.0,-1036.0,1143.0,-40.0,-5054.0,-2814.0,2107.0,4086.0,-571.0,4862.0,-444.0,-895.0,-1781.0,-1317.0,-690.0,4746.0,645.0,-2796.0,1092.0,297.0,1090.0,5099.0,0.0,802.0,1483.0,-28.0,2646.0,176.0,-939.0,384.0,-1648.0,298.0,2647.0,2949.0,278.0,150.0,-1639.0,140.0,1849.0,-848.0,1089.0,-5134.0,1039.0,421.0,132.0,-1362.0,-310.0,5852.0,-864.0,-1427.0,-494.0,-324.0,-464.0,-2270.0,540.0,-601.0,-927.0,2335.0,-1350.0,-97.0,0.0,764.0,1060.0,283.0,1643.0,-695.0,2890.0,-1384.0,-1550.0,1179.0,0.0,-2242.0,-676.0,638.0,-1928.0,-1874.0,-804.0,1019.0,1257.0,-146.0,-2549.0,3155.0,1524.0,-428.0,4379.0,-1197.0,1687.0,1104.0,113.0,2125.0,709.0,-1487.0,-2511.0,686.0,3143.0,-3123.0,1271.0,1147.0,951.0,2455.0,1427.0,-11.0,1443.0,274.0,1155.0,3106.0,1205.0,345.0,557.0,-234.0,1494.0,-666.0,289.0,3572.0,1917.0,570.0,520.0,875.0,-19.0,2670.0,0.0,1576.0,-1255.0,-2149.0,2903.0,1300.0,2368.0,-1489.0,3054.0,-3577.0,325.0,3135.0,4234.0,2791.0,-246.0,449.0,631.0,757.0,1542.0,-2047.0,-2431.0,-1199.0,-2290.0,-5235.0,-2816.0,1025.0,628.0,2936.0,-27.0,-830.0,-4986.0,718.0,-4895.0,-5378.0,1347.0,-4735.0,-4603.0,-3039.0,56.0,-1173.0,1031.0,3223.0,-2152.0,2244.0,3475.0],"cap_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-2690.0,350.0,2830.0,2910.0,1580.0,1340.0,300.0,930.0,-2470.0,500.0,1530.0,940.0,1340.0,770.0,-2350.0,1950.0,1230.0,50.0,180.0,1240.0,1730.0,760.0,-2490.0,3040.0,2060.0,2870.0,750.0,-2370.0,-2580.0,1120.0,1320.0,-3610.0,1990.0,0.0,450.0,740.0,140.0,1300.0,550.0,-670.0,170.0,720.0,960.0,720.0,1320.0,-2540.0,1980.0,-740.0,330.0,580.0,-910.0,-290.0,-390.0,-1340.0,410.0,1050.0,950.0,-780.0,560.0,440.0,-790.0,-90.0,860.0,-2590.0,910.0,-2640.0,-2330.0,2710.0,-870.0,-830.0,-2510.0,-3710.0,2390.0,-2820.0,-2770.0,-2560.0,-2760.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"napv2_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2775.0,-596.0,3247.0,1226.0,-1399.0,3266.0,713.0,675.0,2441.0,0.0,-1489.0,-2111.0,510.0,4496.0,-3405.0,-3454.0,311.0,2029.0,3772.0,-3623.0,281.0,2366.0,-1410.0,4665.0,-322.0,2149.0,1256.0,105.0,1905.0,-75.0,38.0,-3499.0,-919.0,-3045.0,-3634.0,-3544.0,3082.0,2745.0,1470.0,439.0,2632.0,1950.0,1005.0,2284.0,2509.0,836.0,244.0,2951.0,-3598.0,1063.0,-224.0,1076.0,1976.0,-1082.0,-1358.0,-1245.0,2220.0,-3400.0,2233.0,0.0,468.0,3351.0,2353.0,7030.0,3354.0,3214.0,6214.0,5658.0,-2373.0,1521.0,3247.0,2841.0,2178.0,2652.0,767.0,1852.0,-929.0,1700.0,13.0,-3991.0,-3481.0,1128.0,-3715.0,-2444.0,1982.0,-3452.0,5070.0,608.0,-1989.0,-2876.0,7283.0,-3276.0,-3673.0,140.0,-3776.0,4453.0,-718.0,3273.0,-2355.0,-3442.0,-913.0,-1683.0,-3591.0,5239.0],"napv3_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4466.0,2509.0,3345.0,-3555.0,-165.0,3671.0,2415.0,180.0,2546.0,0.0,4856.0,-3971.0,1560.0,3874.0,-1384.0,-3581.0,2816.0,2618.0,1714.0,-2119.0,-1020.0,2089.0,604.0,2753.0,-409.0,-630.0,203.0,-142.0,1148.0,2096.0,-1297.0,-3563.0,-1804.0,1867.0,-1987.0,-3484.0,2209.0,2655.0,1699.0,840.0,1954.0,1879.0,1939.0,3956.0,1706.0,623.0,60.0,364.0,-3474.0,1316.0,-400.0,0.0,1602.0,-120.0,484.0,-3526.0,-1305.0,-3516.0,2220.0,0.0,1245.0,4563.0,1684.0,7764.0,3133.0,3952.0,-3634.0,3100.0,-673.0,1417.0,5870.0,1534.0,2460.0,2408.0,1917.0,2502.0,-962.0,1609.0,-335.0,-3734.0,-3708.0,683.0,-3438.0,-2980.0,2519.0,-1944.0,5356.0,-3604.0,-1190.0,-4154.0,5905.0,-3117.0,-3315.0,-3309.0,-3442.0,4813.0,582.0,-3595.0,-117.0,-3630.0,-962.0,-546.0,-3406.0,6445.0],"sapv2_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2239.0,2173.0,-1073.0,3990.0,-3522.0,596.0,1246.0,-3072.0,1096.0,650.0,230.0,-3607.0,798.0,2450.0,-3600.0,185.0,1014.0,-61.0,2327.0,314.0,-84.0,321.0,485.0,597.0,3088.0,1196.0,99.0,36.0,-2036.0,2361.0,-404.0,837.0,3260.0,1280.0,614.0,538.0,566.0,95.0,1102.0,0.0,-467.0,-1785.0,-1332.0,2347.0,2297.0,2448.0,844.0,3958.0,-3515.0,1129.0,2733.0,3957.0,2545.0,3098.0,-719.0,2794.0,544.0,1245.0,-1894.0,-3741.0,-1095.0,-1596.0,-3300.0,-2975.0,-249.0,611.0,2488.0,719.0,-1628.0,-3578.0,4145.0,-3488.0,-3554.0,2388.0,-3360.0,-358.0,-3253.0,-3504.0,1427.0,1159.0,3418.0,-3484.0,2877.0,5156.0],"sapv3_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,496.0,635.0,328.0,10.0,204.0,2540.0,154.0,-3520.0,387.0,0.0,-3678.0,-1762.0,90.0,1012.0,338.0,-3480.0,1810.0,1125.0,1061.0,-2574.0,1589.0,2032.0,-939.0,3288.0,-2286.0,-3487.0,1237.0,-2294.0,920.0,1489.0,113.0,-3485.0,801.0,2751.0,-3530.0,2662.0,968.0,461.0,2793.0,696.0,-2296.0,1055.0,165.0,1717.0,1913.0,702.0,-228.0,429.0,-1116.0,1914.0,-1503.0,-145.0,2412.0,1404.0,2513.0,-3639.0,-1766.0,-127.0,-1837.0,0.0,3631.0,222.0,-2615.0,-4234.0,1208.0,2182.0,1881.0,2310.0,-1620.0,1530.0,5094.0,1588.0,1777.0,429.0,-284.0,1923.0,606.0,1881.0,-918.0,-957.0,-230.0,-876.0,-3293.0,-2776.0,1254.0,980.0,928.0,-1923.0,-1882.0,-3490.0,616.0,-4530.0,-3426.0,724.0,-3464.0,-2570.0,-3254.0,-3534.0,2335.0,-4380.0,6007.0,-3499.0,2179.0,-1547.0],"daily_dates":["13/02/25","14/02/25","17/02/25","18/02/25","19/02/25","20/02/25","21/02/25","24/02/25","25/02/25","27/02/25","28/02/25","03/03/25","04/03/25","05/03/25","06/03/25","07/03/25","10/03/25","11/03/25","12/03/25","13/03/25","17/03/25","18/03/25","19/03/25","20/03/25","21/03/25","24/03/25","25/03/25","26/03/25","27/03/25","28/03/25","01/04/25","02/04/25","03/04/25","04/04/25","08/04/25","09/04/25","11/04/25","15/04/25","16/04/25","17/04/25","21/04/25","22/04/25","23/04/25","24/04/25","25/04/25","28/04/25","29/04/25","30/04/25","02/05/25","05/05/25","06/05/25","07/05/25","08/05/25","09/05/25","12/05/25","13/05/25","14/05/25","15/05/25","16/05/25","19/05/25","20/05/25","21/05/25","22/05/25","23/05/25","26/05/25","27/05/25","28/05/25","29/05/25","30/05/25","02/06/25","03/06/25","04/06/25","05/06/25","06/06/25","09/06/25","10/06/25","11/06/25","12/06/25","13/06/25","16/06/25","17/06/25","18/06/25","19/06/25","20/06/25","23/06/25","24/06/25","25/06/25","26/06/25","27/06/25","30/06/25","01/07/25","02/07/25","03/07/25","04/07/25","07/07/25","08/07/25","09/07/25","10/07/25","11/07/25","14/07/25","15/07/25","16/07/25","17/07/25","18/07/25","21/07/25","22/07/25","23/07/25","24/07/25","25/07/25","28/07/25","29/07/25","30/07/25","31/07/25","01/08/25","04/08/25","05/08/25","06/08/25","07/08/25","08/08/25","11/08/25","12/08/25","13/08/25","14/08/25","18/08/25","19/08/25","20/08/25","21/08/25","22/08/25","25/08/25","26/08/25","27/08/25","28/08/25","29/08/25","01/09/25","02/09/25","03/09/25","04/09/25","05/09/25","08/09/25","09/09/25","10/09/25","11/09/25","12/09/25","15/09/25","16/09/25","17/09/25","18/09/25","19/09/25","22/09/25","23/09/25","24/09/25","25/09/25","26/09/25","29/09/25","30/09/25","01/10/25","03/10/25","06/10/25","07/10/25","08/10/25","09/10/25","10/10/25","13/10/25","14/10/25","15/10/25","16/10/25","17/10/25","20/10/25","22/10/25","23/10/25","24/10/25","27/10/25","28/10/25","29/10/25","30/10/25","31/10/25","03/11/25","04/11/25","05/11/25","06/11/25","07/11/25","10/11/25","11/11/25","12/11/25","13/11/25","14/11/25","17/11/25","18/11/25","19/11/25","20/11/25","21/11/25","24/11/25","25/11/25","26/11/25","27/11/25","28/11/25","01/12/25","02/12/25","03/12/25","04/12/25","05/12/25","08/12/25","09/12/25","10/12/25","11/12/25","12/12/25","15/12/25","16/12/25","17/12/25","18/12/25","19/12/25","22/12/25","23/12/25","24/12/25","26/12/25","29/12/25","30/12/25","31/12/25","01/01/26","02/01/26","05/01/26","06/01/26","07/01/26","08/01/26","09/01/26","12/01/26","13/01/26","14/01/26","15/01/26","16/01/26","19/01/26","20/01/26","21/01/26","22/01/26","23/01/26","27/01/26","28/01/26","29/01/26","02/02/26","03/02/26","04/02/26","05/02/26","06/02/26","09/02/26","10/02/26","11/02/26","12/02/26","13/02/26","16/02/26","17/02/26","18/02/26","19/02/26","20/02/26","23/02/26","24/02/26","25/02/26","26/02/26","27/02/26","02/03/26","05/03/26","06/03/26","09/03/26","10/03/26","11/03/26","12/03/26","13/03/26","16/03/26","17/03/26","18/03/26","19/03/26","20/03/26","23/03/26","23/03/26"],"stats":{"nap":{"roi":62.9,"avg_month_roi":5.0,"pnl":157288,"sharpe":2.99,"max_dd":-11.4,"win_rate":61.2,"days":273},"sap":{"roi":34.3,"avg_month_roi":3.2,"pnl":85789,"sharpe":1.96,"max_dd":-15.6,"win_rate":55.7,"days":273},"cap":{"roi":0.5,"avg_month_roi":0.1,"pnl":2360,"sharpe":0.15,"max_dd":-4.2,"win_rate":17.6,"days":76},"napv2":{"roi":21.8,"avg_month_roi":4.8,"pnl":54421,"sharpe":1.86,"max_dd":-8.6,"win_rate":23.1,"days":102},"napv3":{"roi":18.8,"avg_month_roi":4.7,"pnl":47050,"sharpe":1.58,"max_dd":-12.3,"win_rate":21.2,"days":101},"sapv2":{"roi":9.5,"avg_month_roi":2.8,"pnl":23776,"sharpe":1.09,"max_dd":-10.9,"win_rate":19.4,"days":83},"sapv3":{"roi":-4.6,"avg_month_roi":0.8,"pnl":-11495,"sharpe":-0.49,"max_dd":-13.9,"win_rate":22.0,"days":102},"comb":{"roi":48.6,"pnl":243077,"sharpe":2.8,"max_dd":-11.3,"win_rate":58.6}}};
-const STRAT_COLORS = {
-  nap:   '#D4A840', sap:   '#3FE088', cap:   '#6DA8E0',
-  napv2: '#B06FE0', napv3: '#E06F6F', sapv2: '#E0B06F', sapv3: '#6FE0D4'
-};
+const STRAT_COLORS = { nap:'#D4A840', sap:'#3FE088', cap:'#6DA8E0', napv2:'#B06FE0', napv3:'#E06F6F', sapv2:'#E0B06F', sapv3:'#6FE0D4' };
 const STRATS = ['nap','sap','cap','napv2','napv3','sapv2','sapv3'];
 const STRAT_LABELS = { nap:'NAP', sap:'SAP', cap:'CAP', napv2:'NAPv2', napv3:'NAPv3', sapv2:'SAPv2', sapv3:'SAPv3' };
+const STRAT_FULL = { nap:'NAP Strategy', sap:'SAP Strategy', cap:'CAP Strategy', napv2:'NAPv2 Strategy', napv3:'NAPv3 Strategy', sapv2:'SAPv2 Strategy', sapv3:'SAPv3 Strategy' };
+const CAPITALS = { nap:250000, sap:250000, cap:500000, napv2:250000, napv3:250000, sapv2:250000, sapv3:250000 };
 
-let currentStrat = 'all';
 let currentRange = 'all';
 let currentDateIdx = 0;
-let displayView = 'table';
-let sortKey = 'date';
-let sortAsc = false;
-let currentPage = 1;
-const PAGE_SIZE = 30;
 let calMonthOffset = 0;
+let bdSortKey = 'name';
+let bdSortAsc = true;
+let charts = {};
 
 // ── THEME ──
 function toggleTheme() {
@@ -376,64 +373,26 @@ function toggleTheme() {
   reRenderCharts();
 }
 
-// ── DATA LOAD ──
-async function loadData() {
-  // DATA is already embedded above
-  init();
-}
-
-function buildSampleData() {
-  // Use the real data embedded
-  const d = {"updated":"24/03/26"};
-  // Inject data from Python output
-  d.daily_dates = [];
-  d.nap_daily = []; d.sap_daily = []; d.cap_daily = [];
-  d.napv2_daily = []; d.napv3_daily = []; d.sapv2_daily = []; d.sapv3_daily = [];
-  d.stats = {"nap":{"roi":62.9,"avg_month_roi":5.0,"pnl":157288,"sharpe":2.99,"max_dd":-11.4,"win_rate":61.2,"days":273},"sap":{"roi":34.3,"avg_month_roi":3.2,"pnl":85789,"sharpe":1.96,"max_dd":-15.6,"win_rate":55.7,"days":273},"cap":{"roi":0.5,"avg_month_roi":0.1,"pnl":2360,"sharpe":0.15,"max_dd":-4.2,"win_rate":17.6,"days":76},"napv2":{"roi":21.8,"avg_month_roi":4.8,"pnl":54421,"sharpe":1.86,"max_dd":-8.6,"win_rate":23.1,"days":102},"napv3":{"roi":18.8,"avg_month_roi":4.7,"pnl":47050,"sharpe":1.58,"max_dd":-12.3,"win_rate":21.2,"days":101},"sapv2":{"roi":9.5,"avg_month_roi":2.8,"pnl":23776,"sharpe":1.09,"max_dd":-10.9,"win_rate":19.4,"days":83},"sapv3":{"roi":-4.6,"avg_month_roi":0.8,"pnl":-11495,"sharpe":-0.49,"max_dd":-13.9,"win_rate":22.0,"days":102},"comb":{"roi":48.6,"pnl":243077,"sharpe":2.8,"max_dd":-11.3,"win_rate":58.6}};
-  return d;
-}
-
-function init() {
-  const today = DATA.daily_dates ? DATA.daily_dates[DATA.daily_dates.length - 1] : '--';
-  document.getElementById('updatedTag').textContent = 'Last updated: ' + (DATA.updated || today);
-  document.getElementById('footerUpdated').textContent = 'Data as of ' + (DATA.updated || today);
-  document.getElementById('liveBadge').textContent = 'LIVE · ' + (DATA.updated || '—');
-  currentDateIdx = DATA.daily_dates ? DATA.daily_dates.length - 1 : 0;
-  updateDateNav();
-  renderTodayBanner();
-  renderRollingStats();
-  renderCharts();
-  renderTable();
-  renderHeatmap();
-  renderSummaryStrip();
-}
-
 // ── HELPERS ──
 function fmt(v, showPlus=true) {
   if (v === 0 || v === null || v === undefined) return '—';
-  const s = Math.abs(v) >= 1000 ? (Math.abs(v)/1000).toFixed(1)+'k' : Math.abs(v).toFixed(0);
-  if (v > 0) return (showPlus?'+':'') + '₹' + s;
-  return '-₹' + s;
+  const abs = Math.abs(v);
+  const s = abs >= 100000 ? (abs/100000).toFixed(2)+'L' : abs >= 1000 ? (abs/1000).toFixed(1)+'k' : abs.toFixed(0);
+  return (v > 0 ? (showPlus?'+':'') : '-') + '₹' + s;
 }
-function fmtFull(v) {
-  if (v === 0 || v === null) return '—';
+function fmtIN(v) {
+  if (v === 0 || v === null || v === undefined) return '—';
   const sign = v > 0 ? '+' : '-';
   return sign + '₹' + Math.abs(v).toLocaleString('en-IN');
 }
-function pctClass(v) {
-  if (!v || v === 0) return 'td-zero';
-  return v > 0 ? 'td-pos' : 'td-neg';
+function pct(v, cap) { return ((v / cap) * 100).toFixed(2); }
+function parseDate(str) {
+  const [d,m,y] = str.split('/');
+  return new Date(2000+parseInt(y), parseInt(m)-1, parseInt(d));
 }
-function badge(v) {
-  if (!v || v === 0) return '<span class="td-badge-na">—</span>';
-  if (v > 0) return `<span class="td-badge-pos">${fmt(v)}</span>`;
-  return `<span class="td-badge-neg">${fmt(v)}</span>`;
-}
-
 function getFilteredIndices() {
-  if (!DATA.daily_dates) return [];
   const now = new Date();
-  return DATA.daily_dates.map((d,i) => ({d, i})).filter(({d}) => {
+  return DATA.daily_dates.map((d,i) => ({d,i})).filter(({d}) => {
     const dt = parseDate(d);
     if (currentRange === 'ytd') return dt.getFullYear() === now.getFullYear();
     if (currentRange === '6m') return dt >= new Date(now - 180*86400000);
@@ -442,495 +401,370 @@ function getFilteredIndices() {
     return true;
   }).map(x => x.i);
 }
+function getAllTotal(i) { return STRATS.reduce((s,k) => s+(DATA[k+'_daily']?.[i]||0), 0); }
+function getRangeLabel() { return {all:'All Time',ytd:'Year-to-Date','6m':'Last 6 Months','3m':'Last 3 Months','1m':'Last Month'}[currentRange]; }
 
-function parseDate(str) {
-  const [d,m,y] = str.split('/');
-  return new Date(2000+parseInt(y), parseInt(m)-1, parseInt(d));
+// ── INIT ──
+function init() {
+  const last = DATA.daily_dates.length - 1;
+  currentDateIdx = last;
+  document.getElementById('updatedTag').textContent = 'Last updated: ' + DATA.updated;
+  document.getElementById('footerUpdated').textContent = 'Data as of ' + DATA.updated;
+  document.getElementById('liveBadge').textContent = 'LIVE · ' + DATA.updated;
+  document.getElementById('bdDatePill').textContent = DATA.daily_dates[last];
+  updateDateNav();
+  renderBreakdownTable();
+  renderTodayBanner();
+  renderRollingStats();
+  renderCharts();
+  renderHeatmap();
+  renderCalendar();
+  renderSummaryStrip();
 }
 
-function getDayTotal(i) {
-  const strats = currentStrat === 'all' ? STRATS : [currentStrat];
-  return strats.reduce((s, k) => s + (DATA[k+'_daily']?.[i] || 0), 0);
+// ══════════════════════════════════
+//  STRATEGY BREAKDOWN TABLE
+// ══════════════════════════════════
+function getMonthlyPnl(k) {
+  // Use DATA monthly arrays for the current (last) month
+  const lastMonthIdx = DATA.months.length - 1;
+  return DATA[k + '_monthly']?.[lastMonthIdx] || 0;
+}
+function getYearlyPnl(k) {
+  // Sum all months of current year
+  const now = new Date();
+  let sum = 0;
+  DATA.months.forEach((m, i) => {
+    const parts = m.split(' ');
+    const yr = 2000 + parseInt(parts[1]);
+    if (yr === now.getFullYear()) sum += DATA[k+'_monthly']?.[i] || 0;
+  });
+  return sum;
+}
+function getTodayPnl(k) {
+  return DATA[k+'_daily']?.[DATA.daily_dates.length - 1] || 0;
 }
 
-function getAllTotal(i) {
-  return STRATS.reduce((s, k) => s + (DATA[k+'_daily']?.[i] || 0), 0);
+function pnlPill(v, cap) {
+  if (v === 0) return '<span class="pnl-pill zero"><span class="pnl-amount">—</span><span class="pnl-pct">—</span></span>';
+  const cls = v > 0 ? 'pos' : 'neg';
+  const sign = v > 0 ? '+' : '-';
+  const abs = Math.abs(v);
+  const amtStr = sign + '₹' + abs.toLocaleString('en-IN');
+  const pctStr = '(' + (v > 0 ? '+' : '') + pct(v, cap) + '%)';
+  return `<span class="pnl-pill ${cls}"><span class="pnl-amount">${amtStr}</span><span class="pnl-pct">${pctStr}</span></span>`;
 }
+
+function ddCell(dd, maxDd) {
+  if (dd === 0 && maxDd === 0) return '<span class="dd-zero">—</span>';
+  const barPct = Math.min(100, Math.abs(dd) / Math.max(Math.abs(maxDd), 0.01) * 100);
+  return `<div class="dd-cell">
+    <div class="dd-pct">${dd.toFixed(2)}%</div>
+    <div class="dd-max">max: ${maxDd.toFixed(2)}%</div>
+    <div class="dd-bar-bg"><div class="dd-bar-fill" style="width:${barPct}%"></div></div>
+  </div>`;
+}
+
+let bdRows = [];
+
+function buildBdRows() {
+  bdRows = STRATS.map(k => {
+    const cap = CAPITALS[k];
+    const today = getTodayPnl(k);
+    const monthly = getMonthlyPnl(k);
+    const yearly = getYearlyPnl(k);
+    const dd = DATA.stats[k]?.max_dd || 0;
+    // Current drawdown: approximate from stats
+    const maxDd = dd;
+    // Running drawdown: use the actual current drawdown (use max_dd from stats as proxy)
+    return { k, cap, today, monthly, yearly, dd: maxDd, maxDd };
+  });
+}
+
+function renderBreakdownTable(filter='') {
+  buildBdRows();
+  let rows = [...bdRows];
+  if (filter) rows = rows.filter(r => STRAT_LABELS[r.k].toLowerCase().includes(filter.toLowerCase()) || STRAT_FULL[r.k].toLowerCase().includes(filter.toLowerCase()));
+
+  // Sort
+  rows.sort((a, b) => {
+    let va, vb;
+    if (bdSortKey === 'name') { va = STRAT_LABELS[a.k]; vb = STRAT_LABELS[b.k]; return bdSortAsc ? va.localeCompare(vb) : vb.localeCompare(va); }
+    if (bdSortKey === 'capital') { va = a.cap; vb = b.cap; }
+    if (bdSortKey === 'today') { va = a.today; vb = b.today; }
+    if (bdSortKey === 'monthly') { va = a.monthly; vb = b.monthly; }
+    if (bdSortKey === 'yearly') { va = a.yearly; vb = b.yearly; }
+    if (bdSortKey === 'drawdown') { va = a.dd; vb = b.dd; }
+    return bdSortAsc ? va - vb : vb - va;
+  });
+
+  // Totals
+  const totalCap = STRATS.reduce((s,k) => s + CAPITALS[k], 0);
+  const totalToday = rows.reduce((s,r) => s + r.today, 0);
+  const totalMonthly = rows.reduce((s,r) => s + r.monthly, 0);
+  const totalYearly = rows.reduce((s,r) => s + r.yearly, 0);
+
+  const tbody = document.getElementById('bdBody');
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td><div class="strat-name-cell"><span class="dot" style="background:${STRAT_COLORS[r.k]}"></span><span class="strat-name-text">${STRAT_FULL[r.k]}</span></div></td>
+      <td><span class="cap-cell">₹${r.cap.toLocaleString('en-IN')}</span></td>
+      <td>${pnlPill(r.today, r.cap)}</td>
+      <td>${pnlPill(r.monthly, r.cap)}</td>
+      <td>${pnlPill(r.yearly, r.cap)}</td>
+      <td>${ddCell(r.dd, r.maxDd)}</td>
+    </tr>
+  `).join('') + `
+    <tr class="total-row">
+      <td><div class="strat-name-cell"><span style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;">TOTAL / AVERAGE</span></div></td>
+      <td><span class="cap-cell" style="font-weight:700;">₹${totalCap.toLocaleString('en-IN')}</span></td>
+      <td>${pnlPill(totalToday, totalCap)}</td>
+      <td>${pnlPill(totalMonthly, totalCap)}</td>
+      <td>${pnlPill(totalYearly, totalCap)}</td>
+      <td><span class="dd-zero">—</span></td>
+    </tr>
+  `;
+
+  // Update sort indicators
+  ['name','capital','today','monthly','yearly','drawdown'].forEach(k => {
+    const el = document.getElementById('th-'+k);
+    if (el) { el.classList.toggle('sorted', bdSortKey === k); el.textContent = el.textContent.replace(' ↑','').replace(' ↓',''); if (bdSortKey === k) el.textContent += bdSortAsc ? ' ↑' : ' ↓'; }
+  });
+}
+
+function sortBd(key) {
+  if (bdSortKey === key) bdSortAsc = !bdSortAsc;
+  else { bdSortKey = key; bdSortAsc = key === 'name'; }
+  renderBreakdownTable(document.getElementById('searchInput').value);
+}
+
+function filterBreakdown() {
+  renderBreakdownTable(document.getElementById('searchInput').value);
+}
+
+function exportCSV() {
+  buildBdRows();
+  const headers = ['Strategy','Capital','Today PNL','Today ROI%','Monthly PNL','Monthly ROI%','Yearly PNL','Yearly ROI%','Drawdown%'];
+  const lines = [headers.join(',')];
+  bdRows.forEach(r => {
+    lines.push([
+      STRAT_FULL[r.k], r.cap,
+      r.today.toFixed(0), pct(r.today, r.cap),
+      r.monthly.toFixed(0), pct(r.monthly, r.cap),
+      r.yearly.toFixed(0), pct(r.yearly, r.cap),
+      r.dd.toFixed(2)
+    ].join(','));
+  });
+  const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'apex_strategy_breakdown.csv'; a.click();
+}
+
+function exportExcel() { exportCSV(); } // simplified — same CSV for now
 
 // ── DATE NAV ──
 function updateDateNav() {
-  if (!DATA.daily_dates || !DATA.daily_dates.length) return;
-  const d = DATA.daily_dates[currentDateIdx];
-  document.getElementById('dateLabel').textContent = d;
+  document.getElementById('dateLabel').textContent = DATA.daily_dates[currentDateIdx];
 }
-
 function navDate(dir) {
-  if (!DATA.daily_dates) return;
-  currentDateIdx = Math.max(0, Math.min(DATA.daily_dates.length-1, currentDateIdx + dir));
-  updateDateNav();
-  renderTodayBanner();
-  renderStratPie();
+  currentDateIdx = Math.max(0, Math.min(DATA.daily_dates.length-1, currentDateIdx+dir));
+  updateDateNav(); renderTodayBanner(); renderStratPie();
 }
-
 function navToday() {
-  if (!DATA.daily_dates) return;
   currentDateIdx = DATA.daily_dates.length - 1;
-  updateDateNav();
-  renderTodayBanner();
-  renderStratPie();
+  updateDateNav(); renderTodayBanner(); renderStratPie();
 }
 
 // ── TODAY BANNER ──
 function renderTodayBanner() {
-  if (!DATA.daily_dates) return;
   const idx = currentDateIdx;
   const d = DATA.daily_dates[idx];
   const dt = parseDate(d);
-  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  document.getElementById('bannerDate').textContent = `${dt.getDate()} ${months[dt.getMonth()]} 20${d.split('/')[2]}`;
-  document.getElementById('bannerDay').textContent = days[dt.getDay()] + ' · Trading Day #' + (idx+1);
-
-  const totals = [];
-  const activeStrats = currentStrat === 'all' ? STRATS : [currentStrat];
-  let grandTotal = 0;
-  activeStrats.forEach(k => {
+  const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('bannerDate').textContent = `${dt.getDate()} ${MONTHS[dt.getMonth()]} 20${d.split('/')[2]}`;
+  document.getElementById('bannerDay').textContent = DAYS[dt.getDay()] + ' · Trading Day #' + (idx+1);
+  let grand = 0;
+  const parts = [];
+  STRATS.forEach(k => {
     const v = DATA[k+'_daily']?.[idx] || 0;
     if (v !== 0) {
-      grandTotal += v;
-      totals.push(`<div class="today-total-item">
-        <div class="today-total-label"><span class="dot" style="background:${STRAT_COLORS[k]}"></span>${STRAT_LABELS[k]}</div>
-        <div class="today-total-val ${v>0?'td-pos':'td-neg'}">${fmtFull(v)}</div>
-      </div>`);
+      grand += v;
+      parts.push(`<div class="today-total-item"><div class="today-total-lbl"><span class="dot" style="background:${STRAT_COLORS[k]};margin-right:4px;"></span>${STRAT_LABELS[k]}</div><div class="today-total-val ${v>0?'td-pos':'td-neg'}">${fmtIN(v)}</div></div>`);
     }
   });
-  totals.unshift(`<div class="today-total-item">
-    <div class="today-total-label">Combined P&L</div>
-    <div class="today-total-val ${grandTotal>0?'td-pos':grandTotal<0?'td-neg':''}">${fmtFull(grandTotal)}</div>
-  </div>`);
-  document.getElementById('bannerTotals').innerHTML = totals.join('');
+  parts.unshift(`<div class="today-total-item"><div class="today-total-lbl">Combined P&L</div><div class="today-total-val ${grand>0?'td-pos':grand<0?'td-neg':''}">${fmtIN(grand)}</div></div>`);
+  document.getElementById('bannerTotals').innerHTML = parts.join('');
 }
 
 // ── ROLLING STATS ──
 function renderRollingStats() {
   const idxs = getFilteredIndices();
-  if (!idxs.length) return;
-  const totals = idxs.map(i => getDayTotal(i));
+  const totals = idxs.map(i => getAllTotal(i));
   const sum = totals.reduce((a,b)=>a+b,0);
   const wins = totals.filter(v=>v>0).length;
   const losses = totals.filter(v=>v<0).length;
   const wr = totals.length ? (wins/totals.length*100).toFixed(1) : 0;
-  // Streak
-  let streak = 0;
-  for (let i = totals.length-1; i >= 0; i--) {
-    if (totals[i] === 0) continue;
-    const sign = totals[i] > 0 ? 1 : -1;
-    if (streak === 0) streak = sign;
-    if (Math.sign(totals[i]) !== Math.sign(streak)) break;
-    streak += sign;
-  }
-  const streakCount = Math.abs(streak);
-  const streakType = streak >= 0 ? 'WIN' : 'LOSS';
-  // Avg daily
-  const activeDays = totals.filter(v=>v!==0);
-  const avgDay = activeDays.length ? (activeDays.reduce((a,b)=>a+b,0)/activeDays.length).toFixed(0) : 0;
-  // Best/worst
+  const active = totals.filter(v=>v!==0);
+  const avg = active.length ? (active.reduce((a,b)=>a+b,0)/active.length).toFixed(0) : 0;
   const best = Math.max(...totals);
   const worst = Math.min(...totals);
-
+  let streak = 0;
+  for (let i = totals.length-1; i>=0; i--) {
+    if (!totals[i]) continue;
+    if (!streak) streak = totals[i]>0?1:-1;
+    else if (Math.sign(totals[i]) !== Math.sign(streak)) break;
+    else streak += Math.sign(streak);
+  }
   document.getElementById('rollingPeriodLabel').textContent = getRangeLabel();
   document.getElementById('rollingGrid').innerHTML = `
-    <div class="roll-cell"><div class="roll-label">Total P&L</div><div class="roll-val ${sum>0?'td-pos':'td-neg'}">${fmtFull(sum)}</div><div class="roll-sub">${idxs.length} trading days</div></div>
+    <div class="roll-cell"><div class="roll-label">Total P&amp;L</div><div class="roll-val ${sum>0?'td-pos':'td-neg'}">${fmtIN(sum)}</div><div class="roll-sub">${idxs.length} trading days</div></div>
     <div class="roll-cell"><div class="roll-label">Win Rate</div><div class="roll-val ${parseFloat(wr)>=50?'td-pos':'td-neg'}">${wr}%</div><div class="roll-sub">${wins}W / ${losses}L</div></div>
-    <div class="roll-cell"><div class="roll-label">Avg Daily P&L</div><div class="roll-val ${avgDay>0?'td-pos':avgDay<0?'td-neg':''}">${fmtFull(parseFloat(avgDay))}</div><div class="roll-sub">Active days only</div></div>
-    <div class="roll-cell"><div class="roll-label">Current Streak</div><div class="roll-val ${streakType==='WIN'?'td-pos':'td-neg'}">${streakCount}× ${streakType}</div><div class="roll-sub">Best: ${fmt(best)} / Worst: ${fmt(worst)}</div></div>
+    <div class="roll-cell"><div class="roll-label">Avg Daily P&amp;L</div><div class="roll-val ${avg>0?'td-pos':avg<0?'td-neg':''}">${fmtIN(parseFloat(avg))}</div><div class="roll-sub">Active days only</div></div>
+    <div class="roll-cell"><div class="roll-label">Current Streak</div><div class="roll-val ${streak>=0?'td-pos':'td-neg'}">${Math.abs(streak)}&times; ${streak>=0?'WIN':'LOSS'}</div><div class="roll-sub">Best: ${fmt(best)} / Worst: ${fmt(worst)}</div></div>
   `;
 }
 
-function getRangeLabel() {
-  return {all:'All Time', ytd:'Year-to-Date', '6m':'Last 6 Months', '3m':'Last 3 Months', '1m':'Last Month'}[currentRange];
-}
-
 // ── CHARTS ──
-let charts = {};
-
 function chartDefaults() {
-  const isLight = document.documentElement.classList.contains('light');
-  return {
-    grid: isLight ? 'rgba(24,20,12,0.07)' : 'rgba(237,230,214,0.07)',
-    text: isLight ? 'rgba(24,20,12,0.6)' : 'rgba(237,230,214,0.6)',
-  };
+  const L = document.documentElement.classList.contains('light');
+  return { grid: L?'rgba(24,20,12,0.07)':'rgba(237,230,214,0.07)', text: L?'rgba(24,20,12,0.6)':'rgba(237,230,214,0.6)' };
 }
-
-function renderCharts() {
-  renderCumulChart();
-  renderDailyBarChart();
-  renderStratPie();
-}
-
-function reRenderCharts() {
-  Object.values(charts).forEach(c => c.destroy());
-  charts = {};
-  renderCharts();
-}
+function renderCharts() { renderCumulChart(); renderDailyBarChart(); renderStratPie(); }
+function reRenderCharts() { Object.values(charts).forEach(c=>c.destroy()); charts={}; renderCharts(); }
 
 function renderCumulChart() {
-  if (!DATA.daily_dates) return;
   const idxs = getFilteredIndices();
   const labels = idxs.map(i => DATA.daily_dates[i]);
   const cd = chartDefaults();
-
-  // Build cumulative per strategy
-  const datasets = [];
-  const activeStrats = currentStrat === 'all' ? STRATS : [currentStrat];
-  activeStrats.forEach(k => {
+  const datasets = STRATS.map(k => {
     let cum = 0;
-    const vals = idxs.map(i => {
-      cum += DATA[k+'_daily']?.[i] || 0;
-      return cum;
-    });
-    if (vals.some(v => v !== 0)) {
-      datasets.push({
-        label: STRAT_LABELS[k],
-        data: vals,
-        borderColor: STRAT_COLORS[k],
-        backgroundColor: 'transparent',
-        borderWidth: 1.5,
-        pointRadius: 0,
-        tension: 0.3,
-      });
-    }
-  });
-
+    const vals = idxs.map(i => { cum += DATA[k+'_daily']?.[i]||0; return cum; });
+    if (!vals.some(v=>v!==0)) return null;
+    return { label:STRAT_LABELS[k], data:vals, borderColor:STRAT_COLORS[k], backgroundColor:'transparent', borderWidth:1.5, pointRadius:0, tension:0.3 };
+  }).filter(Boolean);
   if (charts.cumul) charts.cumul.destroy();
-  const ctx = document.getElementById('cumulChart').getContext('2d');
-  charts.cumul = new Chart(ctx, {
-    type: 'line',
-    data: { labels, datasets },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: { labels: { color: cd.text, font: { family: 'DM Mono', size: 10 }, boxWidth: 12 } },
-        tooltip: {
-          backgroundColor: '#1A1710',
-          titleColor: '#EDE6D6', bodyColor: '#C8B89A',
-          borderColor: '#252118', borderWidth: 1,
-          callbacks: {
-            label: ctx => ` ${ctx.dataset.label}: ₹${ctx.parsed.y.toLocaleString('en-IN')}`
-          }
-        }
-      },
-      scales: {
-        x: { ticks: { color: cd.text, font: {size:9, family:'DM Mono'}, maxTicksLimit: 8 }, grid: { color: cd.grid } },
-        y: { ticks: { color: cd.text, font: {size:9, family:'DM Mono'}, callback: v => '₹'+(v>=1000?v/1000+'k':v) }, grid: { color: cd.grid } }
-      }
+  charts.cumul = new Chart(document.getElementById('cumulChart').getContext('2d'), {
+    type:'line', data:{labels,datasets},
+    options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
+      plugins:{ legend:{labels:{color:cd.text,font:{family:'DM Mono',size:10},boxWidth:12}}, tooltip:{backgroundColor:'#1A1710',titleColor:'#EDE6D6',bodyColor:'#C8B89A',borderColor:'#252118',borderWidth:1,callbacks:{label:c=>` ${c.dataset.label}: ₹${c.parsed.y.toLocaleString('en-IN')}`}}},
+      scales:{ x:{ticks:{color:cd.text,font:{size:9,family:'DM Mono'},maxTicksLimit:8},grid:{color:cd.grid}}, y:{ticks:{color:cd.text,font:{size:9,family:'DM Mono'},callback:v=>'₹'+(Math.abs(v)>=1000?(v/1000).toFixed(0)+'k':v)},grid:{color:cd.grid}} }
     }
   });
 }
 
 function renderDailyBarChart() {
-  if (!DATA.daily_dates) return;
-  const idxs = getFilteredIndices().slice(-60); // last 60 days for readability
+  const idxs = getFilteredIndices().slice(-60);
   const labels = idxs.map(i => DATA.daily_dates[i]);
-  const totals = idxs.map(i => getDayTotal(i));
+  const totals = idxs.map(i => getAllTotal(i));
   const cd = chartDefaults();
-
   if (charts.bar) charts.bar.destroy();
-  const ctx = document.getElementById('dailyBarChart').getContext('2d');
-  charts.bar = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{
-        label: 'Daily P&L',
-        data: totals,
-        backgroundColor: totals.map(v => v >= 0 ? 'rgba(63,224,136,0.6)' : 'rgba(240,112,112,0.6)'),
-        borderColor: totals.map(v => v >= 0 ? '#3FE088' : '#F07070'),
-        borderWidth: 1,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#1A1710', titleColor: '#EDE6D6', bodyColor: '#C8B89A',
-          borderColor: '#252118', borderWidth: 1,
-          callbacks: { label: ctx => ` ₹${ctx.parsed.y.toLocaleString('en-IN')}` }
-        }
-      },
-      scales: {
-        x: { ticks: { color: cd.text, font:{size:8,family:'DM Mono'}, maxTicksLimit:8 }, grid: { color: cd.grid } },
-        y: { ticks: { color: cd.text, font:{size:9,family:'DM Mono'}, callback: v => '₹'+(Math.abs(v)>=1000?(v/1000).toFixed(1)+'k':v) }, grid: { color: cd.grid } }
-      }
+  charts.bar = new Chart(document.getElementById('dailyBarChart').getContext('2d'), {
+    type:'bar', data:{labels,datasets:[{label:'Daily P&L',data:totals,backgroundColor:totals.map(v=>v>=0?'rgba(63,224,136,0.6)':'rgba(240,112,112,0.6)'),borderColor:totals.map(v=>v>=0?'#3FE088':'#F07070'),borderWidth:1}]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'#1A1710',titleColor:'#EDE6D6',bodyColor:'#C8B89A',borderColor:'#252118',borderWidth:1,callbacks:{label:c=>` ₹${c.parsed.y.toLocaleString('en-IN')}`}}},
+      scales:{x:{ticks:{color:cd.text,font:{size:8,family:'DM Mono'},maxTicksLimit:8},grid:{color:cd.grid}},y:{ticks:{color:cd.text,font:{size:9,family:'DM Mono'},callback:v=>'₹'+(Math.abs(v)>=1000?(v/1000).toFixed(1)+'k':v)},grid:{color:cd.grid}}}
     }
   });
 }
 
 function renderStratPie() {
-  if (!DATA.daily_dates) return;
   const idx = currentDateIdx;
-  const vals = STRATS.map(k => DATA[k+'_daily']?.[idx] || 0);
-  const active = STRATS.filter((_,i) => vals[i] !== 0);
-  const activeVals = active.map(k => DATA[k+'_daily']?.[idx] || 0);
+  document.getElementById('pieDate').textContent = DATA.daily_dates[idx];
+  const active = STRATS.filter(k => DATA[k+'_daily']?.[idx] !== 0);
   const cd = chartDefaults();
-
   if (charts.pie) charts.pie.destroy();
-  const ctx = document.getElementById('stratPieChart').getContext('2d');
-
-  if (!active.length) {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    return;
-  }
-
-  charts.pie = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: active.map(k => STRAT_LABELS[k]),
-      datasets: [{
-        data: activeVals.map(v => Math.abs(v)),
-        backgroundColor: active.map(k => STRAT_COLORS[k] + 'CC'),
-        borderColor: active.map(k => STRAT_COLORS[k]),
-        borderWidth: 1,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { position: 'right', labels: { color: cd.text, font:{size:10,family:'DM Mono'}, boxWidth:10 } },
-        tooltip: {
-          backgroundColor: '#1A1710', titleColor: '#EDE6D6', bodyColor: '#C8B89A',
-          borderColor: '#252118', borderWidth: 1,
-          callbacks: { label: ctx => ` ${ctx.label}: ₹${ctx.parsed.toLocaleString('en-IN')}` }
-        }
-      }
+  if (!active.length) return;
+  charts.pie = new Chart(document.getElementById('stratPieChart').getContext('2d'), {
+    type:'doughnut',
+    data:{ labels:active.map(k=>STRAT_LABELS[k]), datasets:[{data:active.map(k=>Math.abs(DATA[k+'_daily']?.[idx]||0)),backgroundColor:active.map(k=>STRAT_COLORS[k]+'CC'),borderColor:active.map(k=>STRAT_COLORS[k]),borderWidth:1}] },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'right',labels:{color:cd.text,font:{size:10,family:'DM Mono'},boxWidth:10}},tooltip:{backgroundColor:'#1A1710',titleColor:'#EDE6D6',bodyColor:'#C8B89A',borderColor:'#252118',borderWidth:1,callbacks:{label:c=>` ${c.label}: ₹${c.parsed.toLocaleString('en-IN')}`}}}
     }
   });
-}
-
-// ── TABLE ──
-let tableData = [];
-
-function renderTable() {
-  if (!DATA.daily_dates) return;
-  const idxs = getFilteredIndices();
-  tableData = idxs.map(i => {
-    const row = { date: DATA.daily_dates[i], _idx: i };
-    STRATS.forEach(k => row[k] = DATA[k+'_daily']?.[i] || 0);
-    row.total = STRATS.reduce((s,k) => s + row[k], 0);
-    return row;
-  });
-
-  // Filter by strat if needed
-  if (currentStrat !== 'all') {
-    tableData = tableData.filter(r => r[currentStrat] !== 0);
-  }
-
-  // Sort
-  tableData.sort((a, b) => {
-    let va = sortKey === 'date' ? parseDate(a.date) : a[sortKey];
-    let vb = sortKey === 'date' ? parseDate(b.date) : b[sortKey];
-    return sortAsc ? va - vb : vb - va;
-  });
-
-  const totalPages = Math.ceil(tableData.length / PAGE_SIZE);
-  if (currentPage > totalPages) currentPage = 1;
-  const page = tableData.slice((currentPage-1)*PAGE_SIZE, currentPage*PAGE_SIZE);
-
-  const lastIdx = DATA.daily_dates.length - 1;
-  const tbody = document.getElementById('dailyTableBody');
-  tbody.innerHTML = page.map(r => {
-    const isToday = r._idx === lastIdx;
-    const cells = STRATS.map(k => {
-      const v = r[k];
-      if (v === 0) return `<td class="td-zero">—</td>`;
-      return `<td class="${pctClass(v)}">${fmtFull(v)}</td>`;
-    }).join('');
-    return `<tr class="${isToday?'today-row':''}" onclick="selectDate(${r._idx})">
-      <td>${r.date}${isToday?' <span style="font-size:0.52rem;color:var(--accent);margin-left:4px;">TODAY</span>':''}</td>
-      ${cells}
-      <td class="${pctClass(r.total)}">${fmtFull(r.total)}</td>
-      <td>${badge(r.total)}</td>
-    </tr>`;
-  }).join('');
-
-  document.getElementById('tableRangeLabel').textContent = `${tableData.length} records`;
-  renderPagination(totalPages);
-}
-
-function selectDate(idx) {
-  currentDateIdx = idx;
-  updateDateNav();
-  renderTodayBanner();
-  renderStratPie();
-}
-
-function renderPagination(totalPages) {
-  const pg = document.getElementById('pagination');
-  if (totalPages <= 1) { pg.innerHTML = ''; return; }
-  let html = `<span class="page-info">Page ${currentPage} of ${totalPages}</span>`;
-  if (currentPage > 1) html += `<button class="page-btn" onclick="goPage(${currentPage-1})">←</button>`;
-  const start = Math.max(1, currentPage-2), end = Math.min(totalPages, currentPage+2);
-  for (let i = start; i <= end; i++) html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
-  if (currentPage < totalPages) html += `<button class="page-btn" onclick="goPage(${currentPage+1})">→</button>`;
-  pg.innerHTML = html;
-}
-function goPage(n) { currentPage = n; renderTable(); }
-
-function sortTable(key) {
-  if (sortKey === key) sortAsc = !sortAsc;
-  else { sortKey = key; sortAsc = false; }
-  currentPage = 1;
-  renderTable();
 }
 
 // ── HEATMAP ──
 function renderHeatmap() {
-  if (!DATA.daily_dates) return;
   const bar = document.getElementById('heatBar');
   bar.innerHTML = '';
-  DATA.daily_dates.forEach((d, i) => {
+  DATA.daily_dates.forEach((d,i) => {
     const total = getAllTotal(i);
-    let bg;
-    if (total > 10000) bg = 'rgba(63,224,136,0.9)';
-    else if (total > 5000) bg = 'rgba(63,224,136,0.65)';
-    else if (total > 0) bg = 'rgba(63,224,136,0.35)';
-    else if (total < -10000) bg = 'rgba(240,112,112,0.9)';
-    else if (total < -5000) bg = 'rgba(240,112,112,0.65)';
-    else if (total < 0) bg = 'rgba(240,112,112,0.35)';
-    else bg = 'var(--surface2)';
+    const bg = total>10000?'rgba(63,224,136,0.9)':total>5000?'rgba(63,224,136,0.65)':total>0?'rgba(63,224,136,0.35)':total<-10000?'rgba(240,112,112,0.9)':total<-5000?'rgba(240,112,112,0.65)':total<0?'rgba(240,112,112,0.35)':'var(--surface2)';
     const el = document.createElement('div');
-    el.className = 'heat-day';
-    el.style.background = bg;
-    el.setAttribute('data-tip', `${d}: ${fmtFull(total)}`);
-    el.onclick = () => { selectDate(i); navToDate(i); };
+    el.className='heat-day'; el.style.background=bg;
+    el.setAttribute('data-tip', `${d}: ${fmtIN(total)}`);
+    el.onclick = () => { currentDateIdx=i; updateDateNav(); renderTodayBanner(); renderStratPie(); };
     bar.appendChild(el);
   });
 }
 
-function navToDate(idx) {
-  currentDateIdx = idx;
-  updateDateNav();
-}
-
 // ── CALENDAR ──
 function renderCalendar() {
-  if (!DATA.daily_dates) return;
-  const today = new Date();
-  const refDate = new Date(today.getFullYear(), today.getMonth() + calMonthOffset, 1);
-  const year = refDate.getFullYear();
-  const month = refDate.getMonth();
-  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('calTitle').textContent = `${months[month]} ${year}`;
-
-  // Build lookup
+  const now = new Date();
+  const refDate = new Date(now.getFullYear(), now.getMonth()+calMonthOffset, 1);
+  const y = refDate.getFullYear(), m = refDate.getMonth();
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calTitle').textContent = `${MONTHS[m]} ${y}`;
   const lookup = {};
-  DATA.daily_dates.forEach((d,i) => {
-    const dt = parseDate(d);
-    if (dt.getFullYear() === year && dt.getMonth() === month) {
-      lookup[dt.getDate()] = i;
-    }
-  });
-
+  DATA.daily_dates.forEach((d,i) => { const dt=parseDate(d); if(dt.getFullYear()===y&&dt.getMonth()===m) lookup[dt.getDate()]=i; });
   const grid = document.getElementById('calGrid');
   grid.innerHTML = '';
-  // Days of week header
-  ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(d => {
-    grid.innerHTML += `<div class="cal-dow">${d}</div>`;
-  });
-
-  const firstDay = new Date(year, month, 1).getDay();
-  const offset = firstDay === 0 ? 6 : firstDay - 1;
-  const daysInMonth = new Date(year, month+1, 0).getDate();
-  const now = new Date();
-
-  for (let e = 0; e < offset; e++) grid.innerHTML += '<div class="cal-day empty"></div>';
-
-  for (let day = 1; day <= daysInMonth; day++) {
+  ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(d => grid.innerHTML+=`<div class="cal-dow">${d}</div>`);
+  const firstDay = new Date(y,m,1).getDay();
+  const offset = firstDay===0?6:firstDay-1;
+  const daysInMonth = new Date(y,m+1,0).getDate();
+  for(let e=0;e<offset;e++) grid.innerHTML+='<div class="cal-day empty"></div>';
+  for(let day=1;day<=daysInMonth;day++){
     const i = lookup[day];
-    const isToday = now.getFullYear()===year && now.getMonth()===month && now.getDate()===day;
-    if (i !== undefined) {
-      const total = getDayTotal(i);
-      const color = total > 0 ? 'var(--pos)' : total < 0 ? 'var(--neg)' : 'var(--muted)';
-      const strats = STRATS.filter(k => DATA[k+'_daily']?.[i] !== 0);
-      const stratDots = strats.map(k => `<span class="dot" style="background:${STRAT_COLORS[k]};width:5px;height:5px;"></span>`).join('');
-      grid.innerHTML += `<div class="cal-day ${isToday?'today-cal':''}" onclick="selectDate(${i}); updateDateNav(); renderTodayBanner();">
+    const isToday = now.getFullYear()===y&&now.getMonth()===m&&now.getDate()===day;
+    if(i!==undefined){
+      const total=getAllTotal(i);
+      const color=total>0?'var(--pos)':total<0?'var(--neg)':'var(--muted)';
+      grid.innerHTML+=`<div class="cal-day ${isToday?'today-cal':''}" onclick="currentDateIdx=${i};updateDateNav();renderTodayBanner();renderStratPie();">
         <div class="cal-day-num">${day}</div>
         <div class="cal-day-pnl" style="color:${color}">${fmt(total,false)}</div>
-        <div class="cal-day-strats">${stratDots}</div>
       </div>`;
     } else {
-      grid.innerHTML += `<div class="cal-day ${isToday?'today-cal':''}" style="opacity:0.4;">
-        <div class="cal-day-num">${day}</div>
-      </div>`;
+      grid.innerHTML+=`<div class="cal-day ${isToday?'today-cal':''}" style="opacity:0.35;"><div class="cal-day-num">${day}</div></div>`;
     }
   }
 }
-
-function calNav(dir) {
-  calMonthOffset += dir;
-  renderCalendar();
-}
+function calNav(dir) { calMonthOffset+=dir; renderCalendar(); }
 
 // ── SUMMARY STRIP ──
 function renderSummaryStrip() {
-  if (!DATA.daily_dates) return;
   const idxs = getFilteredIndices();
-  const totals = idxs.map(i => getAllTotal(i));
+  const totals = idxs.map(i=>getAllTotal(i));
   const sum = totals.reduce((a,b)=>a+b,0);
-  const best = Math.max(...totals);
-  const worst = Math.min(...totals);
   const wins = totals.filter(v=>v>0).length;
-  const wr = totals.length ? (wins/totals.length*100).toFixed(1) : 0;
-  const activeDays = totals.filter(v=>v!==0);
-  const avg = activeDays.length ? activeDays.reduce((a,b)=>a+b,0)/activeDays.length : 0;
-
+  const wr = totals.length?(wins/totals.length*100).toFixed(1):0;
+  const active = totals.filter(v=>v!==0);
+  const avg = active.length?(active.reduce((a,b)=>a+b,0)/active.length):0;
+  const best=Math.max(...totals), worst=Math.min(...totals);
   document.getElementById('summaryPeriodLabel').textContent = getRangeLabel();
   document.getElementById('summaryStrip').innerHTML = [
-    { label:'Total P&L', val: fmtFull(sum), cls: sum>0?'td-pos':'td-neg' },
-    { label:'Trading Days', val: idxs.length, cls:'' },
-    { label:'Win Rate', val: wr+'%', cls: parseFloat(wr)>=50?'td-pos':'td-neg' },
-    { label:'Avg Daily P&L', val: fmtFull(Math.round(avg)), cls: avg>0?'td-pos':'td-neg' },
-    { label:'Best Day', val: fmtFull(best), cls:'td-pos' },
-    { label:'Worst Day', val: fmtFull(worst), cls:'td-neg' },
-  ].map(({label,val,cls}) => `<div class="sum-cell"><div class="sum-label">${label}</div><div class="sum-val ${cls}">${val}</div></div>`).join('');
+    {label:'Total P&L',val:fmtIN(sum),cls:sum>0?'td-pos':'td-neg'},
+    {label:'Trading Days',val:idxs.length,cls:''},
+    {label:'Win Rate',val:wr+'%',cls:parseFloat(wr)>=50?'td-pos':'td-neg'},
+    {label:'Avg Daily P&L',val:fmtIN(Math.round(avg)),cls:avg>0?'td-pos':'td-neg'},
+    {label:'Best Day',val:fmtIN(best),cls:'td-pos'},
+    {label:'Worst Day',val:fmtIN(worst),cls:'td-neg'},
+  ].map(({label,val,cls})=>`<div class="sum-cell"><div class="sum-label">${label}</div><div class="sum-val ${cls}">${val}</div></div>`).join('');
 }
 
 // ── CONTROLS ──
 function setRange(r, btn) {
-  currentRange = r;
-  document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
+  currentRange=r;
+  document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  currentPage = 1;
-  renderRollingStats();
-  renderCharts();
-  renderTable();
-  renderSummaryStrip();
+  renderRollingStats(); renderCharts(); renderSummaryStrip();
 }
-
-function setStrat(s, btn) {
-  currentStrat = s;
-  document.querySelectorAll('.strat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentPage = 1;
-  renderTodayBanner();
-  renderRollingStats();
-  renderCharts();
-  renderTable();
-  renderSummaryStrip();
-}
-
 function setDisplayView(v, btn) {
-  displayView = v;
-  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('tableView').style.display = v === 'table' ? 'block' : 'none';
-  document.getElementById('calendarView').style.display = v === 'calendar' ? 'block' : 'none';
-  if (v === 'calendar') renderCalendar();
 }
 
-loadData();
+init();
 </script>
 </body>
 </html>
