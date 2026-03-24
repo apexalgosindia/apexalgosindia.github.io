@@ -442,7 +442,7 @@ function getYearlyPnl(k) {
   return sum;
 }
 function getTodayPnl(k) {
-  return DATA[k+'_daily']?.[DATA.daily_dates.length] || 0;
+  return DATA[k+'_daily']?.[DATA.daily_dates.length-1] || 0;
 }
 
 function pnlPill(v, cap) {
