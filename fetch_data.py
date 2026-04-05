@@ -38,8 +38,8 @@ STRATEGIES = [
     # ── Hedged strategies (DAILY P&L HEDGED tab) ───────────────────────────
     # Add your hedged strategies below — set col to the correct column index.
     # Example (update col/label/capital/color/visible to match your sheet):
-    {'key':'naph',  'label':'NAP-H',  'capital':250_000, 'col':1,  'sheet':'DAILY P&L HEDGED', 'color':'#A0E06F', 'visible':True},
-    {'key':'saph',  'label':'SAP-H',  'capital':250_000, 'col':4,  'sheet':'DAILY P&L HEDGED', 'color':'#E06FB0', 'visible':True},
+    {'key':'naph',  'label':'NAP-H',  'capital':150_000, 'col':1,  'sheet':'DAILY P&L HEDGED', 'color':'#A0E06F', 'visible':True},
+    {'key':'saph',  'label':'SAP-H',  'capital':150_000, 'col':4,  'sheet':'DAILY P&L HEDGED', 'color':'#E06FB0', 'visible':True},
 ]
 # ══════════════════════════════════════════════════════════════════════════════
 
