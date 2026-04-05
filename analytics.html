@@ -305,14 +305,7 @@
     </div>
   </div>
 
-  <!-- ── TODAY BANNER ── -->
-  <div class="today-banner">
-    <div>
-      <div class="today-date-label" id="bannerDate">&mdash;</div>
-      <div class="today-day-sub" id="bannerDay">&mdash;</div>
-    </div>
-    <div class="today-totals" id="bannerTotals"></div>
-  </div>
+
 
   <!-- ── ROLLING STATS ── -->
   <p class="section-title">Rolling Performance &mdash; <span id="rollingPeriodLabel">All Time</span></p>
@@ -653,8 +646,7 @@ function renderTodayBanner() {
   const dt = parseDate(d);
   const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  document.getElementById('bannerDate').textContent = `${dt.getDate()} ${MONTHS[dt.getMonth()]} 20${d.split('/')[2]}`;
-  document.getElementById('bannerDay').textContent = DAYS[dt.getDay()] + ' · Trading Day #' + (idx+1);
+
   let grand = 0;
   const parts = [];
   STRATS.forEach(k => {
@@ -665,7 +657,7 @@ function renderTodayBanner() {
     }
   });
   parts.unshift(`<div class="today-total-item"><div class="today-total-lbl">Combined P&L</div><div class="today-total-val ${grand>0?'td-pos':grand<0?'td-neg':''}">${fmtIN(grand)}</div></div>`);
-  document.getElementById('bannerTotals').innerHTML = parts.join('');
+
 
   // ── Compact strip above the breakdown table ──
   const strip = document.getElementById('bdTodayStrip');
