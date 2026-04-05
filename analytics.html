@@ -497,8 +497,11 @@ function getStratCat(k) {
   return (loadStratConfig()[k]?.category) || 'nfo';
 }
 function getStratVisible(k) {
-  const v = loadStratConfig()[k]?.visible;
-  return v === undefined ? true : v;
+  const cfg = loadStratConfig();
+  if (cfg[k] && cfg[k].visible !== undefined) return cfg[k].visible;
+  // Fall back to the value baked into data.json by fetch_data.py
+  const def_ = DATA.strategies?.find(s => s.key === k);
+  return def_ ? (def_.visible !== false) : true;
 }
 
 // Active category filter for the breakdown table
@@ -739,6 +742,7 @@ function buildBdRows() {
   bdRows = STRATS.filter(k => {
     const cat = cfg[k]?.category || 'nfo';
     if (activeCatFilter !== 'all' && cat !== activeCatFilter) return false;
+    if (!getStratVisible(k)) return false;   // respect visible flag
     return true;
   }).map(k => {
     const cap = CAPITALS[k];
