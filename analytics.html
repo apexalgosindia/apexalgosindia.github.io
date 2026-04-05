@@ -137,7 +137,19 @@
     .dd-zero { color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.72rem; }
 
     /* ── TODAY BANNER ── */
-    .today-banner { background: var(--surface); border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 1rem 1.5rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .bd-today-strip { background: linear-gradient(100deg, rgba(212,168,64,0.07) 0%, rgba(30,28,22,0.0) 45%, rgba(63,224,136,0.05) 100%), var(--surface); border: 1px solid var(--rule); border-bottom: none; border-left: 3px solid var(--accent); padding: 0.8rem 1.5rem; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .bd-today-strip .strip-date { display: flex; flex-direction: column; gap: 0.1rem; }
+    .bd-today-strip .strip-date-main { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 600; color: var(--cream); letter-spacing: 0.02em; }
+    .bd-today-strip .strip-date-sub { font-family: 'Inter', sans-serif; font-size: 0.55rem; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
+    .bd-today-strip .strip-totals { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; }
+    .bd-today-strip .strip-item { display: flex; flex-direction: column; align-items: flex-end; gap: 0.05rem; }
+    .bd-today-strip .strip-item-label { font-family: 'Inter', sans-serif; font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .bd-today-strip .strip-item-val { font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 700; }
+    .bd-today-strip .strip-item-val.pos { color: var(--pos); }
+    .bd-today-strip .strip-item-val.neg { color: var(--neg); }
+    .bd-today-strip .strip-item-val.combined { font-size: 1rem; }
+    .bd-today-strip .strip-divider { width: 1px; height: 28px; background: var(--rule); flex-shrink: 0; }
+    
     .today-date-label { font-family: 'Inter', sans-serif; font-size: 1.1rem; color: var(--cream); }
     .today-day-sub { font-family: 'Inter', sans-serif; font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; margin-top: 0.15rem; }
     .today-totals { display: flex; gap: 2rem; flex-wrap: wrap; }
@@ -242,6 +254,8 @@
       <button class="export-btn" onclick="exportCSV()">&#8595; Export CSV</button>
       <button class="export-btn" onclick="exportExcel()">&#8595; Export Excel</button>
     </div>
+
+    <div class="bd-today-strip" id="bdTodayStrip"></div>
 
     <div class="bd-header">
       <div class="bd-header-left">
@@ -652,6 +666,27 @@ function renderTodayBanner() {
   });
   parts.unshift(`<div class="today-total-item"><div class="today-total-lbl">Combined P&L</div><div class="today-total-val ${grand>0?'td-pos':grand<0?'td-neg':''}">${fmtIN(grand)}</div></div>`);
   document.getElementById('bannerTotals').innerHTML = parts.join('');
+
+  // ── Compact strip above the breakdown table ──
+  const strip = document.getElementById('bdTodayStrip');
+  if (strip) {
+    const dateStr = `${dt.getDate()} ${MONTHS[dt.getMonth()]} 20${d.split('/')[2]}`;
+    const dayStr = DAYS[dt.getDay()] + ' · Trading Day #' + (idx+1);
+    let stripParts = `<div class="strip-date"><div class="strip-date-main">${dateStr}</div><div class="strip-date-sub">${dayStr}</div></div>`;
+    stripParts += `<div class="strip-divider"></div>`;
+    stripParts += `<div class="strip-totals">`;
+    const grandCls = grand > 0 ? 'pos' : grand < 0 ? 'neg' : '';
+    stripParts += `<div class="strip-item"><div class="strip-item-label">Combined P&L</div><div class="strip-item-val combined ${grandCls}">${fmtIN(grand)}</div></div>`;
+    STRATS.forEach(k => {
+      const v = DATA[k+'_daily']?.[idx] || 0;
+      if (v !== 0) {
+        const cls = v > 0 ? 'pos' : 'neg';
+        stripParts += `<div class="strip-item"><div class="strip-item-label"><span class="dot" style="background:${STRAT_COLORS[k]};margin-right:3px;width:6px;height:6px;"></span>${STRAT_LABELS[k]}</div><div class="strip-item-val ${cls}">${fmtIN(v)}</div></div>`;
+      }
+    });
+    stripParts += `</div>`;
+    strip.innerHTML = stripParts;
+  }
 }
 
 // ── ROLLING STATS ──
