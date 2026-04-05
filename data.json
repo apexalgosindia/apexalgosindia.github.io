@@ -7,7 +7,11 @@
       "capital": 250000,
       "color": "#D4A840",
       "visible": true,
-      "sheet": "DAILY P&L"
+      "sheet": "DAILY P&L",
+      "tradetron_id": "7324677",
+      "share_code": "d404a9df-c1de-49e5-a6e4-c431a7a34c37",
+      "subtitle": "Nifty Intraday Selling",
+      "sl": 5000
     },
     {
       "key": "sap",
@@ -15,7 +19,11 @@
       "capital": 250000,
       "color": "#3FE088",
       "visible": true,
-      "sheet": "DAILY P&L"
+      "sheet": "DAILY P&L",
+      "tradetron_id": "7324685",
+      "share_code": "5e606810-edce-46e3-bd89-f1ded1f6f4f6",
+      "subtitle": "Sensex Intraday Selling",
+      "sl": 5000
     },
     {
       "key": "cap",
@@ -23,7 +31,11 @@
       "capital": 500000,
       "color": "#B06FE0",
       "visible": true,
-      "sheet": "DAILY P&L"
+      "sheet": "DAILY P&L",
+      "tradetron_id": "",
+      "share_code": "",
+      "subtitle": "Combined Auto Portfolio",
+      "sl": 0
     },
     {
       "key": "napv2",
@@ -31,7 +43,11 @@
       "capital": 250000,
       "color": "#E06F6F",
       "visible": true,
-      "sheet": "DAILY P&L"
+      "sheet": "DAILY P&L",
+      "tradetron_id": "7803165",
+      "share_code": "f10c10c5-3bbf-415f-8aee-a59e56a01856",
+      "subtitle": "Nifty Intraday Selling",
+      "sl": 3500
     },
     {
       "key": "napv3",
@@ -39,7 +55,11 @@
       "capital": 250000,
       "color": "#E0B06F",
       "visible": true,
-      "sheet": "DAILY P&L"
+      "sheet": "DAILY P&L",
+      "tradetron_id": "8678425",
+      "share_code": "98a1a981-2594-415a-9dd8-b39cdfa571e9",
+      "subtitle": "Nifty Intraday Selling",
+      "sl": 3500
     },
     {
       "key": "sapv2",
@@ -47,7 +67,11 @@
       "capital": 250000,
       "color": "#6FE0D4",
       "visible": true,
-      "sheet": "DAILY P&L"
+      "sheet": "DAILY P&L",
+      "tradetron_id": "8838677",
+      "share_code": "e906d9cf-8076-4958-800b-e02a5967ef98",
+      "subtitle": "Sensex Intraday Selling",
+      "sl": 3500
     },
     {
       "key": "sapv3",
@@ -55,7 +79,11 @@
       "capital": 250000,
       "color": "#6F9FE0",
       "visible": true,
-      "sheet": "DAILY P&L"
+      "sheet": "DAILY P&L",
+      "tradetron_id": "8680369",
+      "share_code": "a2a10dfa-3c31-47d9-b720-e183681ebc5f",
+      "subtitle": "Sensex Intraday Selling",
+      "sl": 3500
     },
     {
       "key": "naph",
@@ -63,7 +91,11 @@
       "capital": 150000,
       "color": "#A0E06F",
       "visible": true,
-      "sheet": "DAILY P&L HEDGED"
+      "sheet": "DAILY P&L HEDGED",
+      "tradetron_id": "7286441",
+      "share_code": "65ad2c9c-0ceb-4076-932f-5430d14b4530",
+      "subtitle": "Nifty Intraday Selling \u2014 Hedged",
+      "sl": 3500
     },
     {
       "key": "saph",
@@ -71,7 +103,11 @@
       "capital": 150000,
       "color": "#E06FB0",
       "visible": true,
-      "sheet": "DAILY P&L HEDGED"
+      "sheet": "DAILY P&L HEDGED",
+      "tradetron_id": "7324673",
+      "share_code": "YOUR-SAPH-SHARE-CODE",
+      "subtitle": "Sensex Intraday Selling \u2014 Hedged",
+      "sl": 3500
     }
   ],
   "months": [
