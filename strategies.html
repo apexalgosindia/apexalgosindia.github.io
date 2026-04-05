@@ -1189,8 +1189,11 @@
       const subSecNfoH    = document.getElementById('sub-section-nfo-hedged');
       const subSecMcxH    = document.getElementById('sub-section-mcx-hedged');
 
-      // Clear all grids first (re-grouping on each refresh)
-      [gridNfo, gridNfoHedged, gridMcx, gridMcxHedged].forEach(g => { if (g) g.innerHTML = ''; });
+      // Move all cards back to pool first, then clear grids
+      [gridNfo, gridNfoHedged, gridMcx, gridMcxHedged].forEach(g => {
+        if (!g) return;
+        Array.from(g.querySelectorAll('.strat-card')).forEach(c => pool.appendChild(c));
+      });
 
       const cards = Array.from(pool.querySelectorAll('.strat-card'));
 
