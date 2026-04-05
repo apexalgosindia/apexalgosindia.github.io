@@ -366,12 +366,41 @@ def build_data():
     return data
 
 
+def inject_data_into_html(data, html_files=None):
+    """Inject const DATA = {...} into HTML files that have inline data."""
+    import re
+    if html_files is None:
+        html_files = ['analytics.html', 'index.html']
+    data_str = json.dumps(data, separators=(',', ':'))
+    for fname in html_files:
+        try:
+            with open(fname, 'r', encoding='utf-8') as f:
+                html = f.read()
+            if 'const DATA = {' not in html:
+                print(f"   ⚠  {fname}: no inline DATA found, skipping.")
+                continue
+            new_html = re.sub(
+                r'const DATA = \{.*?\};',
+                lambda m: f'const DATA = {data_str};',
+                html,
+                flags=re.DOTALL
+            )
+            with open(fname, 'w', encoding='utf-8') as f:
+                f.write(new_html)
+            print(f"   ✓ {fname}: const DATA injected.")
+        except FileNotFoundError:
+            print(f"   ⚠  {fname}: file not found, skipping.")
+        except Exception as e:
+            print(f"   ✗ {fname}: {e}")
+
 if __name__ == '__main__':
     try:
         data = build_data()
         with open('data.json', 'w') as f:
             json.dump(data, f, indent=2)
         print(f"\n✓ data.json written successfully!")
+        print(f"\nInjecting inline DATA into HTML files...")
+        inject_data_into_html(data)
     except Exception as e:
         print(f"\n✗ Error: {e}", file=sys.stderr)
         import traceback; traceback.print_exc()
