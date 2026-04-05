@@ -6,7 +6,7 @@
   <title>Apex Algos — Daily P&L Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@300;400;500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,39 +26,39 @@
       --chart-grid: rgba(24,20,12,0.06); --chart-text: rgba(24,20,12,0.65);
       --pos: #1F7A38; --neg: #B03030; --pos-bg: rgba(31,122,56,0.1); --neg-bg: rgba(176,48,48,0.1);
     }
-    body { background: var(--ink); color: var(--cream); font-family: 'Jost', sans-serif; font-size: 15px; line-height: 1.65; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    body { background: var(--ink); color: var(--cream); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.65; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
     nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 2.5rem; background: var(--nav-bg); backdrop-filter: blur(20px); border-bottom: 1px solid var(--rule); }
-    .nav-logo { font-family: 'DM Mono', monospace; font-size: 1rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cream); text-decoration: none; }
+    .nav-logo { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cream); text-decoration: none; }
     .nav-logo span { color: var(--accent); }
     .nav-links { display: flex; gap: 2rem; list-style: none; }
     .nav-links a { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
     .nav-links a:hover, .nav-links a.active { color: var(--cream); }
     .nav-right { display: flex; align-items: center; gap: 0.75rem; }
-    .live-badge { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.12em; background: rgba(63,224,136,0.1); border: 1px solid rgba(63,224,136,0.3); color: #7EC8A0; padding: 0.3rem 0.75rem; }
-    .theme-btn { background: transparent; border: 1px solid var(--rule); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; padding: 0.35rem 0.8rem; cursor: pointer; transition: all 0.2s; }
+    .live-badge { font-family: 'Inter', sans-serif; font-size: 0.6rem; letter-spacing: 0.12em; background: rgba(63,224,136,0.1); border: 1px solid rgba(63,224,136,0.3); color: #7EC8A0; padding: 0.3rem 0.75rem; }
+    .theme-btn { background: transparent; border: 1px solid var(--rule); color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.62rem; letter-spacing: 0.1em; padding: 0.35rem 0.8rem; cursor: pointer; transition: all 0.2s; }
     .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
 
     main { max-width: 1380px; margin: 0 auto; padding: 88px 2rem 5rem; }
-    .page-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.7rem; }
-    .page-title { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem, 3vw, 2.5rem); font-weight: 400; color: var(--cream); margin-bottom: 0.4rem; }
+    .page-eyebrow { font-family: 'Inter', sans-serif; font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.7rem; }
+    .page-title { font-family: 'Inter', sans-serif; font-size: clamp(1.7rem, 3vw, 2.5rem); font-weight: 400; color: var(--cream); margin-bottom: 0.4rem; }
     .page-subtitle { font-size: 0.88rem; color: var(--muted); max-width: 56ch; margin-bottom: 1.5rem; line-height: 1.7; }
-    .updated-tag { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 1.5rem; }
-    .section-title { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; margin-top: 0.5rem; }
+    .updated-tag { font-family: 'Inter', sans-serif; font-size: 0.58rem; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 1.5rem; }
+    .section-title { font-family: 'Inter', sans-serif; font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; margin-top: 0.5rem; }
     .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
     /* ── CONTROLS ── */
     .top-controls { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--rule); padding-bottom: 1.25rem; }
-    .nav-btn { background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.65rem; padding: 0.38rem 0.7rem; cursor: pointer; transition: all 0.18s; }
+    .nav-btn { background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.65rem; padding: 0.38rem 0.7rem; cursor: pointer; transition: all 0.18s; }
     .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
     .nav-btn.active-today { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
-    .date-label { font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; color: var(--cream); min-width: 120px; text-align: center; background: var(--surface); border: 1px solid var(--rule); padding: 0.38rem 0.6rem; }
+    .date-label { font-family: 'Inter', sans-serif; font-size: 0.72rem; letter-spacing: 0.08em; color: var(--cream); min-width: 120px; text-align: center; background: var(--surface); border: 1px solid var(--rule); padding: 0.38rem 0.6rem; }
     .range-group { display: flex; gap: 0; }
-    .range-btn { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.08em; background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); padding: 0.38rem 0.85rem; cursor: pointer; margin-right: -1px; transition: all 0.18s; }
+    .range-btn { font-family: 'Inter', sans-serif; font-size: 0.6rem; letter-spacing: 0.08em; background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); padding: 0.38rem 0.85rem; cursor: pointer; margin-right: -1px; transition: all 0.18s; }
     .range-btn:hover { color: var(--cream); border-color: var(--accent-dim); z-index:1; }
     .range-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); z-index: 2; }
     .view-toggle { display: flex; gap: 0; }
-    .view-btn { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.08em; background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); padding: 0.35rem 0.8rem; cursor: pointer; margin-right: -1px; transition: all 0.15s; }
+    .view-btn { font-family: 'Inter', sans-serif; font-size: 0.58rem; letter-spacing: 0.08em; background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); padding: 0.35rem 0.8rem; cursor: pointer; margin-right: -1px; transition: all 0.15s; }
     .view-btn:hover { color: var(--cream); }
     .view-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); z-index: 1; }
     .date-nav { display: flex; align-items: center; gap: 0.4rem; margin-left: auto; }
@@ -69,26 +69,26 @@
     .breakdown-wrap { margin-bottom: 2.5rem; }
     .breakdown-toolbar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
     .search-box { position: relative; flex: 1; min-width: 200px; max-width: 320px; }
-    .search-box input { width: 100%; background: var(--surface); border: 1px solid var(--rule); color: var(--cream); font-family: 'DM Mono', monospace; font-size: 0.7rem; padding: 0.5rem 0.75rem 0.5rem 2.2rem; outline: none; transition: border-color 0.18s; }
+    .search-box input { width: 100%; background: var(--surface); border: 1px solid var(--rule); color: var(--cream); font-family: 'Inter', sans-serif; font-size: 0.7rem; padding: 0.5rem 0.75rem 0.5rem 2.2rem; outline: none; transition: border-color 0.18s; }
     .search-box input:focus { border-color: var(--accent); }
     .search-box input::placeholder { color: var(--muted); }
     .search-icon { position: absolute; left: 0.7rem; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.75rem; pointer-events: none; }
-    .export-btn { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.08em; background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); padding: 0.45rem 1rem; cursor: pointer; transition: all 0.18s; display: flex; align-items: center; gap: 5px; }
+    .export-btn { font-family: 'Inter', sans-serif; font-size: 0.6rem; letter-spacing: 0.08em; background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); padding: 0.45rem 1rem; cursor: pointer; transition: all 0.18s; display: flex; align-items: center; gap: 5px; }
     .export-btn:hover { border-color: var(--accent); color: var(--accent); }
 
     /* Header bar */
     .bd-header { background: var(--surface2); border: 1px solid var(--rule); border-bottom: none; padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; }
     .bd-header-left { display: flex; align-items: center; gap: 1rem; }
     .bd-icon { width: 32px; height: 32px; background: var(--accent-glow); border: 1px solid var(--accent-dim); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
-    .bd-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 500; color: var(--cream); line-height: 1.2; }
-    .bd-sub { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.1em; color: var(--muted); margin-top: 0.1rem; }
-    .bd-date-pill { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.08em; background: var(--accent); color: var(--ink); padding: 0.28rem 0.8rem; font-weight: 700; }
+    .bd-title { font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 500; color: var(--cream); line-height: 1.2; }
+    .bd-sub { font-family: 'Inter', sans-serif; font-size: 0.55rem; letter-spacing: 0.1em; color: var(--muted); margin-top: 0.1rem; }
+    .bd-date-pill { font-family: 'Inter', sans-serif; font-size: 0.6rem; letter-spacing: 0.08em; background: var(--accent); color: var(--ink); padding: 0.28rem 0.8rem; font-weight: 700; }
 
     /* Table */
     .bd-table-wrap { overflow-x: auto; border: 1px solid var(--rule); }
     .bd-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 900px; }
     .bd-table thead tr { background: var(--surface2); border-bottom: 1px solid var(--rule); }
-    .bd-table thead th { font-family: 'DM Mono', monospace; font-size: 0.54rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); padding: 0.7rem 1rem; text-align: right; white-space: nowrap; border-right: 1px solid var(--rule); cursor: pointer; user-select: none; transition: color 0.15s; }
+    .bd-table thead th { font-family: 'Inter', sans-serif; font-size: 0.54rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); padding: 0.7rem 1rem; text-align: right; white-space: nowrap; border-right: 1px solid var(--rule); cursor: pointer; user-select: none; transition: color 0.15s; }
     .bd-table thead th:hover { color: var(--cream); }
     .bd-table thead th:first-child { text-align: left; width: 240px; }
     .bd-table thead th:nth-child(2) { text-align: right; }
@@ -97,7 +97,7 @@
     .bd-table tbody tr { border-bottom: 1px solid var(--rule); transition: background 0.12s; }
     .bd-table tbody tr:hover { background: var(--surface2); }
     .bd-table tbody tr.total-row { background: var(--surface2); border-top: 2px solid var(--rule); }
-    .bd-table tbody tr.total-row td { font-family: 'DM Mono', monospace; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; }
+    .bd-table tbody tr.total-row td { font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; }
 
     .bd-table td { padding: 0.85rem 1rem; text-align: right; border-right: 1px solid var(--rule); vertical-align: middle; }
     .bd-table td:first-child { text-align: left; }
@@ -106,13 +106,13 @@
 
     /* Strategy name cell */
     .strat-name-cell { display: flex; align-items: center; gap: 0.65rem; }
-    .strat-name-text { font-family: 'Jost', sans-serif; font-size: 0.82rem; font-weight: 500; color: var(--cream); }
+    .strat-name-text { font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500; color: var(--cream); }
 
     /* Capital cell */
-    .cap-cell { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--mid); }
+    .cap-cell { font-family: 'Inter', sans-serif; font-size: 0.72rem; color: var(--mid); }
 
     /* PNL pill */
-    .pnl-pill { display: inline-flex; align-items: center; justify-content: space-between; gap: 0.4rem; padding: 0.28rem 0.75rem; font-family: 'DM Mono', monospace; font-size: 0.68rem; font-weight: 500; min-width: 170px; }
+    .pnl-pill { display: inline-flex; align-items: center; justify-content: space-between; gap: 0.4rem; padding: 0.28rem 0.75rem; font-family: 'Inter', sans-serif; font-size: 0.68rem; font-weight: 500; min-width: 170px; }
     .pnl-pill.pos { background: var(--pos-bg); color: var(--pos); border: 1px solid rgba(63,224,136,0.2); }
     .pnl-pill.neg { background: var(--neg-bg); color: var(--neg); border: 1px solid rgba(240,112,112,0.2); }
     .pnl-pill.zero { background: rgba(200,184,154,0.07); color: var(--muted); border: 1px solid transparent; }
@@ -121,27 +121,27 @@
 
     /* Drawdown cell */
     .dd-cell { min-width: 160px; }
-    .dd-pct { font-family: 'DM Mono', monospace; font-size: 0.8rem; font-weight: 700; color: var(--neg); }
-    .dd-max { font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--muted); margin-top: 0.15rem; }
+    .dd-pct { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 700; color: var(--neg); }
+    .dd-max { font-family: 'Inter', sans-serif; font-size: 0.58rem; color: var(--muted); margin-top: 0.15rem; }
     .dd-bar-bg { background: var(--neg-bg); height: 4px; width: 100%; margin-top: 0.35rem; border-radius: 1px; }
     .dd-bar-fill { background: var(--neg); height: 100%; border-radius: 1px; transition: width 0.5s ease; }
-    .dd-zero { color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.72rem; }
+    .dd-zero { color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.72rem; }
 
     /* ── TODAY BANNER ── */
     .today-banner { background: var(--surface); border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 1rem 1.5rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-    .today-date-label { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--cream); }
-    .today-day-sub { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; margin-top: 0.15rem; }
+    .today-date-label { font-family: 'Inter', sans-serif; font-size: 1.1rem; color: var(--cream); }
+    .today-day-sub { font-family: 'Inter', sans-serif; font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; margin-top: 0.15rem; }
     .today-totals { display: flex; gap: 2rem; flex-wrap: wrap; }
     .today-total-item { text-align: right; }
-    .today-total-lbl { font-family: 'DM Mono', monospace; font-size: 0.54rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
-    .today-total-val { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 600; }
+    .today-total-lbl { font-family: 'Inter', sans-serif; font-size: 0.54rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .today-total-val { font-family: 'Inter', sans-serif; font-size: 1.4rem; font-weight: 600; }
 
     /* ── ROLLING STATS ── */
     .rolling-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 2rem; }
     @media (max-width: 700px) { .rolling-grid { grid-template-columns: repeat(2,1fr); } }
     .roll-cell { background: var(--surface); padding: 1rem 1.2rem; }
-    .roll-label { font-family: 'DM Mono', monospace; font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
-    .roll-val { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 600; }
+    .roll-label { font-family: 'Inter', sans-serif; font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+    .roll-val { font-family: 'Inter', sans-serif; font-size: 1.2rem; font-weight: 600; }
     .roll-sub { font-size: 0.65rem; color: var(--muted); margin-top: 0.1rem; }
     .td-pos { color: var(--pos) !important; }
     .td-neg { color: var(--neg) !important; }
@@ -152,7 +152,7 @@
     @media (max-width: 860px) { .chart-grid { grid-template-columns: 1fr; } }
     .chart-panel { background: var(--surface); border: 1px solid var(--rule); padding: 1.4rem; }
     .chart-panel.full { grid-column: 1 / -1; }
-    .chart-panel-title { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.1rem; }
+    .chart-panel-title { font-family: 'Inter', sans-serif; font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.1rem; }
     .chart-wrap { position: relative; }
     .chart-wrap.h220 { height: 220px; }
     .chart-wrap.h260 { height: 260px; }
@@ -162,37 +162,37 @@
     .heat-bar { display: flex; gap: 2px; flex-wrap: wrap; margin-bottom: 0.5rem; }
     .heat-day { width: 18px; height: 18px; border-radius: 2px; cursor: pointer; transition: transform 0.12s; position: relative; }
     .heat-day:hover { transform: scale(1.3); z-index: 10; }
-    .heat-day[data-tip]:hover::after { content: attr(data-tip); position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); background: var(--surface2); border: 1px solid var(--rule); color: var(--cream); font-family: 'DM Mono', monospace; font-size: 0.55rem; white-space: nowrap; padding: 0.3rem 0.6rem; z-index: 99; pointer-events: none; }
+    .heat-day[data-tip]:hover::after { content: attr(data-tip); position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); background: var(--surface2); border: 1px solid var(--rule); color: var(--cream); font-family: 'Inter', sans-serif; font-size: 0.55rem; white-space: nowrap; padding: 0.3rem 0.6rem; z-index: 99; pointer-events: none; }
 
     /* ── SUMMARY STRIP ── */
     .summary-strip { display: flex; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 2rem; }
     .sum-cell { background: var(--surface2); padding: 0.9rem 1.2rem; flex: 1; min-width: 100px; }
-    .sum-label { font-family: 'DM Mono', monospace; font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.15rem; }
-    .sum-val { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 600; }
+    .sum-label { font-family: 'Inter', sans-serif; font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.15rem; }
+    .sum-val { font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 600; }
 
     /* ── CALENDAR ── */
     .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
     .cal-month-nav { display: flex; align-items: center; gap: 1rem; }
-    .cal-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--cream); }
+    .cal-title { font-family: 'Inter', sans-serif; font-size: 1.1rem; color: var(--cream); }
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
-    .cal-dow { font-family: 'DM Mono', monospace; font-size: 0.52rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-align: center; padding: 0.4rem 0; }
+    .cal-dow { font-family: 'Inter', sans-serif; font-size: 0.52rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-align: center; padding: 0.4rem 0; }
     .cal-day { background: var(--surface); border: 1px solid var(--rule); padding: 0.5rem; min-height: 68px; transition: background 0.12s; cursor: pointer; }
     .cal-day:hover { background: var(--surface2); }
     .cal-day.empty { background: transparent; border-color: transparent; }
     .cal-day.today-cal { border-color: var(--accent); }
-    .cal-day-num { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); margin-bottom: 0.3rem; }
+    .cal-day-num { font-family: 'Inter', sans-serif; font-size: 0.6rem; color: var(--muted); margin-bottom: 0.3rem; }
     .cal-day.today-cal .cal-day-num { color: var(--accent); }
-    .cal-day-pnl { font-family: 'Playfair Display', serif; font-size: 0.85rem; font-weight: 600; }
+    .cal-day-pnl { font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 600; }
 
     /* ── PAGINATION ── */
     .pagination { display: flex; align-items: center; gap: 0.5rem; justify-content: flex-end; margin-top: 0.75rem; margin-bottom: 2rem; }
-    .page-btn { font-family: 'DM Mono', monospace; font-size: 0.6rem; background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); padding: 0.3rem 0.65rem; cursor: pointer; transition: all 0.18s; }
+    .page-btn { font-family: 'Inter', sans-serif; font-size: 0.6rem; background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); padding: 0.3rem 0.65rem; cursor: pointer; transition: all 0.18s; }
     .page-btn:hover, .page-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
-    .page-info { font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--muted); }
+    .page-info { font-family: 'Inter', sans-serif; font-size: 0.58rem; color: var(--muted); }
 
     footer { border-top: 1px solid var(--rule); padding: 1.8rem 2.5rem; max-width: 1380px; margin: 0 auto; }
     .disclaimer { font-size: 0.73rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.8rem; }
-    .footer-bottom { display: flex; justify-content: space-between; font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; color: var(--muted); }
+    .footer-bottom { display: flex; justify-content: space-between; font-family: 'Inter', sans-serif; font-size: 0.58rem; letter-spacing: 0.1em; color: var(--muted); }
     @media (max-width: 768px) { nav { padding: 1rem 1.2rem; } .nav-links { display: none; } }
   </style>
 </head>
@@ -201,10 +201,11 @@
 <nav>
   <a class="nav-logo" href="./index.html">APEX <span>ALGOS</span></a>
   <ul class="nav-links">
-    <li><a href="./index.html">Analytics</a></li>
-    <li><a href="#" class="active">Daily P&amp;L</a></li>
-    <li><a href="./strategies.html">Strategies</a></li>
-    <li><a href="https://t.me/apexalgoschat" target="_blank">Telegram</a></li>
+    <li><a href="./index.html#features">Strategies</a></li>
+    <li><a href="./index.html#performance">Performance</a></li>
+    <li><a href="./index.html" class="active">Analytics</a></li>
+    <li><a href="./strategies.html">Share Codes</a></li>
+    <li><a href="./index.html#contact">Contact</a></li>
   </ul>
   <div class="nav-right">
     <span class="live-badge" id="liveBadge">LIVE &middot; &mdash;</span>
@@ -312,11 +313,11 @@
   <div style="background:var(--surface);border:1px solid var(--rule);padding:1.2rem 1.4rem;margin-bottom:2rem;">
     <div class="heat-bar" id="heatBar"></div>
     <div style="display:flex;gap:1.5rem;margin-top:0.75rem;align-items:center;">
-      <div style="font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--muted);">&uarr; Each square = 1 trading day &middot; Hover for P&amp;L</div>
+      <div style="font-family:'Inter',sans-serif;font-size:0.55rem;color:var(--muted);">&uarr; Each square = 1 trading day &middot; Hover for P&amp;L</div>
       <div style="display:flex;align-items:center;gap:0.4rem;">
-        <div style="width:12px;height:12px;background:rgba(63,224,136,0.8);border-radius:2px;"></div><span style="font-family:'DM Mono',monospace;font-size:0.54rem;color:var(--muted);">Profit</span>
-        <div style="width:12px;height:12px;background:rgba(240,112,112,0.8);border-radius:2px;margin-left:0.8rem;"></div><span style="font-family:'DM Mono',monospace;font-size:0.54rem;color:var(--muted);">Loss</span>
-        <div style="width:12px;height:12px;background:var(--surface2);border:1px solid var(--rule);border-radius:2px;margin-left:0.8rem;"></div><span style="font-family:'DM Mono',monospace;font-size:0.54rem;color:var(--muted);">Zero</span>
+        <div style="width:12px;height:12px;background:rgba(63,224,136,0.8);border-radius:2px;"></div><span style="font-family:'Inter',sans-serif;font-size:0.54rem;color:var(--muted);">Profit</span>
+        <div style="width:12px;height:12px;background:rgba(240,112,112,0.8);border-radius:2px;margin-left:0.8rem;"></div><span style="font-family:'Inter',sans-serif;font-size:0.54rem;color:var(--muted);">Loss</span>
+        <div style="width:12px;height:12px;background:var(--surface2);border:1px solid var(--rule);border-radius:2px;margin-left:0.8rem;"></div><span style="font-family:'Inter',sans-serif;font-size:0.54rem;color:var(--muted);">Zero</span>
       </div>
     </div>
   </div>
@@ -516,7 +517,7 @@ function renderBreakdownTable(filter='') {
     </tr>
   `).join('') + `
     <tr class="total-row">
-      <td><div class="strat-name-cell"><span style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;">TOTAL / AVERAGE</span></div></td>
+      <td><div class="strat-name-cell"><span style="font-family:'Inter',sans-serif;font-size:0.65rem;letter-spacing:0.1em;">TOTAL / AVERAGE</span></div></td>
       <td><span class="cap-cell" style="font-weight:700;">₹${totalCap.toLocaleString('en-IN')}</span></td>
       <td>${pnlPill(totalToday, totalCap)}</td>
       <td>${pnlPill(totalMonthly, totalCap)}</td>
@@ -646,8 +647,8 @@ function renderCumulChart() {
   charts.cumul = new Chart(document.getElementById('cumulChart').getContext('2d'), {
     type:'line', data:{labels,datasets},
     options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
-      plugins:{ legend:{labels:{color:cd.text,font:{family:'DM Mono',size:10},boxWidth:12}}, tooltip:{backgroundColor:'#1A1710',titleColor:'#EDE6D6',bodyColor:'#C8B89A',borderColor:'#252118',borderWidth:1,callbacks:{label:c=>` ${c.dataset.label}: ₹${c.parsed.y.toLocaleString('en-IN')}`}}},
-      scales:{ x:{ticks:{color:cd.text,font:{size:9,family:'DM Mono'},maxTicksLimit:8},grid:{color:cd.grid}}, y:{ticks:{color:cd.text,font:{size:9,family:'DM Mono'},callback:v=>'₹'+(Math.abs(v)>=1000?(v/1000).toFixed(0)+'k':v)},grid:{color:cd.grid}} }
+      plugins:{ legend:{labels:{color:cd.text,font:{family:'Inter',size:10},boxWidth:12}}, tooltip:{backgroundColor:'#1A1710',titleColor:'#EDE6D6',bodyColor:'#C8B89A',borderColor:'#252118',borderWidth:1,callbacks:{label:c=>` ${c.dataset.label}: ₹${c.parsed.y.toLocaleString('en-IN')}`}}},
+      scales:{ x:{ticks:{color:cd.text,font:{size:9,family:'Inter'},maxTicksLimit:8},grid:{color:cd.grid}}, y:{ticks:{color:cd.text,font:{size:9,family:'Inter'},callback:v=>'₹'+(Math.abs(v)>=1000?(v/1000).toFixed(0)+'k':v)},grid:{color:cd.grid}} }
     }
   });
 }
@@ -662,7 +663,7 @@ function renderDailyBarChart() {
     type:'bar', data:{labels,datasets:[{label:'Daily P&L',data:totals,backgroundColor:totals.map(v=>v>=0?'rgba(63,224,136,0.6)':'rgba(240,112,112,0.6)'),borderColor:totals.map(v=>v>=0?'#3FE088':'#F07070'),borderWidth:1}]},
     options:{ responsive:true, maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{backgroundColor:'#1A1710',titleColor:'#EDE6D6',bodyColor:'#C8B89A',borderColor:'#252118',borderWidth:1,callbacks:{label:c=>` ₹${c.parsed.y.toLocaleString('en-IN')}`}}},
-      scales:{x:{ticks:{color:cd.text,font:{size:8,family:'DM Mono'},maxTicksLimit:8},grid:{color:cd.grid}},y:{ticks:{color:cd.text,font:{size:9,family:'DM Mono'},callback:v=>'₹'+(Math.abs(v)>=1000?(v/1000).toFixed(1)+'k':v)},grid:{color:cd.grid}}}
+      scales:{x:{ticks:{color:cd.text,font:{size:8,family:'Inter'},maxTicksLimit:8},grid:{color:cd.grid}},y:{ticks:{color:cd.text,font:{size:9,family:'Inter'},callback:v=>'₹'+(Math.abs(v)>=1000?(v/1000).toFixed(1)+'k':v)},grid:{color:cd.grid}}}
     }
   });
 }
@@ -678,7 +679,7 @@ function renderStratPie() {
     type:'doughnut',
     data:{ labels:active.map(k=>STRAT_LABELS[k]), datasets:[{data:active.map(k=>Math.abs(DATA[k+'_daily']?.[idx]||0)),backgroundColor:active.map(k=>STRAT_COLORS[k]+'CC'),borderColor:active.map(k=>STRAT_COLORS[k]),borderWidth:1}] },
     options:{ responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{position:'right',labels:{color:cd.text,font:{size:10,family:'DM Mono'},boxWidth:10}},tooltip:{backgroundColor:'#1A1710',titleColor:'#EDE6D6',bodyColor:'#C8B89A',borderColor:'#252118',borderWidth:1,callbacks:{label:c=>` ${c.label}: ₹${c.parsed.toLocaleString('en-IN')}`}}}
+      plugins:{legend:{position:'right',labels:{color:cd.text,font:{size:10,family:'Inter'},boxWidth:10}},tooltip:{backgroundColor:'#1A1710',titleColor:'#EDE6D6',bodyColor:'#C8B89A',borderColor:'#252118',borderWidth:1,callbacks:{label:c=>` ${c.label}: ₹${c.parsed.toLocaleString('en-IN')}`}}}
     }
   });
 }
