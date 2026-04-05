@@ -8,37 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
-// ── LIVE SYNC from data.json — keeps STRATS in sync without re-injecting HTML ──
-(async function liveSync() {
-  try {
-    const res = await fetch('./data.json?t=' + Date.now());
-    if (!res.ok) return;
-    const d = await res.json();
-    if (!d?.strategies?.length) return;
-    // Re-init all strategy maps from live data.json
-    STRATS       = d.strategies.map(s => s.key);
-    STRAT_LABELS = Object.fromEntries(d.strategies.map(s => [s.key, s.label]));
-    STRAT_FULL   = Object.fromEntries(d.strategies.map(s => [s.key, s.label]));
-    STRAT_COLORS = Object.fromEntries(d.strategies.map((s,i) => [s.key, s.color || AUTO_PALETTE[i % AUTO_PALETTE.length]]));
-    CAPITALS     = Object.fromEntries(d.strategies.map(s => [s.key, s.capital ?? 250000]));
-    STRAT_SHEETS = Object.fromEntries(d.strategies.map(s => [s.key, s.sheet || 'DAILY P&L']));
-    // Merge new daily/monthly arrays + stats into DATA
-    d.strategies.forEach(s => {
-      if (d[s.key + '_daily'])   DATA[s.key + '_daily']   = d[s.key + '_daily'];
-      if (d[s.key + '_monthly']) DATA[s.key + '_monthly'] = d[s.key + '_monthly'];
-    });
-    if (d.stats)      Object.assign(DATA.stats = DATA.stats || {}, d.stats);
-    if (d.months)     DATA.months      = d.months;
-    if (d.daily_dates) DATA.daily_dates = d.daily_dates;
-    DATA.strategies = d.strategies;
-    DATA.updated    = d.updated || DATA.updated;
-    // Re-render everything with fresh data
-    init();
-  } catch(e) { console.warn('liveSync:', e.message); }
-})();
-
-</script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -1140,6 +1110,35 @@ function setDisplayView(v, btn) {
 }
 
 init();
+
+// ── LIVE SYNC — re-initialise STRATS from data.json so new strategies appear immediately ──
+(async function liveSync() {
+  try {
+    const res = await fetch('./data.json?t=' + Date.now());
+    if (!res.ok) return;
+    const d = await res.json();
+    if (!d?.strategies?.length) return;
+    // Re-init all strategy maps from live data.json
+    STRATS       = d.strategies.map(s => s.key);
+    STRAT_LABELS = Object.fromEntries(d.strategies.map(s => [s.key, s.label]));
+    STRAT_FULL   = Object.fromEntries(d.strategies.map(s => [s.key, s.label]));
+    STRAT_COLORS = Object.fromEntries(d.strategies.map((s,i) => [s.key, s.color || AUTO_PALETTE[i % AUTO_PALETTE.length]]));
+    CAPITALS     = Object.fromEntries(d.strategies.map(s => [s.key, s.capital ?? 250000]));
+    STRAT_SHEETS = Object.fromEntries(d.strategies.map(s => [s.key, s.sheet || 'DAILY P&L']));
+    // Merge new daily/monthly arrays + stats into DATA
+    d.strategies.forEach(s => {
+      if (d[s.key + '_daily'])   DATA[s.key + '_daily']   = d[s.key + '_daily'];
+      if (d[s.key + '_monthly']) DATA[s.key + '_monthly'] = d[s.key + '_monthly'];
+    });
+    if (d.stats)       Object.assign(DATA.stats = DATA.stats || {}, d.stats);
+    if (d.months)      DATA.months       = d.months;
+    if (d.daily_dates) DATA.daily_dates  = d.daily_dates;
+    DATA.strategies = d.strategies;
+    DATA.updated    = d.updated || DATA.updated;
+    // Re-render with fresh data
+    init();
+  } catch(e) { console.warn('liveSync:', e.message); }
+})();
 </script>
 </body>
 </html>
