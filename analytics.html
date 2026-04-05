@@ -305,6 +305,19 @@
   display: flex; align-items: center; gap: 0.5rem;
 }
 .subgroup-label::after { content: ''; flex: 1; height: 1px; background: var(--rule); opacity: 0.5; }
+
+/* ── SUBTOTAL ROW ── */
+.bd-table tbody tr.subtotal-row td {
+  background: rgba(212,168,64,0.05);
+  border-top: 1px solid rgba(212,168,64,0.2);
+  border-bottom: 1px solid rgba(212,168,64,0.2);
+  font-weight: 600;
+}
+.bd-table tbody tr.subtotal-row .cap-cell,
+.bd-table tbody tr.subtotal-row .strat-name-text {
+  color: var(--muted);
+  font-size: 0.68rem;
+}
 </style>
 </head>
 <body>
@@ -343,7 +356,7 @@
         <button class="range-btn"        id="cat-nfo"    onclick="setCatFilter('nfo',this)">NFO / BFO</button>
         <button class="range-btn"        id="cat-mcx"    onclick="setCatFilter('mcx',this)">MCX</button>
         <span style="display:inline-block;width:1px;height:18px;background:var(--rule);margin:0 6px;flex-shrink:0;opacity:0.6;"></span>
-        <button class="range-btn"        id="cat-hedged" onclick="setCatFilter('hedged',this)">Hedged</button>
+        <button class="range-btn"        id="cat-hedged" onclick="setCatFilter('hedged',this)">&#128737; Hedged</button>
       </div>
       <div class="search-box">
         <span class="search-icon">&#128269;</span>
@@ -803,48 +816,64 @@ function renderBreakdownTable(filter='') {
     return bdSortAsc ? va - vb : vb - va;
   });
 
-  // Totals
-  const totalCap = STRATS.reduce((s,k) => s + CAPITALS[k], 0);
-  const totalToday = rows.reduce((s,r) => s + r.today, 0);
-  const totalMonthly = rows.reduce((s,r) => s + r.monthly, 0);
-  const totalYearly = rows.reduce((s,r) => s + r.yearly, 0);
+  const HEDGED_SHEET = 'DAILY P&L HEDGED';
+  const stdRows    = rows.filter(r => r.sheet !== HEDGED_SHEET);
+  const hedgedRows = rows.filter(r => r.sheet === HEDGED_SHEET);
+  const hasHedged   = hedgedRows.length > 0;
+  const hasStandard = stdRows.length > 0;
+  const showGroups  = hasHedged && hasStandard;
+
+  // Helper: subtotal row html
+  function subTotalRow(label, rws, isOverall) {
+    if (!rws.length) return '';
+    const sCap = rws.reduce((s,r) => s + r.cap, 0);
+    const sToday = rws.reduce((s,r) => s + r.today, 0);
+    const sMon   = rws.reduce((s,r) => s + r.monthly, 0);
+    const sYear  = rws.reduce((s,r) => s + r.yearly, 0);
+    const cls = isOverall ? 'total-row' : 'total-row subtotal-row';
+    return `<tr class="${cls}">
+      <td><div class="strat-name-cell"><span style="font-family:'Inter',sans-serif;font-size:0.65rem;letter-spacing:0.1em;">${label}</span></div></td>
+      <td><span class="cap-cell" style="font-weight:700;">&#8377;${sCap.toLocaleString('en-IN')}</span></td>
+      <td>${pnlPill(sToday, sCap)}</td>
+      <td>${pnlPill(sMon, sCap)}</td>
+      <td>${pnlPill(sYear, sCap)}</td>
+      <td><span class="dd-zero">—</span></td>
+    </tr>`;
+  }
+
+  // Build rows html with subgroup headers + subtotals
+  let rowsHtml = '';
+  function renderGroupRows(grpRows, label, icon) {
+    if (!grpRows.length) return;
+    if (showGroups) {
+      rowsHtml += `<tr class="subgroup-row"><td colspan="6"><div class="subgroup-label">${icon} ${label}</div></td></tr>`;
+    }
+    grpRows.forEach(r => {
+      rowsHtml += `
+      <tr>
+        <td><div class="strat-name-cell"><span class="dot" style="background:${STRAT_COLORS[r.k]}"></span><span class="strat-name-text">${STRAT_FULL[r.k]}</span></div></td>
+        <td><span class="cap-cell">&#8377;${r.cap.toLocaleString('en-IN')}</span></td>
+        <td>${pnlPill(r.today, r.cap)}</td>
+        <td>${pnlPill(r.monthly, r.cap)}</td>
+        <td>${pnlPill(r.yearly, r.cap)}</td>
+        <td>${ddCell(r.curDd, r.maxDd)}</td>
+      </tr>`;
+    });
+    if (showGroups) rowsHtml += subTotalRow(label + ' Total', grpRows, false);
+  }
+
+  renderGroupRows(stdRows,    'Standard Strategies', '&#128200;');
+  renderGroupRows(hedgedRows, 'Hedged Strategies',   '&#128737;');
+
+  // Overall total row — only show if more than one group or single filter
+  const allRows = rows;
+  const totalCap = allRows.reduce((s,r) => s + r.cap, 0);
+  const totalToday = allRows.reduce((s,r) => s + r.today, 0);
+  const totalMonthly = allRows.reduce((s,r) => s + r.monthly, 0);
+  const totalYearly = allRows.reduce((s,r) => s + r.yearly, 0);
 
   const tbody = document.getElementById('bdBody');
-
-  // Subgroup separators — Standard vs Hedged
-  const HEDGED_SHEET = 'DAILY P&L HEDGED';
-  const hasHedged   = rows.some(r => r.sheet === HEDGED_SHEET);
-  const hasStandard = rows.some(r => r.sheet !== HEDGED_SHEET);
-  const showGroups  = hasHedged && hasStandard;
-  let lastSheet = null, rowsHtml = '';
-  rows.forEach(r => {
-    const groupKey = r.sheet === HEDGED_SHEET ? HEDGED_SHEET : 'DAILY P&L';
-    if (showGroups && groupKey !== lastSheet) {
-      const lbl = groupKey === HEDGED_SHEET ? '&#128737; Hedged Strategies' : '&#128200; Standard Strategies';
-      rowsHtml += `<tr class="subgroup-row"><td colspan="6"><div class="subgroup-label">${lbl}</div></td></tr>`;
-      lastSheet = groupKey;
-    }
-    rowsHtml += `
-    <tr>
-      <td><div class="strat-name-cell"><span class="dot" style="background:${STRAT_COLORS[r.k]}"></span><span class="strat-name-text">${STRAT_FULL[r.k]}</span></div></td>
-      <td><span class="cap-cell">&#8377;${r.cap.toLocaleString('en-IN')}</span></td>
-      <td>${pnlPill(r.today, r.cap)}</td>
-      <td>${pnlPill(r.monthly, r.cap)}</td>
-      <td>${pnlPill(r.yearly, r.cap)}</td>
-      <td>${ddCell(r.curDd, r.maxDd)}</td>
-    </tr>`;
-  });
-
-  tbody.innerHTML = rowsHtml + `
-    <tr class="total-row">
-      <td><div class="strat-name-cell"><span style="font-family:'Inter',sans-serif;font-size:0.65rem;letter-spacing:0.1em;">TOTAL / AVERAGE</span></div></td>
-      <td><span class="cap-cell" style="font-weight:700;">₹${totalCap.toLocaleString('en-IN')}</span></td>
-      <td>${pnlPill(totalToday, totalCap)}</td>
-      <td>${pnlPill(totalMonthly, totalCap)}</td>
-      <td>${pnlPill(totalYearly, totalCap)}</td>
-      <td><span class="dd-zero">—</span></td>
-    </tr>
-  `;
+  tbody.innerHTML = rowsHtml + subTotalRow('TOTAL / AVERAGE', allRows, true);
 
   // Update sort indicators
   ['name','capital','today','monthly','yearly','drawdown'].forEach(k => {
@@ -905,7 +934,13 @@ function renderTodayBanner() {
 
   let grand = 0;
   const parts = [];
+  const _bannerCfg = loadStratConfig();
   STRATS.forEach(k => {
+    if (!getStratVisible(k)) return;
+    const cat      = _bannerCfg[k]?.category || 'nfo';
+    const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
+    if (activeCatFilter === 'hedged' && !isHedged) return;
+    if (activeCatFilter !== 'all' && activeCatFilter !== 'hedged' && cat !== activeCatFilter) return;
     const v = DATA[k+'_daily']?.[idx] || 0;
     if (v !== 0) {
       grand += v;
@@ -927,8 +962,12 @@ function renderTodayBanner() {
     stripParts += `<div class="strip-item"><div class="strip-item-label">Combined P&L</div><div class="strip-item-val combined ${grandCls}">${fmtIN(grand)}</div></div>`;
     const stripCfg = loadStratConfig();
     STRATS.filter(k => {
-      const cat = stripCfg[k]?.category || 'nfo';
-      return activeCatFilter === 'all' || cat === activeCatFilter;
+      if (!getStratVisible(k)) return false;
+      const cat      = stripCfg[k]?.category || 'nfo';
+      const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
+      if (activeCatFilter === 'hedged') return isHedged;
+      if (activeCatFilter !== 'all') return cat === activeCatFilter;
+      return true;
     }).forEach(k => {
       const v = DATA[k+'_daily']?.[idx] || 0;
       if (v !== 0) {
