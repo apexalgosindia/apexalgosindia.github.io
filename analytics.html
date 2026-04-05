@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apex Algos — Daily P&L Dashboard</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -17,6 +18,7 @@
       --accent-light: #ECC84C; --nav-bg: rgba(10,9,6,0.92);
       --chart-grid: rgba(237,230,214,0.07); --chart-text: rgba(237,230,214,0.65);
       --pos: #3FE088; --neg: #F07070; --pos-bg: rgba(63,224,136,0.12); --neg-bg: rgba(240,112,112,0.12);
+      --tab-border: #3E3B2E;
     }
     :root.light {
       --ink: #FAF7F2; --surface: #F1EDE3; --surface2: #E8E2D6;
@@ -25,19 +27,22 @@
       --accent-light: #B8820E; --nav-bg: rgba(250,247,242,0.96);
       --chart-grid: rgba(24,20,12,0.06); --chart-text: rgba(24,20,12,0.65);
       --pos: #1F7A38; --neg: #B03030; --pos-bg: rgba(31,122,56,0.1); --neg-bg: rgba(176,48,48,0.1);
+      --tab-border: #C8C0AC;
     }
     body { background: var(--ink); color: var(--cream); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.65; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 2.5rem; background: var(--nav-bg); backdrop-filter: blur(20px); border-bottom: 1px solid var(--rule); }
-    .nav-logo { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cream); text-decoration: none; }
-    .nav-logo span { color: var(--accent); }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 4rem; background: var(--nav-bg); backdrop-filter: blur(16px); border-bottom: 1px solid var(--rule); }
+    .nav-logo { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cream); text-decoration: none; }
+    .nav-logo span { color: var(--accent); font-style: normal; font-weight: 700; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.25s; }
     .nav-links a:hover, .nav-links a.active { color: var(--cream); }
-    .nav-right { display: flex; align-items: center; gap: 0.75rem; }
+    .nav-right { display: flex; align-items: center; gap: 0.8rem; }
     .live-badge { font-family: 'Inter', sans-serif; font-size: 0.6rem; letter-spacing: 0.12em; background: rgba(63,224,136,0.1); border: 1px solid rgba(63,224,136,0.3); color: #7EC8A0; padding: 0.3rem 0.75rem; }
-    .theme-btn { background: transparent; border: 1px solid var(--rule); color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.62rem; letter-spacing: 0.1em; padding: 0.35rem 0.8rem; cursor: pointer; transition: all 0.2s; }
+    .theme-btn { background: transparent; border: 1px solid var(--tab-border, #3E3B2E); color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 400; letter-spacing: 0.1em; padding: 0.4rem 0.9rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.45rem; }
     .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .nav-cta { font-family: 'Inter', sans-serif; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); text-decoration: none; border: 1px solid rgba(212,168,64,0.45); padding: 0.5rem 1.2rem; transition: background 0.2s, color 0.2s; }
+    .nav-cta:hover { background: var(--accent); color: var(--ink); }
 
     main { max-width: 1380px; margin: 0 auto; padding: 88px 2rem 5rem; }
     .page-eyebrow { font-family: 'Inter', sans-serif; font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.7rem; }
@@ -199,17 +204,18 @@
 <body>
 
 <nav>
-  <a class="nav-logo" href="./index.html">APEX <span>ALGOS</span></a>
+  <a class="nav-logo" href="./index.html"><span style="color:var(--accent);">Apex <span style="color:var(--cream);">Algos</span></span></a>
   <ul class="nav-links">
     <li><a href="./index.html#features">Strategies</a></li>
     <li><a href="./index.html#performance">Performance</a></li>
-    <li><a href="./index.html" class="active">Analytics</a></li>
+    <li><a href="./analytics.html" class="active">Analytics</a></li>
     <li><a href="./strategies.html">Share Codes</a></li>
     <li><a href="./index.html#contact">Contact</a></li>
   </ul>
   <div class="nav-right">
     <span class="live-badge" id="liveBadge">LIVE &middot; &mdash;</span>
     <button class="theme-btn" onclick="toggleTheme()"><span id="themeIcon">&#9728;</span> <span id="themeLabel">Light</span></button>
+    <a class="nav-cta" href="./index.html#contact">Get Started</a>
   </div>
 </nav>
 
@@ -367,12 +373,25 @@ let charts = {};
 
 // ── THEME ──
 function toggleTheme() {
-  document.documentElement.classList.toggle('light');
-  const isLight = document.documentElement.classList.contains('light');
-  document.getElementById('themeIcon').textContent = isLight ? '◑' : '☀';
+  const isLight = document.documentElement.classList.toggle('light');
+  document.getElementById('themeIcon').textContent = isLight ? '◐' : '☀';
   document.getElementById('themeLabel').textContent = isLight ? 'Dark' : 'Light';
+  localStorage.setItem('apex-theme', isLight ? 'light' : 'dark');
   reRenderCharts();
 }
+// Restore saved theme on load
+(function() {
+  const saved = localStorage.getItem('apex-theme');
+  if (saved === 'light') {
+    document.documentElement.classList.add('light');
+    document.addEventListener('DOMContentLoaded', () => {
+      const icon  = document.getElementById('themeIcon');
+      const label = document.getElementById('themeLabel');
+      if (icon)  icon.textContent  = '◐';
+      if (label) label.textContent = 'Dark';
+    });
+  }
+})();
 
 // ── HELPERS ──
 function fmt(v, showPlus=true) {
