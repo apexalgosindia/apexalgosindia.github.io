@@ -592,39 +592,22 @@
   
 /* ── HEDGED SUB-SECTION ── */
 .sub-section-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-top: 2.5rem;
-  margin-bottom: 1.25rem;
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-top: 2.5rem; margin-bottom: 1.25rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid rgba(237,230,214,0.08);
 }
 :root.light .sub-section-header { border-bottom-color: var(--rule); }
 .sub-section-badge {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.55rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--accent);
-  background: var(--surface2);
-  border: 1px solid rgba(212,168,64,0.35);
-  padding: 0.2rem 0.6rem;
-  border-radius: 2px;
+  font-family: 'Inter', sans-serif; font-size: 0.55rem; font-weight: 500;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent); background: var(--surface2);
+  border: 1px solid rgba(212,168,64,0.35); padding: 0.2rem 0.6rem; border-radius: 2px;
 }
 .sub-section-heading {
-  font-family: 'Inter', sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
-  color: var(--muted);
+  font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 400; color: var(--muted);
 }
-.sub-section-divider {
-  flex: 1;
-  height: 1px;
-  background: var(--rule);
-  opacity: 0.5;
-}
+.sub-section-divider { flex: 1; height: 1px; background: var(--rule); opacity: 0.5; }
 </style>
 </head>
 <body>
@@ -708,8 +691,8 @@
       <span class="sheet-banner-arrow">&#8599;</span>
     </a>
 
-    <!-- MAIN STRATEGIES -->
-    <div class="section-header" id="section-nfo">
+    <!-- NFO/BFO SECTION -->
+    <div class="section-header" id="section-nfo" style="display:none;">
       <span class="section-badge">NFO / BFO</span>
       <h2 class="section-heading">NFO / BFO Strategies</h2>
     </div>
@@ -721,7 +704,7 @@
     </div>
     <div class="strategy-grid" id="grid-nfo-hedged"></div>
 
-    <!-- MCX STRATEGIES -->
+    <!-- MCX SECTION -->
     <div class="section-header" id="section-mcx" style="display:none;">
       <span class="section-badge" style="background:var(--surface2);color:var(--accent);border:1px solid rgba(212,168,64,0.4);">MCX</span>
       <h2 class="section-heading">MCX Strategies</h2>
@@ -734,286 +717,7 @@
     </div>
     <div class="strategy-grid" id="grid-mcx-hedged"></div>
 
-    <!-- ALL CARDS (hidden pool) -->
-    <div id="card-pool" style="display:none;">
-
-      <!-- NAP -->
-      <div class="strat-card" data-key="nap">
-        <div class="card-header">
-          <div>
-            <div class="card-name">NAP</div>
-            <div class="card-subtitle">Nifty Intraday Selling</div>
-          </div>
-          <span class="card-tag">Main</span>
-        </div>
-        <div class="card-params">
-          <div class="param">
-            <div class="param-label">Target</div>
-            <div class="param-val pos">Open</div>
-          </div>
-          <div class="param">
-            <div class="param-label">Stop Loss</div>
-            <div class="param-val neg">&#8377;5,000</div>
-          </div>
-        </div>
-        <div class="card-roi-row">
-          <span class="card-roi-label">Avg Monthly ROI</span>
-          <span class="card-roi-val loading" id="roi-nap">—</span>
-        </div>
-        <div class="card-links">
-          <a class="card-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">
-            <span class="card-link-icon">&#128279;</span>
-            <div class="card-link-text">
-              <div class="card-link-label">Strategy Link</div>
-              <div class="card-link-val">tradetron.tech/strategy/7324677</div>
-            </div>
-          </a>
-          <div class="share-code-row" onclick="copyCode(this, 'd404a9df-c1de-49e5-a6e4-c431a7a34c37')">
-            <div style="flex:1">
-              <div class="share-code-label">Share Code</div>
-              <div class="share-code-val">d404a9df-c1de-49e5-a6e4-c431a7a34c37</div>
-            </div>
-            <button class="copy-btn">Copy</button>
-          </div>
-          <div class="hedged-note">
-            &#128737; Hedged version &rarr;
-            <a href="https://tradetron.tech/strategy/7286441" target="_blank" rel="noopener">tradetron.tech/strategy/7286441</a><br>
-            <span style="font-family:'Inter',sans-serif;font-size:0.68rem;">Code: 65ad2c9c-0ceb-4076-932f-5430d14b4530</span>
-            <button class="copy-btn" onclick="copyCode(this,'65ad2c9c-0ceb-4076-932f-5430d14b4530')" style="margin-left:0.5rem;">Copy</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- SAP -->
-      <div class="strat-card" data-key="sap">
-        <div class="card-header">
-          <div>
-            <div class="card-name">SAP</div>
-            <div class="card-subtitle">Sensex Intraday Selling</div>
-          </div>
-          <span class="card-tag">Main</span>
-        </div>
-        <div class="card-params">
-          <div class="param">
-            <div class="param-label">Target</div>
-            <div class="param-val pos">Open</div>
-          </div>
-          <div class="param">
-            <div class="param-label">Stop Loss</div>
-            <div class="param-val neg">&#8377;5,000</div>
-          </div>
-        </div>
-        <div class="card-roi-row">
-          <span class="card-roi-label">Avg Monthly ROI</span>
-          <span class="card-roi-val loading" id="roi-sap">—</span>
-        </div>
-        <div class="card-links">
-          <a class="card-link" href="https://tradetron.tech/strategy/7324685" target="_blank" rel="noopener">
-            <span class="card-link-icon">&#128279;</span>
-            <div class="card-link-text">
-              <div class="card-link-label">Strategy Link</div>
-              <div class="card-link-val">tradetron.tech/strategy/7324685</div>
-            </div>
-          </a>
-          <div class="share-code-row" onclick="copyCode(this,'5e606810-edce-46e3-bd89-f1ded1f6f4f6')">
-            <div style="flex:1">
-              <div class="share-code-label">Share Code</div>
-              <div class="share-code-val">5e606810-edce-46e3-bd89-f1ded1f6f4f6</div>
-            </div>
-            <button class="copy-btn">Copy</button>
-          </div>
-          <div class="hedged-note">
-            &#128737; Hedged version &rarr;
-            <a href="https://tradetron.tech/strategy/7324673" target="_blank" rel="noopener">tradetron.tech/strategy/7324673</a>
-          </div>
-        </div>
-      </div>
-
-    <!-- DIVERSIFY STRATEGIES (now merged into pool) -->
-
-      <!-- NAP v2 -->
-      <div class="strat-card" data-key="napv2">
-        <div class="card-header">
-          <div>
-            <div class="card-name">NAP v2</div>
-            <div class="card-subtitle">Nifty Intraday Selling</div>
-          </div>
-          <span class="card-tag">Diversify</span>
-        </div>
-        <div class="card-params">
-          <div class="param">
-            <div class="param-label">Target</div>
-            <div class="param-val pos">Open</div>
-          </div>
-          <div class="param">
-            <div class="param-label">Stop Loss</div>
-            <div class="param-val neg">&#8377;3,500</div>
-          </div>
-        </div>
-        <div class="card-roi-row">
-          <span class="card-roi-label">Avg Monthly ROI</span>
-          <span class="card-roi-val loading" id="roi-napv2">—</span>
-        </div>
-        <div class="card-links">
-          <a class="card-link" href="https://tradetron.tech/strategy/7803165" target="_blank" rel="noopener">
-            <span class="card-link-icon">&#128279;</span>
-            <div class="card-link-text">
-              <div class="card-link-label">Strategy Link</div>
-              <div class="card-link-val">tradetron.tech/strategy/7803165</div>
-            </div>
-          </a>
-          <div class="share-code-row" onclick="copyCode(this,'f10c10c5-3bbf-415f-8aee-a59e56a01856')">
-            <div style="flex:1">
-              <div class="share-code-label">Share Code</div>
-              <div class="share-code-val">f10c10c5-3bbf-415f-8aee-a59e56a01856</div>
-            </div>
-            <button class="copy-btn">Copy</button>
-          </div>
-          <div class="hedged-note">
-            &#128737; Hedged &rarr;
-            <a href="https://tradetron.tech/strategy/8820633" target="_blank" rel="noopener">tradetron.tech/strategy/8820633</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- NAP v3 -->
-      <div class="strat-card" data-key="napv3">
-        <div class="card-header">
-          <div>
-            <div class="card-name">NAP v3</div>
-            <div class="card-subtitle">Nifty Intraday Selling</div>
-          </div>
-          <span class="card-tag">Diversify</span>
-        </div>
-        <div class="card-params">
-          <div class="param">
-            <div class="param-label">Target</div>
-            <div class="param-val pos">Open</div>
-          </div>
-          <div class="param">
-            <div class="param-label">Stop Loss</div>
-            <div class="param-val neg">&#8377;3,500</div>
-          </div>
-        </div>
-        <div class="card-roi-row">
-          <span class="card-roi-label">Avg Monthly ROI</span>
-          <span class="card-roi-val loading" id="roi-napv3">—</span>
-        </div>
-        <div class="card-links">
-          <a class="card-link" href="https://tradetron.tech/strategy/8678425" target="_blank" rel="noopener">
-            <span class="card-link-icon">&#128279;</span>
-            <div class="card-link-text">
-              <div class="card-link-label">Strategy Link</div>
-              <div class="card-link-val">tradetron.tech/strategy/8678425</div>
-            </div>
-          </a>
-          <div class="share-code-row" onclick="copyCode(this,'98a1a981-2594-415a-9dd8-b39cdfa571e9')">
-            <div style="flex:1">
-              <div class="share-code-label">Share Code</div>
-              <div class="share-code-val">98a1a981-2594-415a-9dd8-b39cdfa571e9</div>
-            </div>
-            <button class="copy-btn">Copy</button>
-          </div>
-          <div class="hedged-note">
-            &#128737; Hedged &rarr;
-            <a href="https://tradetron.tech/strategy/8820653" target="_blank" rel="noopener">tradetron.tech/strategy/8820653</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- SAP v2 -->
-      <div class="strat-card" data-key="sapv2">
-        <div class="card-header">
-          <div>
-            <div class="card-name">SAP v2</div>
-            <div class="card-subtitle">Sensex Intraday Selling</div>
-          </div>
-          <span class="card-tag">Diversify</span>
-        </div>
-        <div class="card-params">
-          <div class="param">
-            <div class="param-label">Target</div>
-            <div class="param-val pos">Open</div>
-          </div>
-          <div class="param">
-            <div class="param-label">Stop Loss</div>
-            <div class="param-val neg">&#8377;3,500</div>
-          </div>
-        </div>
-        <div class="card-roi-row">
-          <span class="card-roi-label">Avg Monthly ROI</span>
-          <span class="card-roi-val loading" id="roi-sapv2">—</span>
-        </div>
-        <div class="card-links">
-          <a class="card-link" href="https://tradetron.tech/strategy/8838677" target="_blank" rel="noopener">
-            <span class="card-link-icon">&#128279;</span>
-            <div class="card-link-text">
-              <div class="card-link-label">Strategy Link</div>
-              <div class="card-link-val">tradetron.tech/strategy/8838677</div>
-            </div>
-          </a>
-          <div class="share-code-row" onclick="copyCode(this,'e906d9cf-8076-4958-800b-e02a5967ef98')">
-            <div style="flex:1">
-              <div class="share-code-label">Share Code</div>
-              <div class="share-code-val">e906d9cf-8076-4958-800b-e02a5967ef98</div>
-            </div>
-            <button class="copy-btn">Copy</button>
-          </div>
-          <div class="hedged-note">
-            &#128737; Hedged &rarr;
-            <a href="https://tradetron.tech/strategy/8910217" target="_blank" rel="noopener">tradetron.tech/strategy/8910217</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- SAP v3 -->
-      <div class="strat-card" data-key="sapv3">
-        <div class="card-header">
-          <div>
-            <div class="card-name">SAP v3</div>
-            <div class="card-subtitle">Sensex Intraday Selling</div>
-          </div>
-          <span class="card-tag">Diversify</span>
-        </div>
-        <div class="card-params">
-          <div class="param">
-            <div class="param-label">Target</div>
-            <div class="param-val pos">Open</div>
-          </div>
-          <div class="param">
-            <div class="param-label">Stop Loss</div>
-            <div class="param-val neg">&#8377;3,500</div>
-          </div>
-        </div>
-        <div class="card-roi-row">
-          <span class="card-roi-label">Avg Monthly ROI</span>
-          <span class="card-roi-val loading" id="roi-sapv3">—</span>
-        </div>
-        <div class="card-links">
-          <a class="card-link" href="https://tradetron.tech/strategy/8680369" target="_blank" rel="noopener">
-            <span class="card-link-icon">&#128279;</span>
-            <div class="card-link-text">
-              <div class="card-link-label">Strategy Link</div>
-              <div class="card-link-val">tradetron.tech/strategy/8680369</div>
-            </div>
-          </a>
-          <div class="share-code-row" onclick="copyCode(this,'a2a10dfa-3c31-47d9-b720-e183681ebc5f')">
-            <div style="flex:1">
-              <div class="share-code-label">Share Code</div>
-              <div class="share-code-val">a2a10dfa-3c31-47d9-b720-e183681ebc5f</div>
-            </div>
-            <button class="copy-btn">Copy</button>
-          </div>
-          <div class="hedged-note">
-            &#128737; Hedged &rarr;
-            <a href="https://tradetron.tech/strategy/8820661" target="_blank" rel="noopener">tradetron.tech/strategy/8820661</a>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /card-pool -->
-
-    <!-- Telegram -->
+        <!-- Telegram -->
     <a class="tg-card" href="https://t.me/apexalgoschat" target="_blank" rel="noopener">
       <span class="tg-card-icon">&#9992;</span>
       <div class="tg-card-body">
@@ -1026,212 +730,177 @@
   </main>
 
   <script>
-        function toggleTheme() {
-      const isLight = document.documentElement.classList.toggle('light');
-      document.getElementById('themeIcon').textContent  = isLight ? '◐' : '☀';
-      document.getElementById('themeLabel').textContent = isLight ? 'Dark' : 'Light';
-      localStorage.setItem('apex-theme', isLight ? 'light' : 'dark');
-      updateChartTheme();
-    }
-    // Restore saved theme
-    (function() {
-      const saved = localStorage.getItem('apex-theme');
-      if (saved === 'light') {
-        document.documentElement.classList.add('light');
-        document.addEventListener('DOMContentLoaded', () => {
-          const icon  = document.getElementById('themeIcon');
-          const label = document.getElementById('themeLabel');
-          if (icon)  icon.textContent  = '◐';
-          if (label) label.textContent = 'Dark';
-        });
+  // ── THEME ──
+  function toggleTheme() {
+    const isLight = document.documentElement.classList.toggle('light');
+    document.getElementById('themeIcon').textContent  = isLight ? '☀' : '☾';
+    document.getElementById('themeLabel').textContent = isLight ? 'Dark' : 'Light';
+    localStorage.setItem('apex-theme', isLight ? 'light' : 'dark');
+  }
+  (function(){ const saved = localStorage.getItem('apex-theme'); if (saved==='light') document.documentElement.classList.add('light'); })();
+
+  // ── COPY SHARE CODE ──
+  function copyCode(el, code) {
+    navigator.clipboard.writeText(code).then(() => {
+      const target = el.classList.contains('copy-btn') ? el : el.querySelector('.copy-btn');
+      const orig = target.textContent; target.textContent = 'Copied!';
+      setTimeout(() => target.textContent = orig, 2000);
+    }).catch(() => {
+      const ta = document.createElement('textarea'); ta.value = code;
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    });
+  }
+
+  // ── ROI BADGE ──
+  function setRoiEl(id, roi) {
+    const el = document.getElementById(id); if (!el) return;
+    el.classList.remove('loading');
+    if (roi === null || roi === undefined) { el.textContent = 'N/A'; el.style.color = 'var(--muted)'; return; }
+    const sign = roi >= 0 ? '+' : '';
+    el.textContent = sign + roi.toFixed(1) + '% /mo';
+    el.classList.toggle('neg', roi < 0);
+    el.style.color = '';
+  }
+
+  // ── BUILD CARD HTML from strategy object ──
+  function buildCard(s) {
+    const slStr   = s.sl ? '&#8377;' + Number(s.sl).toLocaleString('en-IN') : 'Open';
+    const isHedged = (s.sheet || '') === 'DAILY P&L HEDGED';
+    const tagLabel = isHedged ? 'Hedged' : (s.tag || 'Main');
+    const linkHtml = s.tradetron_id ? `
+      <a class="card-link" href="https://tradetron.tech/strategy/${s.tradetron_id}" target="_blank" rel="noopener">
+        <span class="card-link-icon">&#128279;</span>
+        <div class="card-link-text">
+          <div class="card-link-label">Strategy Link</div>
+          <div class="card-link-val">tradetron.tech/strategy/${s.tradetron_id}</div>
+        </div>
+      </a>` : '';
+    const codeHtml = s.share_code ? `
+      <div class="share-code-row" onclick="copyCode(this,'${s.share_code}')">
+        <div style="flex:1">
+          <div class="share-code-label">Share Code</div>
+          <div class="share-code-val">${s.share_code}</div>
+        </div>
+        <button class="copy-btn">Copy</button>
+      </div>` : '';
+    const div = document.createElement('div');
+    div.className = 'strat-card';
+    div.dataset.key = s.key;
+    div.innerHTML = `
+      <div class="card-header">
+        <div>
+          <div class="card-name">${s.label}</div>
+          <div class="card-subtitle">${s.subtitle || ''}</div>
+        </div>
+        <span class="card-tag">${tagLabel}</span>
+      </div>
+      <div class="card-params">
+        <div class="param"><div class="param-label">Target</div><div class="param-val pos">Open</div></div>
+        <div class="param"><div class="param-label">Stop Loss</div><div class="param-val neg">${slStr}</div></div>
+      </div>
+      <div class="card-roi-row">
+        <span class="card-roi-label">Avg Monthly ROI</span>
+        <span class="card-roi-val loading" id="roi-${s.key}">—</span>
+      </div>
+      <div class="card-links">${linkHtml}${codeHtml}</div>`;
+    return div;
+  }
+
+  // ── GROUP & RENDER cards from data.json strategies ──
+  const CONFIG_KEY = 'apexStratConfig_v1';
+  function loadCfg() { try { return JSON.parse(localStorage.getItem(CONFIG_KEY)) || {}; } catch { return {}; } }
+
+  function renderCards(dataStrategies, stats) {
+    const cfg = loadCfg();
+    const grids = {
+      nfo:       document.getElementById('grid-nfo'),
+      nfoHedged: document.getElementById('grid-nfo-hedged'),
+      mcx:       document.getElementById('grid-mcx'),
+      mcxHedged: document.getElementById('grid-mcx-hedged'),
+    };
+    // Clear grids
+    Object.values(grids).forEach(g => { if (g) g.innerHTML = ''; });
+
+    dataStrategies.forEach(s => {
+      const cat      = cfg[s.key]?.category || 'nfo';
+      const isHedged = (s.sheet || '') === 'DAILY P&L HEDGED';
+
+      // Visibility
+      let visible;
+      if (cfg[s.key] && cfg[s.key].visible !== undefined) visible = cfg[s.key].visible;
+      else visible = s.visible !== false;
+      if (!visible || cat === 'hidden') return;
+
+      const card = buildCard(s);
+      if (cat === 'mcx') {
+        (isHedged ? grids.mcxHedged : grids.mcx).appendChild(card);
+      } else {
+        (isHedged ? grids.nfoHedged : grids.nfo).appendChild(card);
       }
-    })();
 
-    // ── Copy share code ──────────────────────────────────────────────────────
-    function copyCode(el, code) {
-      navigator.clipboard.writeText(code).then(() => {
-        const target = el.classList.contains('copy-btn') ? el : (el.querySelector('.copy-btn') || el);
-        const orig = target.textContent;
-        target.textContent = 'Copied!';
-        setTimeout(() => { target.textContent = orig; }, 2000);
-      }).catch(() => {
-        const ta = document.createElement('textarea');
-        ta.value = code; document.body.appendChild(ta); ta.select();
-        document.execCommand('copy'); document.body.removeChild(ta);
-      });
-    }
+      // Set ROI badge
+      if (stats && stats[s.key]) setRoiEl('roi-' + s.key, stats[s.key].avg_month_roi ?? null);
+    });
 
-    // ── Auto-refresh P&L from data.json (same source as main page) ──────────
-    async function refreshPnL() {
-      try {
-        const res = await fetch('./data.json?t=' + Date.now());
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const d = await res.json();
-        if (!d || !d.stats) return;
-        const s = d.stats;
-        const fmt = n => '\u20b9' + Math.abs(Math.round(n)).toLocaleString('en-IN');
-        const setEl = (id, v) => { const e = document.getElementById(id); if (e) e.innerHTML = v; };
-        setEl('live-comb-roi', '+' + s.comb.roi + '%');
-        setEl('live-comb-pnl', fmt(s.comb.pnl));
-        setEl('live-comb-dd',  s.comb.max_dd + '%');
-        setEl('live-nap-roi',  '+' + s.nap.roi + '%');
-        setEl('live-nap-pnl',  fmt(s.nap.pnl));
-        setEl('live-sap-roi',  '+' + s.sap.roi + '%');
-        setEl('live-sap-pnl',  fmt(s.sap.pnl));
-        const badge = document.getElementById('live-status');
-        if (badge && d.updated) {
-          badge.textContent = 'LIVE \u00b7 ' + d.updated;
-          badge.style.background  = 'rgba(78,160,110,0.12)';
-          badge.style.borderColor = 'rgba(78,160,110,0.35)';
-          badge.style.color       = '#7EC8A0';
-        }
-        // Apply visibility from data.json strategies array
-        if (d.strategies && !window._stratGrouped) {
-          window._stratGrouped = true;
-          groupStrategies(d.strategies);
-        }
-      } catch(e) {
-        const badge = document.getElementById('live-status');
-        if (badge) badge.textContent = 'CACHED';
-        console.warn('data.json not available:', e.message);
+    // Show/hide section headers
+    const nfoAny = grids.nfo.children.length > 0 || grids.nfoHedged.children.length > 0;
+    document.getElementById('section-nfo').style.display          = nfoAny ? '' : 'none';
+    document.getElementById('sub-section-nfo-hedged').style.display = grids.nfoHedged.children.length > 0 ? '' : 'none';
+
+    const mcxAny = grids.mcx.children.length > 0 || grids.mcxHedged.children.length > 0;
+    document.getElementById('section-mcx').style.display          = mcxAny ? '' : 'none';
+    document.getElementById('sub-section-mcx-hedged').style.display = grids.mcxHedged.children.length > 0 ? '' : 'none';
+  }
+
+  // ── FETCH data.json & REFRESH ──
+  async function refreshPnL() {
+    try {
+      const res = await fetch('./data.json?t=' + Date.now());
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const d = await res.json();
+      if (!d || !d.stats) return;
+      const s   = d.stats;
+      const fmt = n => '&#8377;' + Math.abs(Math.round(n)).toLocaleString('en-IN');
+      const setEl = (id, v) => { const e = document.getElementById(id); if (e) e.innerHTML = v; };
+
+      setEl('live-comb-roi', '+' + s.comb.roi + '%');
+      setEl('live-comb-pnl', fmt(s.comb.pnl));
+      setEl('live-nap-roi',  '+' + s.nap.roi  + '%');
+      setEl('live-nap-pnl',  fmt(s.nap.pnl));
+      setEl('live-sap-roi',  '+' + s.sap.roi  + '%');
+      setEl('live-sap-pnl',  fmt(s.sap.pnl));
+
+      const badge = document.getElementById('live-status');
+      if (badge && d.updated) {
+        badge.textContent = 'LIVE · ' + d.updated;
+        badge.style.background  = 'rgba(78,160,110,0.12)';
+        badge.style.borderColor = 'rgba(78,160,110,0.35)';
+        badge.style.color       = '#7EC8A0';
       }
-    }
 
-    // Immediate fallback: group using only localStorage (no data.json yet)
-    groupStrategies(null);
+      // Rebuild cards every refresh (picks up visibility changes)
+      if (d.strategies && d.strategies.length) {
+        renderCards(d.strategies, d.stats);
+      }
+    } catch(e) {
+      const badge = document.getElementById('live-status');
+      if (badge) badge.textContent = 'CACHED';
+      console.warn('data.json not available:', e.message);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
     refreshPnL();
     setInterval(refreshPnL, 5 * 60 * 1000);
 
-    // ── Avg Monthly ROI from data.json ───────────────────────────────────────
-    const CAPITALS = {
-      nap:   250000,
-      sap:   250000,
-            napv2: 250000,
-      napv3: 250000,
-      sapv2: 250000,
-      sapv3: 250000,
-    };
-
-    function avgMonthlyROI(monthlyPnL, capital) {
-      if (!monthlyPnL || monthlyPnL.length === 0) return null;
-      // Exclude current (incomplete) month — last entry
-      const complete = monthlyPnL.slice(0, -1);
-      if (complete.length === 0) return null;
-      // Only count months where strategy was active (non-zero P&L)
-      const activePnL = complete.filter(v => v !== 0);
-      if (activePnL.length === 0) return null;
-      const avg = activePnL.reduce((a, b) => a + b, 0) / activePnL.length;
-      return (avg / capital) * 100;
-    }
-
-    function setRoiEl(id, roi) {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.classList.remove('loading');
-      if (roi === null) {
-        el.textContent = 'N/A';
-        el.style.color = 'var(--muted)';
-        return;
-      }
-      const sign = roi >= 0 ? '+' : '';
-      el.textContent = sign + roi.toFixed(1) + '% / mo';
-      el.classList.toggle('neg', roi < 0);
-      el.style.color = '';
-    }
-
-    async function loadAvgROIs() {
-      try {
-        const res = await fetch('./data.json?t=' + Date.now());
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const d = await res.json();
-        const s = d.stats;
-
-        setRoiEl('roi-nap',   s.nap?.avg_month_roi   ?? null);
-        setRoiEl('roi-sap',   s.sap?.avg_month_roi   ?? null);
-        setRoiEl('roi-napv2', s.napv2?.avg_month_roi ?? null);
-        setRoiEl('roi-napv3', s.napv3?.avg_month_roi ?? null);
-        setRoiEl('roi-sapv2', s.sapv2?.avg_month_roi ?? null);
-        setRoiEl('roi-sapv3', s.sapv3?.avg_month_roi ?? null);
-
-      } catch(e) {
-        console.warn('Avg ROI load failed:', e.message);
-        ['roi-nap','roi-sap','roi-napv2','roi-napv3','roi-sapv2','roi-sapv3']
-          .forEach(id => setRoiEl(id, null));
-      }
-    }
-
-    loadAvgROIs();
-
-    // ── STRATEGY CATEGORY GROUPING ──────────────────────────────────────────
-    // dataStrategies: optional array from data.json — used as default visibility
-    function groupStrategies(dataStrategies) {
-      const CONFIG_KEY = 'apexStratConfig_v1';
-      let cfg = {};
-      try { cfg = JSON.parse(localStorage.getItem(CONFIG_KEY)) || {}; } catch {}
-
-      // Build quick lookups: key → visible, key → sheet
-      const dataVis   = {};
-      const dataSheet = {};
-      if (dataStrategies && dataStrategies.length) {
-        dataStrategies.forEach(s => {
-          dataVis[s.key]   = s.visible !== false;
-          dataSheet[s.key] = s.sheet || 'DAILY P&L';
-        });
-      }
-
-      const pool          = document.getElementById('card-pool');
-      const gridNfo       = document.getElementById('grid-nfo');
-      const gridNfoHedged = document.getElementById('grid-nfo-hedged');
-      const gridMcx       = document.getElementById('grid-mcx');
-      const gridMcxHedged = document.getElementById('grid-mcx-hedged');
-      const secNfo        = document.getElementById('section-nfo');
-      const secMcx        = document.getElementById('section-mcx');
-      const subSecNfoH    = document.getElementById('sub-section-nfo-hedged');
-      const subSecMcxH    = document.getElementById('sub-section-mcx-hedged');
-
-      // Move all cards back to pool first, then clear grids
-      [gridNfo, gridNfoHedged, gridMcx, gridMcxHedged].forEach(g => {
-        if (!g) return;
-        Array.from(g.querySelectorAll('.strat-card')).forEach(c => pool.appendChild(c));
-      });
-
-      const cards = Array.from(pool.querySelectorAll('.strat-card'));
-
-      cards.forEach(card => {
-        const key      = card.dataset.key;
-        const cat      = cfg[key]?.category || 'nfo';
-        const sheet    = dataSheet[key] || 'DAILY P&L';
-        const isHedged = sheet === 'DAILY P&L HEDGED';
-
-        // Visibility: localStorage override first, then data.json default, then true
-        let visible;
-        if (cfg[key] && cfg[key].visible !== undefined) {
-          visible = cfg[key].visible;
-        } else if (dataVis[key] !== undefined) {
-          visible = dataVis[key];
-        } else {
-          visible = true;
-        }
-
-        if (!visible || cat === 'hidden') return;
-
-        if (cat === 'mcx') {
-          (isHedged ? gridMcxHedged : gridMcx).appendChild(card);
-        } else {
-          (isHedged ? gridNfoHedged : gridNfo).appendChild(card);
-        }
-      });
-
-      // Show/hide section + sub-section headers
-      const nfoHasAny = gridNfo.children.length > 0 || gridNfoHedged.children.length > 0;
-      secNfo.style.display     = nfoHasAny ? '' : 'none';
-      subSecNfoH.style.display = gridNfoHedged.children.length > 0 ? '' : 'none';
-
-      const mcxHasAny = gridMcx.children.length > 0 || gridMcxHedged.children.length > 0;
-      secMcx.style.display     = mcxHasAny ? '' : 'none';
-      subSecMcxH.style.display = gridMcxHedged.children.length > 0 ? '' : 'none';
-    }
-  </script>
+    // Theme icon init
+    const isLight = document.documentElement.classList.contains('light');
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+    if (icon)  icon.textContent  = isLight ? '☀' : '☾';
+    if (label) label.textContent = isLight ? 'Dark' : 'Light';
+  });
+</script>
 
   <footer>
     <div class="footer-disclaimer">
