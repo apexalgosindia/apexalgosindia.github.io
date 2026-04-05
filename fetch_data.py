@@ -25,23 +25,21 @@ SHEET_ID = '1Rgy-HH8bcY7guN7PuH6biiK-JVV-PaFOH5aDII8oVf8'
 # (or any other tab name) — the script fetches each unique tab only once.
 # ══════════════════════════════════════════════════════════════════════════════
 STRATEGIES = [
-    # ── Standard strategies (DAILY P&L tab) ────────────────────────────────
-    # key       label           capital     col   sheet            color       visible
-    {'key':'nap',   'label':'NAP',   'capital':250_000, 'col':1,  'sheet':'DAILY P&L', 'color':'#D4A840', 'visible':True},
-    {'key':'sap',   'label':'SAP',   'capital':250_000, 'col':4,  'sheet':'DAILY P&L', 'color':'#3FE088', 'visible':True},
-    {'key':'cap',   'label':'CAP',   'capital':500_000, 'col':11, 'sheet':'DAILY P&L', 'color':'#B06FE0', 'visible':True},
-    {'key':'napv2', 'label':'NAPv2', 'capital':250_000, 'col':18, 'sheet':'DAILY P&L', 'color':'#E06F6F', 'visible':True},
-    {'key':'napv3', 'label':'NAPv3', 'capital':250_000, 'col':21, 'sheet':'DAILY P&L', 'color':'#E0B06F', 'visible':True},
-    {'key':'sapv2', 'label':'SAPv2', 'capital':250_000, 'col':24, 'sheet':'DAILY P&L', 'color':'#6FE0D4', 'visible':True},
-    {'key':'sapv3', 'label':'SAPv3', 'capital':250_000, 'col':27, 'sheet':'DAILY P&L', 'color':'#6F9FE0', 'visible':True},
+    # ── Standard strategies (DAILY P&L tab) ──────────────────────────────────────────────────────────────────
+    # key      label     capital    col  sheet           color       visible  tradetron_id  share_code                              subtitle                    sl
+    {'key':'nap',   'label':'NAP',   'capital':250_000, 'col':1,  'sheet':'DAILY P&L', 'color':'#D4A840', 'visible':True,  'tradetron_id':'7324677', 'share_code':'d404a9df-c1de-49e5-a6e4-c431a7a34c37', 'subtitle':'Nifty Intraday Selling',            'sl':5000},
+    {'key':'sap',   'label':'SAP',   'capital':250_000, 'col':4,  'sheet':'DAILY P&L', 'color':'#3FE088', 'visible':True,  'tradetron_id':'7324685', 'share_code':'5e606810-edce-46e3-bd89-f1ded1f6f4f6', 'subtitle':'Sensex Intraday Selling',           'sl':5000},
+    {'key':'cap',   'label':'CAP',   'capital':500_000, 'col':11, 'sheet':'DAILY P&L', 'color':'#B06FE0', 'visible':True,  'tradetron_id':'',        'share_code':'',                                     'subtitle':'Combined Auto Portfolio',           'sl':0},
+    {'key':'napv2', 'label':'NAPv2', 'capital':250_000, 'col':18, 'sheet':'DAILY P&L', 'color':'#E06F6F', 'visible':True,  'tradetron_id':'7803165', 'share_code':'f10c10c5-3bbf-415f-8aee-a59e56a01856', 'subtitle':'Nifty Intraday Selling',            'sl':3500},
+    {'key':'napv3', 'label':'NAPv3', 'capital':250_000, 'col':21, 'sheet':'DAILY P&L', 'color':'#E0B06F', 'visible':True,  'tradetron_id':'8678425', 'share_code':'98a1a981-2594-415a-9dd8-b39cdfa571e9', 'subtitle':'Nifty Intraday Selling',            'sl':3500},
+    {'key':'sapv2', 'label':'SAPv2', 'capital':250_000, 'col':24, 'sheet':'DAILY P&L', 'color':'#6FE0D4', 'visible':True,  'tradetron_id':'8838677', 'share_code':'e906d9cf-8076-4958-800b-e02a5967ef98', 'subtitle':'Sensex Intraday Selling',           'sl':3500},
+    {'key':'sapv3', 'label':'SAPv3', 'capital':250_000, 'col':27, 'sheet':'DAILY P&L', 'color':'#6F9FE0', 'visible':True,  'tradetron_id':'8680369', 'share_code':'a2a10dfa-3c31-47d9-b720-e183681ebc5f', 'subtitle':'Sensex Intraday Selling',           'sl':3500},
 
-    # ── Hedged strategies (DAILY P&L HEDGED tab) ───────────────────────────
-    # Add your hedged strategies below — set col to the correct column index.
-    # Example (update col/label/capital/color/visible to match your sheet):
-    {'key':'naph',  'label':'NAP-H',  'capital':150_000, 'col':1,  'sheet':'DAILY P&L HEDGED', 'color':'#A0E06F', 'visible':True},
-    {'key':'saph',  'label':'SAP-H',  'capital':150_000, 'col':4,  'sheet':'DAILY P&L HEDGED', 'color':'#E06FB0', 'visible':True},
-]
-# ══════════════════════════════════════════════════════════════════════════════
+    # ── Hedged strategies (DAILY P&L HEDGED tab) ─────────────────────────────────────────────────────────────
+    {'key':'naph',  'label':'NAP-H', 'capital':150_000, 'col':1,  'sheet':'DAILY P&L HEDGED', 'color':'#A0E06F', 'visible':True, 'tradetron_id':'7286441', 'share_code':'65ad2c9c-0ceb-4076-932f-5430d14b4530', 'subtitle':'Nifty Intraday Selling — Hedged',  'sl':3500},
+    {'key':'saph',  'label':'SAP-H', 'capital':150_000, 'col':4,  'sheet':'DAILY P&L HEDGED', 'color':'#E06FB0', 'visible':True, 'tradetron_id':'7324673', 'share_code':'YOUR-SAPH-SHARE-CODE',                 'subtitle':'Sensex Intraday Selling — Hedged', 'sl':3500},
+
+# ══
 
 _S = {s['key']: s for s in STRATEGIES}   # quick lookup by key
 
@@ -331,12 +329,16 @@ def build_data():
         'updated':    today_formatted,
         'strategies': [
             {
-                'key':     s['key'],
-                'label':   s['label'],
-                'capital': s['capital'],
-                'color':   s['color'],
-                'visible': s['visible'],
-                'sheet':   s.get('sheet', 'DAILY P&L'),
+                'key':          s['key'],
+                'label':        s['label'],
+                'capital':      s['capital'],
+                'color':        s['color'],
+                'visible':      s['visible'],
+                'sheet':        s.get('sheet', 'DAILY P&L'),
+                'tradetron_id': s.get('tradetron_id', ''),
+                'share_code':   s.get('share_code', ''),
+                'subtitle':     s.get('subtitle', ''),
+                'sl':           s.get('sl', 0),
             }
             for s in STRATEGIES
         ],
