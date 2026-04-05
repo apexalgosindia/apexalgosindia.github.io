@@ -356,7 +356,8 @@
         <button class="range-btn"        id="cat-nfo"    onclick="setCatFilter('nfo',this)">NFO / BFO</button>
         <button class="range-btn"        id="cat-mcx"    onclick="setCatFilter('mcx',this)">MCX</button>
         <span style="display:inline-block;width:1px;height:18px;background:var(--rule);margin:0 6px;flex-shrink:0;opacity:0.6;"></span>
-        <button class="range-btn"        id="cat-hedged" onclick="setCatFilter('hedged',this)">&#128737; Hedged</button>
+        <button class="range-btn"        id="cat-unhedged" onclick="setCatFilter('unhedged',this)">Unhedged</button>
+        <button class="range-btn"        id="cat-hedged"   onclick="setCatFilter('hedged',this)">Hedged</button>
       </div>
       <div class="search-box">
         <span class="search-icon">&#128269;</span>
@@ -583,7 +584,7 @@ function setStratCat(k, cat) {
 
 function setCatFilter(cat, btn) {
   activeCatFilter = cat;
-  ['all','nfo','mcx','hedged'].forEach(c => {
+  ['all','nfo','mcx','unhedged','hedged'].forEach(c => {
     const el = document.getElementById('cat-'+c);
     if (el) el.classList.toggle('active', c === cat);
   });
@@ -775,6 +776,8 @@ function buildBdRows() {
     const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
     if (activeCatFilter === 'hedged') {
       if (!isHedged) return false;
+    } else if (activeCatFilter === 'unhedged') {
+      if (isHedged) return false;
     } else if (activeCatFilter !== 'all') {
       if (cat !== activeCatFilter) return false;
     }
@@ -846,7 +849,7 @@ function renderBreakdownTable(filter='') {
   function renderGroupRows(grpRows, label, icon) {
     if (!grpRows.length) return;
     if (showGroups) {
-      rowsHtml += `<tr class="subgroup-row"><td colspan="6"><div class="subgroup-label">${icon} ${label}</div></td></tr>`;
+      rowsHtml += `<tr class="subgroup-row"><td colspan="6"><div class="subgroup-label">${label || ''}</div></td></tr>`;
     }
     grpRows.forEach(r => {
       rowsHtml += `
@@ -859,11 +862,11 @@ function renderBreakdownTable(filter='') {
         <td>${ddCell(r.curDd, r.maxDd)}</td>
       </tr>`;
     });
-    if (showGroups) rowsHtml += subTotalRow(label + ' Total', grpRows, false);
+    if (showGroups) rowsHtml += subTotalRow(label ? label + ' Total' : 'Standard Total', grpRows, false);
   }
 
-  renderGroupRows(stdRows,    'Standard Strategies', '&#128200;');
-  renderGroupRows(hedgedRows, 'Hedged Strategies',   '&#128737;');
+  renderGroupRows(stdRows,    '', '');
+  renderGroupRows(hedgedRows, 'Hedged', '');
 
   // Overall total row — only show if more than one group or single filter
   const allRows = rows;
@@ -940,7 +943,8 @@ function renderTodayBanner() {
     const cat      = _bannerCfg[k]?.category || 'nfo';
     const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
     if (activeCatFilter === 'hedged' && !isHedged) return;
-    if (activeCatFilter !== 'all' && activeCatFilter !== 'hedged' && cat !== activeCatFilter) return;
+    if (activeCatFilter === 'unhedged' && isHedged) return;
+    if (activeCatFilter !== 'all' && activeCatFilter !== 'hedged' && activeCatFilter !== 'unhedged' && cat !== activeCatFilter) return;
     const v = DATA[k+'_daily']?.[idx] || 0;
     if (v !== 0) {
       grand += v;
@@ -965,7 +969,8 @@ function renderTodayBanner() {
       if (!getStratVisible(k)) return false;
       const cat      = stripCfg[k]?.category || 'nfo';
       const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
-      if (activeCatFilter === 'hedged') return isHedged;
+      if (activeCatFilter === 'hedged')   return isHedged;
+      if (activeCatFilter === 'unhedged') return !isHedged;
       if (activeCatFilter !== 'all') return cat === activeCatFilter;
       return true;
     }).forEach(k => {
