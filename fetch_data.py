@@ -38,8 +38,7 @@ STRATEGIES = [
     # ── Hedged strategies (DAILY P&L HEDGED tab) ─────────────────────────────────────────────────────────────
     {'key':'naph',  'label':'NAP-H', 'capital':150_000, 'col':1,  'sheet':'DAILY P&L HEDGED', 'color':'#A0E06F', 'visible':True, 'tradetron_id':'7286441', 'share_code':'65ad2c9c-0ceb-4076-932f-5430d14b4530', 'subtitle':'Nifty Intraday Selling — Hedged',  'sl':3500},
     {'key':'saph',  'label':'SAP-H', 'capital':150_000, 'col':4,  'sheet':'DAILY P&L HEDGED', 'color':'#E06FB0', 'visible':True, 'tradetron_id':'7324673', 'share_code':'YOUR-SAPH-SHARE-CODE',                 'subtitle':'Sensex Intraday Selling — Hedged', 'sl':3500},
-
-# ══
+]
 
 _S = {s['key']: s for s in STRATEGIES}   # quick lookup by key
 
