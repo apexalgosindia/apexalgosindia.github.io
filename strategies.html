@@ -589,7 +589,44 @@
     .mobile-nav a:hover { color: var(--accent); }
     :root.light .mobile-nav a { color: var(--mid); }
     :root.light .mobile-nav a:hover { color: var(--accent); }
-  </style>
+  
+/* ── HEDGED SUB-SECTION ── */
+.sub-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(237,230,214,0.08);
+}
+:root.light .sub-section-header { border-bottom-color: var(--rule); }
+.sub-section-badge {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.55rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--surface2);
+  border: 1px solid rgba(212,168,64,0.35);
+  padding: 0.2rem 0.6rem;
+  border-radius: 2px;
+}
+.sub-section-heading {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+.sub-section-divider {
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+  opacity: 0.5;
+}
+
+</style>
 </head>
 <body>
   <nav>
@@ -678,6 +715,13 @@
       <h2 class="section-heading">NFO / BFO Strategies</h2>
     </div>
     <div class="strategy-grid" id="grid-nfo"></div>
+    <!-- NFO Hedged sub-section -->
+    <div class="sub-section-header" id="sub-section-nfo-hedged" style="display:none;">
+      <span class="sub-section-badge">&#128737; Hedged</span>
+      <h3 class="sub-section-heading">Hedged Strategies</h3>
+      <div class="sub-section-divider"></div>
+    </div>
+    <div class="strategy-grid" id="grid-nfo-hedged"></div>
 
     <!-- MCX STRATEGIES -->
     <div class="section-header" id="section-mcx" style="display:none;">
@@ -685,6 +729,13 @@
       <h2 class="section-heading">MCX Strategies</h2>
     </div>
     <div class="strategy-grid" id="grid-mcx"></div>
+    <!-- MCX Hedged sub-section -->
+    <div class="sub-section-header" id="sub-section-mcx-hedged" style="display:none;">
+      <span class="sub-section-badge">&#128737; Hedged</span>
+      <h3 class="sub-section-heading">Hedged Strategies</h3>
+      <div class="sub-section-divider"></div>
+    </div>
+    <div class="strategy-grid" id="grid-mcx-hedged"></div>
 
     <!-- ALL CARDS (hidden pool) -->
     <div id="card-pool" style="display:none;">
@@ -1121,23 +1172,33 @@
       let cfg = {};
       try { cfg = JSON.parse(localStorage.getItem(CONFIG_KEY)) || {}; } catch {}
 
-      // Build a quick lookup: key → default visible from data.json
-      const dataVis = {};
+      // Build quick lookups: key → visible, key → sheet
+      const dataVis   = {};
+      const dataSheet = {};
       if (dataStrategies && dataStrategies.length) {
-        dataStrategies.forEach(s => { dataVis[s.key] = s.visible !== false; });
+        dataStrategies.forEach(s => {
+          dataVis[s.key]   = s.visible !== false;
+          dataSheet[s.key] = s.sheet || 'DAILY P&L';
+        });
       }
 
-      const pool    = document.getElementById('card-pool');
-      const gridNfo = document.getElementById('grid-nfo');
-      const gridMcx = document.getElementById('grid-mcx');
-      const secNfo  = document.getElementById('section-nfo');
-      const secMcx  = document.getElementById('section-mcx');
+      const pool           = document.getElementById('card-pool');
+      const gridNfo        = document.getElementById('grid-nfo');
+      const gridNfoHedged  = document.getElementById('grid-nfo-hedged');
+      const gridMcx        = document.getElementById('grid-mcx');
+      const gridMcxHedged  = document.getElementById('grid-mcx-hedged');
+      const secNfo         = document.getElementById('section-nfo');
+      const secMcx         = document.getElementById('section-mcx');
+      const subSecNfoH     = document.getElementById('sub-section-nfo-hedged');
+      const subSecMcxH     = document.getElementById('sub-section-mcx-hedged');
 
       const cards = Array.from(pool.querySelectorAll('.strat-card'));
 
       cards.forEach(card => {
-        const key = card.dataset.key;
-        const cat = cfg[key]?.category || 'nfo';
+        const key   = card.dataset.key;
+        const cat   = cfg[key]?.category || 'nfo';
+        const sheet = dataSheet[key] || 'DAILY P&L';
+        const isHedged = sheet === 'DAILY P&L HEDGED';
 
         // Visibility: localStorage override first, then data.json default, then true
         let visible;
@@ -1150,12 +1211,26 @@
         }
 
         if (!visible || cat === 'hidden') return;
-        (cat === 'mcx' ? gridMcx : gridNfo).appendChild(card);
+
+        if (cat === 'mcx') {
+          (isHedged ? gridMcxHedged : gridMcx).appendChild(card);
+        } else {
+          (isHedged ? gridNfoHedged : gridNfo).appendChild(card);
+        }
       });
 
-      // Show/hide section headers based on whether grids have any cards
-      if (gridNfo.children.length === 0) secNfo.style.display = 'none';
-      if (gridMcx.children.length > 0)  secMcx.style.display = '';
+      // Show/hide section + sub-section headers
+      if (gridNfo.children.length === 0 && gridNfoHedged.children.length === 0) secNfo.style.display = 'none';
+      else secNfo.style.display = '';
+
+      if (gridNfoHedged.children.length > 0) subSecNfoH.style.display = '';
+      else subSecNfoH.style.display = 'none';
+
+      if (gridMcx.children.length > 0 || gridMcxHedged.children.length > 0) secMcx.style.display = '';
+      else secMcx.style.display = 'none';
+
+      if (gridMcxHedged.children.length > 0) subSecMcxH.style.display = '';
+      else subSecMcxH.style.display = 'none';
     }
   </script>
 
