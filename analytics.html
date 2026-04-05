@@ -590,6 +590,11 @@ function setCatFilter(cat, btn) {
   });
   renderBreakdownTable(document.getElementById('searchInput').value);
   renderTodayBanner();
+  renderRollingStats();
+  renderSummaryStrip();
+  reRenderCharts();
+  renderHeatmap();
+  renderCalendar();
 }
 
 function toggleStratVisible(k) {
