@@ -1,50 +1,72 @@
 """
 Fetches Apex Algos P&L data from Google Sheets and writes data.json.
 CUSTOM VERSION for your specific data format (DD-MM-YY dates, ₹ symbols)
+
+To add / remove / hide a strategy, edit ONLY the STRATEGIES list below.
 """
 import requests, json, csv, io, datetime, statistics, sys
-import re
 
-SHEET_ID  = '1Rgy-HH8bcY7guN7PuH6biiK-JVV-PaFOH5aDII8oVf8'
-CAP_NAP   = 250_000
-CAP_SAP   = 250_000
-CAP_CAP   = 500_000
-CAP_NAPV2 = 250_000
-CAP_NAPV3 = 250_000
-CAP_SAPV2 = 250_000
-CAP_SAPV3 = 250_000
+SHEET_ID = '1Rgy-HH8bcY7guN7PuH6biiK-JVV-PaFOH5aDII8oVf8'
 
-# Column indices (0-based): A=0, B=1 ... L=11, S=18, V=21, Y=24, AB=27
-COL_NAP   = 1
-COL_SAP   = 4
-COL_CAP   = 11
-COL_NAPV2 = 18
-COL_NAPV3 = 21
-COL_SAPV2 = 24
-COL_SAPV3 = 27
+# ══════════════════════════════════════════════════════════════════════════════
+# STRATEGY CONFIG — this is the single source of truth.
+#
+# Fields:
+#   key     → identifier used in data.json  (e.g. 'nap' → nap_daily, nap_monthly)
+#   label   → display name shown on the website
+#   capital → deployed capital in ₹ (used for ROI / Sharpe calculations)
+#   col     → 0-based column index in the sheet (A=0, B=1, C=2 … L=11, S=18 …)
+#   sheet   → Google Sheet tab name to read from (default: 'DAILY P&L')
+#   color   → hex color for charts ('' = auto-assign from palette)
+#   visible → True  = shown by default on the public site
+#             False = data is fetched & stored but hidden unless admin toggles on
+#
+# To add a strategy from a different tab, just set sheet='DAILY P&L HEDGED'
+# (or any other tab name) — the script fetches each unique tab only once.
+# ══════════════════════════════════════════════════════════════════════════════
+STRATEGIES = [
+    # ── Standard strategies (DAILY P&L tab) ────────────────────────────────
+    # key       label           capital     col   sheet            color       visible
+    {'key':'nap',   'label':'NAP',   'capital':250_000, 'col':1,  'sheet':'DAILY P&L', 'color':'#D4A840', 'visible':True},
+    {'key':'sap',   'label':'SAP',   'capital':250_000, 'col':4,  'sheet':'DAILY P&L', 'color':'#3FE088', 'visible':True},
+    {'key':'cap',   'label':'CAP',   'capital':500_000, 'col':11, 'sheet':'DAILY P&L', 'color':'#B06FE0', 'visible':True},
+    {'key':'napv2', 'label':'NAPv2', 'capital':250_000, 'col':18, 'sheet':'DAILY P&L', 'color':'#E06F6F', 'visible':True},
+    {'key':'napv3', 'label':'NAPv3', 'capital':250_000, 'col':21, 'sheet':'DAILY P&L', 'color':'#E0B06F', 'visible':True},
+    {'key':'sapv2', 'label':'SAPv2', 'capital':250_000, 'col':24, 'sheet':'DAILY P&L', 'color':'#6FE0D4', 'visible':True},
+    {'key':'sapv3', 'label':'SAPv3', 'capital':250_000, 'col':27, 'sheet':'DAILY P&L', 'color':'#6F9FE0', 'visible':True},
+
+    # ── Hedged strategies (DAILY P&L HEDGED tab) ───────────────────────────
+    # Add your hedged strategies below — set col to the correct column index.
+    # Example (update col/label/capital/color/visible to match your sheet):
+    # {'key':'naph',  'label':'NAP-H',  'capital':250_000, 'col':1,  'sheet':'DAILY P&L HEDGED', 'color':'#A0E06F', 'visible':True},
+    # {'key':'saph',  'label':'SAP-H',  'capital':250_000, 'col':4,  'sheet':'DAILY P&L HEDGED', 'color':'#E06FB0', 'visible':True},
+]
+# ══════════════════════════════════════════════════════════════════════════════
+
+_S = {s['key']: s for s in STRATEGIES}   # quick lookup by key
+
+
+# ── Helpers ──────────────────────────────────────────────────────────────────
 
 def clean_number(value):
-    """Remove ₹, commas, quotes and convert to float"""
+    """Remove ₹, commas, quotes and convert to float."""
     if not value or not value.strip():
         return None
-    # Remove ₹ symbol, commas, quotes, and extra spaces
     cleaned = value.replace('₹', '').replace(',', '').replace('"', '').strip()
     try:
         return float(cleaned)
     except ValueError:
         return None
 
+
 def parse_date_ddmmyy(date_str):
-    """Parse date in DD-MM-YY (Day of Week) format"""
-    # Format: "02-03-26 (Mon)" or "02-03-26"
-    # Extract just the date part
+    """Parse date in DD-MM-YY (Day of Week) format, e.g. '02-03-26 (Mon)'."""
     date_part = date_str.split('(')[0].strip()
     try:
-        # Parse DD-MM-YY format
-        d = datetime.datetime.strptime(date_part, '%d-%m-%y')
-        return d
+        return datetime.datetime.strptime(date_part, '%d-%m-%y')
     except ValueError:
         return None
+
 
 def fetch_csv(sheet_name):
     url = (
@@ -57,291 +79,292 @@ def fetch_csv(sheet_name):
     print(f"  ✓ Response received: {len(r.text)} bytes")
     return r.text
 
-def parse_daily_pnl(raw_csv):
-    """Parse DAILY P&L sheet with DD-MM-YY format"""
-    reader = csv.reader(io.StringIO(raw_csv))
-    rows = list(reader)
-    data = []
-    
+
+# ── Parsers ───────────────────────────────────────────────────────────────────
+
+def parse_sheet(raw_csv, sheet_strategies, sheet_name=''):
+    """Parse one sheet tab for a given subset of strategies.
+
+    Also scans for numeric columns not covered by any strategy in STRATEGIES
+    and prints a warning so you know to add them to the config.
+    """
+    reader  = csv.reader(io.StringIO(raw_csv))
+    rows    = list(reader)
+    records = []
+
     print(f"  Found {len(rows)} total rows")
-    
-    # Auto-detect the first data row by finding where dates start
+
+    # Auto-detect first data row
     start_row = 0
     for i, row in enumerate(rows):
-        if row and row[0].strip():
-            parsed = parse_date_ddmmyy(row[0])
-            if parsed:
-                start_row = i
-                print(f"  Auto-detected data start at row {i}: '{row[0]}'")
-                break
+        if row and row[0].strip() and parse_date_ddmmyy(row[0]):
+            start_row = i
+            print(f"  Auto-detected data start at row {i}: '{row[0]}'")
+            break
 
-    for i, row in enumerate(rows[start_row:], start=start_row):
+    # ── Header row detection (row just before data, if it exists) ────────────
+    header_row = rows[start_row - 1] if start_row > 0 else []
+
+    for row in rows[start_row:]:
         if not row or not row[0].strip():
             continue
-        
         date = parse_date_ddmmyy(row[0])
         if not date:
             continue
+        entry     = {'date': date}
+        any_value = False
+        for s in sheet_strategies:
+            val = clean_number(row[s['col']]) if len(row) > s['col'] else None
+            entry[s['key']] = val if val is not None else 0
+            if val is not None:
+                any_value = True
+        if any_value:
+            records.append(entry)
 
-        def get_col(col_idx):
-            return clean_number(row[col_idx]) if len(row) > col_idx else None
+    records.sort(key=lambda x: x['date'])
+    dates = [r['date'].strftime('%d/%m/%y') for r in records]
+    daily = {s['key']: [r[s['key']] for r in records] for s in sheet_strategies}
 
-        nap   = get_col(COL_NAP)
-        sap   = get_col(COL_SAP)
-        cap   = get_col(COL_CAP)
-        napv2 = get_col(COL_NAPV2)
-        napv3 = get_col(COL_NAPV3)
-        sapv2 = get_col(COL_SAPV2)
-        sapv3 = get_col(COL_SAPV3)
-
-        if any(v is not None for v in [nap, sap, cap, napv2, napv3, sapv2, sapv3]):
-            data.append({
-                'date':  date,
-                'nap':   nap   if nap   is not None else 0,
-                'sap':   sap   if sap   is not None else 0,
-                'cap':   cap   if cap   is not None else 0,
-                'napv2': napv2 if napv2 is not None else 0,
-                'napv3': napv3 if napv3 is not None else 0,
-                'sapv2': sapv2 if sapv2 is not None else 0,
-                'sapv3': sapv3 if sapv3 is not None else 0,
-            })
-    
-    data.sort(key=lambda x: x['date'])
-    
-    dates  = [d['date'].strftime('%d/%m/%y') for d in data]
-    nap_l  = [d['nap']   for d in data]
-    sap_l  = [d['sap']   for d in data]
-    cap_l  = [d['cap']   for d in data]
-    napv2_l= [d['napv2'] for d in data]
-    napv3_l= [d['napv3'] for d in data]
-    sapv2_l= [d['sapv2'] for d in data]
-    sapv3_l= [d['sapv3'] for d in data]
-    
-    print(f"  ✓ Parsed {len(data)} daily records")
-    if len(data) > 0:
+    print(f"  ✓ Parsed {len(records)} daily records")
+    if records:
         print(f"  Date range: {dates[0]} to {dates[-1]}")
-    
-    return dates, nap_l, sap_l, cap_l, napv2_l, napv3_l, sapv2_l, sapv3_l
 
-def build_monthly_from_daily(daily_dates, nap_daily, sap_daily,
-                              cap_daily, napv2_daily, napv3_daily,
-                              sapv2_daily, sapv3_daily):
-    """Build monthly data by aggregating daily data"""
+    # ── Warn about unconfigured numeric columns ───────────────────────────────
+    configured_cols = {s['col'] for s in STRATEGIES if s.get('sheet', 'DAILY P&L') == sheet_name}
+    unconfigured    = []
+    if records:
+        # Sample the first data row to find all numeric columns
+        sample_row = rows[start_row]
+        for col_idx, cell in enumerate(sample_row):
+            if col_idx == 0:
+                continue  # skip date column
+            if clean_number(cell) is not None and col_idx not in configured_cols:
+                header = header_row[col_idx].strip() if col_idx < len(header_row) else ''
+                unconfigured.append((col_idx, header))
+
+    if unconfigured:
+        print(f"\n  ⚠️  UNCONFIGURED COLUMNS detected in '{sheet_name}':")
+        print(f"     These columns have numeric data but are NOT in your STRATEGIES list.")
+        print(f"     Add them to fetch_data.py if you want them tracked:\n")
+        for col_idx, header in unconfigured:
+            col_letter = _col_letter(col_idx)
+            hint = f'  ← header: "{header}"' if header else ''
+            print(f"     col={col_idx} ({col_letter}){hint}")
+            print(f"     {{'key':'???', 'label':'???', 'capital':250_000, 'col':{col_idx}, 'sheet':'{sheet_name}', 'color':'', 'visible':True}},")
+        print()
+
+    return dates, daily
+
+
+def _col_letter(n):
+    """Convert 0-based column index to spreadsheet letter (0→A, 27→AB …)."""
+    s = ''
+    n += 1
+    while n:
+        n, r = divmod(n - 1, 26)
+        s = chr(65 + r) + s
+    return s
+
+
+# Keep old name as alias
+def parse_daily_pnl(raw_csv):
+    sheet = 'DAILY P&L'
+    return parse_sheet(raw_csv, [s for s in STRATEGIES if s.get('sheet', 'DAILY P&L') == sheet], sheet)
+
+
+def build_monthly_from_daily(daily_dates, daily):
+    """Aggregate daily dict → monthly dict, driven by STRATEGIES config."""
     if not daily_dates:
-        return [], [], [], [], [], [], [], []
-    
+        return [], {s['key']: [] for s in STRATEGIES}
+
     monthly_data = {}
-    
     for i, date_str in enumerate(daily_dates):
-        d = datetime.datetime.strptime(date_str, '%d/%m/%y')
+        d           = datetime.datetime.strptime(date_str, '%d/%m/%y')
         month_key   = d.strftime('%Y-%m')
         month_label = d.strftime('%b %y')
-        
         if month_key not in monthly_data:
-            monthly_data[month_key] = {
-                'label': month_label,
-                'nap': 0, 'sap': 0, 'cap': 0,
-                'napv2': 0, 'napv3': 0, 'sapv2': 0, 'sapv3': 0
-            }
-        
-        monthly_data[month_key]['nap']   += nap_daily[i]
-        monthly_data[month_key]['sap']   += sap_daily[i]
-        monthly_data[month_key]['cap']   += cap_daily[i]
-        monthly_data[month_key]['napv2'] += napv2_daily[i]
-        monthly_data[month_key]['napv3'] += napv3_daily[i]
-        monthly_data[month_key]['sapv2'] += sapv2_daily[i]
-        monthly_data[month_key]['sapv3'] += sapv3_daily[i]
-    
-    sorted_months = sorted(monthly_data.keys())
-    months  = [monthly_data[m]['label'] for m in sorted_months]
-    nap_m   = [monthly_data[m]['nap']   for m in sorted_months]
-    sap_m   = [monthly_data[m]['sap']   for m in sorted_months]
-    cap_m   = [monthly_data[m]['cap']   for m in sorted_months]
-    napv2_m = [monthly_data[m]['napv2'] for m in sorted_months]
-    napv3_m = [monthly_data[m]['napv3'] for m in sorted_months]
-    sapv2_m = [monthly_data[m]['sapv2'] for m in sorted_months]
-    sapv3_m = [monthly_data[m]['sapv3'] for m in sorted_months]
-    
-    print(f"  ✓ Built {len(months)} monthly records from daily data")
-    
-    return months, nap_m, sap_m, cap_m, napv2_m, napv3_m, sapv2_m, sapv3_m
+            monthly_data[month_key] = {'label': month_label,
+                                       **{s['key']: 0 for s in STRATEGIES}}
+        for s in STRATEGIES:
+            monthly_data[month_key][s['key']] += daily[s['key']][i]
 
-def sharpe(daily, capital):
-    if len(daily) < 2:
+    sorted_keys = sorted(monthly_data.keys())
+    months  = [monthly_data[m]['label'] for m in sorted_keys]
+    monthly = {s['key']: [monthly_data[m][s['key']] for m in sorted_keys]
+               for s in STRATEGIES}
+
+    print(f"  ✓ Built {len(months)} monthly records from daily data")
+    return months, monthly
+
+
+# ── Stats helpers ─────────────────────────────────────────────────────────────
+
+def sharpe(daily_list, capital):
+    if len(daily_list) < 2:
         return 0
-    r = [d / capital for d in daily]
+    r      = [d / capital for d in daily_list]
     mean_r = statistics.mean(r)
-    std_r = statistics.stdev(r)
+    std_r  = statistics.stdev(r)
     if std_r == 0:
         return 0
     return round((mean_r / std_r) * (252 ** 0.5), 2)
 
-def max_drawdown(daily, capital):
+
+def max_drawdown(daily_list, capital):
     cum = peak = 0
-    dd = 0
-    for d in daily:
-        cum += d
-        peak = max(peak, cum)
-        dd = min(dd, (cum - peak) / capital)
+    dd  = 0
+    for d in daily_list:
+        cum  += d
+        peak  = max(peak, cum)
+        dd    = min(dd, (cum - peak) / capital)
     return round(dd * 100, 1)
 
+
 def avg_monthly_roi(monthly_pnl, capital):
-    """Average monthly ROI using only months where strategy was active (non-zero)"""
+    """Average monthly ROI using only complete, active months."""
     if not monthly_pnl:
         return 0
-    # Exclude current incomplete month
     complete = monthly_pnl[:-1]
-    active = [v for v in complete if v != 0]
+    active   = [v for v in complete if v != 0]
     if not active:
         return 0
-    avg = sum(active) / len(active)
-    return round((avg / capital) * 100, 1)
+    return round((sum(active) / len(active) / capital) * 100, 1)
 
-def win_rate(daily):
-    if not daily:
+
+def win_rate(daily_list):
+    if not daily_list:
         return 0
-    return round(sum(1 for d in daily if d > 0) / len(daily) * 100, 1)
+    return round(sum(1 for d in daily_list if d > 0) / len(daily_list) * 100, 1)
+
+
+# ── Main builder ──────────────────────────────────────────────────────────────
 
 def build_data():
-    print("Fetching DAILY P&L sheet...")
-    try:
-        daily_csv = fetch_csv('DAILY P&L')
-        daily_dates, nap_daily, sap_daily, cap_daily, napv2_daily, napv3_daily, sapv2_daily, sapv3_daily = parse_daily_pnl(daily_csv)
-    except Exception as e:
-        print(f"✗ Error fetching DAILY P&L: {e}")
-        import traceback
-        traceback.print_exc()
-        daily_dates, nap_daily, sap_daily = [], [], []
-        cap_daily, napv2_daily, napv3_daily, sapv2_daily, sapv3_daily = [], [], [], [], []
-    
-    if len(daily_dates) == 0:
-        print("\n⚠️  WARNING: No daily data found!")
-        print("    Please check:")
-        print("    1. Sheet is published to web (File → Share → Publish to web)")
-        print("    2. Sheet name is exactly 'DAILY P&L'")
-        print("    3. Data format matches expected structure")
+    # ── 1. Group strategies by sheet tab, fetch each tab once ────────────────
+    from collections import defaultdict
+    sheet_groups = defaultdict(list)
+    for s in STRATEGIES:
+        sheet_groups[s.get('sheet', 'DAILY P&L')].append(s)
+
+    all_dates_sets = {}   # sheet_name → set of date strings
+    all_daily      = {}   # sheet_name → {key: [values]}
+
+    for sheet_name, strats in sheet_groups.items():
+        print(f"\nFetching sheet: '{sheet_name}' ({len(strats)} strategies)...")
+        try:
+            raw_csv    = fetch_csv(sheet_name)
+            dates, daily = parse_sheet(raw_csv, strats, sheet_name)
+            all_dates_sets[sheet_name] = dates
+            all_daily[sheet_name]      = daily
+        except Exception as e:
+            print(f"✗ Error fetching '{sheet_name}': {e}")
+            import traceback; traceback.print_exc()
+            all_dates_sets[sheet_name] = []
+            all_daily[sheet_name]      = {s['key']: [] for s in strats}
+
+    # ── 2. Build a unified sorted date spine across all sheets ───────────────
+    all_date_set = set()
+    for dates in all_dates_sets.values():
+        all_date_set.update(dates)
+
+    if not all_date_set:
+        print("\n⚠️  WARNING: No daily data found across any sheet!")
         sys.exit(1)
-    
-    # Build monthly data from daily aggregation
+
+    unified_dates = sorted(all_date_set,
+                           key=lambda d: datetime.datetime.strptime(d, '%d/%m/%y'))
+
+    # ── 3. Map each strategy onto the unified spine (0 for missing dates) ────
+    daily = {}
+    for sheet_name, strats in sheet_groups.items():
+        sheet_dates = all_dates_sets[sheet_name]
+        date_to_idx = {d: i for i, d in enumerate(sheet_dates)}
+        for s in strats:
+            raw = all_daily[sheet_name].get(s['key'], [])
+            daily[s['key']] = [
+                raw[date_to_idx[d]] if d in date_to_idx else 0
+                for d in unified_dates
+            ]
+
+    daily_dates = unified_dates
+
+    # ── 4. Build monthly aggregates ──────────────────────────────────────────
     print("\nAggregating monthly data from daily records...")
-    months, nap_m, sap_m, cap_m, napv2_m, napv3_m, sapv2_m, sapv3_m = build_monthly_from_daily(
-        daily_dates, nap_daily, sap_daily,
-        cap_daily, napv2_daily, napv3_daily, sapv2_daily, sapv3_daily
-    )
-    
-    # Calculate combined daily (NAP + SAP only, as before)
-    comb_daily = [n + s for n, s in zip(nap_daily, sap_daily)]
-    
-    # Get today's date in DD/MM/YY format
+    months, monthly = build_monthly_from_daily(daily_dates, daily)
+
     today_formatted = datetime.date.today().strftime('%d/%m/%y')
-    
-    data = {
-        'updated': today_formatted,
-        'months': months,
-        'nap_monthly':   nap_m,
-        'sap_monthly':   sap_m,
-        'cap_monthly':   cap_m,
-        'napv2_monthly': napv2_m,
-        'napv3_monthly': napv3_m,
-        'sapv2_monthly': sapv2_m,
-        'sapv3_monthly': sapv3_m,
-        'nap_daily':   nap_daily,
-        'sap_daily':   sap_daily,
-        'cap_daily':   cap_daily,
-        'napv2_daily': napv2_daily,
-        'napv3_daily': napv3_daily,
-        'sapv2_daily': sapv2_daily,
-        'sapv3_daily': sapv3_daily,
-        'daily_dates': daily_dates,
-        'stats': {
-            'nap': {
-                'roi':          round(sum(nap_m) / CAP_NAP * 100, 1) if nap_m else 0,
-                'avg_month_roi': avg_monthly_roi(nap_m, CAP_NAP),
-                'pnl':          round(sum(nap_m)) if nap_m else 0,
-                'sharpe':       sharpe(nap_daily, CAP_NAP),
-                'max_dd':       max_drawdown(nap_daily, CAP_NAP),
-                'win_rate':     win_rate(nap_daily),
-                'days':         len(nap_daily),
-            },
-            'sap': {
-                'roi':          round(sum(sap_m) / CAP_SAP * 100, 1) if sap_m else 0,
-                'avg_month_roi': avg_monthly_roi(sap_m, CAP_SAP),
-                'pnl':          round(sum(sap_m)) if sap_m else 0,
-                'sharpe':       sharpe(sap_daily, CAP_SAP),
-                'max_dd':       max_drawdown(sap_daily, CAP_SAP),
-                'win_rate':     win_rate(sap_daily),
-                'days':         len(sap_daily),
-            },
-            'cap': {
-                'roi':          round(sum(cap_m) / CAP_CAP * 100, 1) if cap_m else 0,
-                'avg_month_roi': avg_monthly_roi(cap_m, CAP_CAP),
-                'pnl':          round(sum(cap_m)) if cap_m else 0,
-                'sharpe':       sharpe(cap_daily, CAP_CAP),
-                'max_dd':       max_drawdown(cap_daily, CAP_CAP),
-                'win_rate':     win_rate(cap_daily),
-                'days':         len([x for x in cap_daily if x != 0]),
-            },
-            'napv2': {
-                'roi':          round(sum(napv2_m) / CAP_NAPV2 * 100, 1) if napv2_m else 0,
-                'avg_month_roi': avg_monthly_roi(napv2_m, CAP_NAPV2),
-                'pnl':          round(sum(napv2_m)) if napv2_m else 0,
-                'sharpe':       sharpe(napv2_daily, CAP_NAPV2),
-                'max_dd':       max_drawdown(napv2_daily, CAP_NAPV2),
-                'win_rate':     win_rate(napv2_daily),
-                'days':         len([x for x in napv2_daily if x != 0]),
-            },
-            'napv3': {
-                'roi':          round(sum(napv3_m) / CAP_NAPV3 * 100, 1) if napv3_m else 0,
-                'avg_month_roi': avg_monthly_roi(napv3_m, CAP_NAPV3),
-                'pnl':          round(sum(napv3_m)) if napv3_m else 0,
-                'sharpe':       sharpe(napv3_daily, CAP_NAPV3),
-                'max_dd':       max_drawdown(napv3_daily, CAP_NAPV3),
-                'win_rate':     win_rate(napv3_daily),
-                'days':         len([x for x in napv3_daily if x != 0]),
-            },
-            'sapv2': {
-                'roi':          round(sum(sapv2_m) / CAP_SAPV2 * 100, 1) if sapv2_m else 0,
-                'avg_month_roi': avg_monthly_roi(sapv2_m, CAP_SAPV2),
-                'pnl':          round(sum(sapv2_m)) if sapv2_m else 0,
-                'sharpe':       sharpe(sapv2_daily, CAP_SAPV2),
-                'max_dd':       max_drawdown(sapv2_daily, CAP_SAPV2),
-                'win_rate':     win_rate(sapv2_daily),
-                'days':         len([x for x in sapv2_daily if x != 0]),
-            },
-            'sapv3': {
-                'roi':          round(sum(sapv3_m) / CAP_SAPV3 * 100, 1) if sapv3_m else 0,
-                'avg_month_roi': avg_monthly_roi(sapv3_m, CAP_SAPV3),
-                'pnl':          round(sum(sapv3_m)) if sapv3_m else 0,
-                'sharpe':       sharpe(sapv3_daily, CAP_SAPV3),
-                'max_dd':       max_drawdown(sapv3_daily, CAP_SAPV3),
-                'win_rate':     win_rate(sapv3_daily),
-                'days':         len([x for x in sapv3_daily if x != 0]),
-            },
-            'comb': {
-                'roi':          round((sum(nap_m) + sum(sap_m)) / (CAP_NAP + CAP_SAP) * 100, 1) if nap_m and sap_m else 0,
-                'pnl':          round(sum(nap_m) + sum(sap_m)) if nap_m and sap_m else 0,
-                'sharpe':       sharpe(comb_daily, CAP_NAP + CAP_SAP),
-                'max_dd':       max_drawdown(comb_daily, CAP_NAP + CAP_SAP),
-                'win_rate':     win_rate(comb_daily),
-            },
-        },
+
+    # ── 5. Per-strategy stats ─────────────────────────────────────────────────
+    stats = {}
+    for s in STRATEGIES:
+        k   = s['key']
+        cap = s['capital']
+        d   = daily[k]
+        m   = monthly[k]
+        stats[k] = {
+            'roi':           round(sum(m) / cap * 100, 1) if m else 0,
+            'avg_month_roi': avg_monthly_roi(m, cap),
+            'pnl':           round(sum(m)) if m else 0,
+            'sharpe':        sharpe(d, cap),
+            'max_dd':        max_drawdown(d, cap),
+            'win_rate':      win_rate(d),
+            'days':          len([x for x in d if x != 0]),
+        }
+
+    # Legacy combined stat (NAP + SAP)
+    nap_d = daily.get('nap', []);  sap_d = daily.get('sap', [])
+    nap_m = monthly.get('nap', []); sap_m = monthly.get('sap', [])
+    comb  = [n + s for n, s in zip(nap_d, sap_d)] if nap_d and sap_d else []
+    nc = _S.get('nap', {}).get('capital', 250_000)
+    sc = _S.get('sap', {}).get('capital', 250_000)
+    stats['comb'] = {
+        'roi':      round((sum(nap_m) + sum(sap_m)) / (nc + sc) * 100, 1)
+                    if nap_m and sap_m else 0,
+        'pnl':      round(sum(nap_m) + sum(sap_m)) if nap_m and sap_m else 0,
+        'sharpe':   sharpe(comb, nc + sc),
+        'max_dd':   max_drawdown(comb, nc + sc),
+        'win_rate': win_rate(comb),
     }
-    
+
+    # ── 6. Assemble output ────────────────────────────────────────────────────
+    data = {
+        'updated':    today_formatted,
+        'strategies': [
+            {
+                'key':     s['key'],
+                'label':   s['label'],
+                'capital': s['capital'],
+                'color':   s['color'],
+                'visible': s['visible'],
+                'sheet':   s.get('sheet', 'DAILY P&L'),
+            }
+            for s in STRATEGIES
+        ],
+        'months':      months,
+        'daily_dates': daily_dates,
+        'stats':       stats,
+    }
+
+    # Flat arrays for backwards-compat
+    for s in STRATEGIES:
+        data[f"{s['key']}_monthly"] = monthly[s['key']]
+        data[f"{s['key']}_daily"]   = daily[s['key']]
+
+    # Print summary
     print(f"\n✓ Summary:")
-    print(f"  - Monthly records: {len(months)}")
-    print(f"  - Daily records: {len(daily_dates)}")
-    print(f"  - Date range: {daily_dates[0]} to {daily_dates[-1]}")
-    print(f"  - Updated date: {today_formatted}")
-    print(f"  - Total NAP P&L:   ₹{sum(nap_m):,.0f}")
-    print(f"  - Total SAP P&L:   ₹{sum(sap_m):,.0f}")
-    print(f"  - Total CAP P&L:   ₹{sum(cap_m):,.0f}")
-    print(f"  - Total NAPv2 P&L: ₹{sum(napv2_m):,.0f}")
-    print(f"  - Total NAPv3 P&L: ₹{sum(napv3_m):,.0f}")
-    print(f"  - Total SAPv2 P&L: ₹{sum(sapv2_m):,.0f}")
-    print(f"  - Total SAPv3 P&L: ₹{sum(sapv3_m):,.0f}")
-    print(f"  - Combined ROI: {data['stats']['comb']['roi']}%")
-    
+    print(f"  - Monthly records : {len(months)}")
+    print(f"  - Daily records   : {len(daily_dates)}")
+    print(f"  - Date range      : {daily_dates[0]} to {daily_dates[-1]}")
+    print(f"  - Updated         : {today_formatted}")
+    for s in STRATEGIES:
+        vis   = '(visible)' if s['visible'] else '(hidden) '
+        sheet = s.get('sheet', 'DAILY P&L')
+        tag   = '' if sheet == 'DAILY P&L' else f' [{sheet}]'
+        print(f"  - {s['label']:8s} {vis}: ₹{sum(monthly[s['key']]):,.0f}{tag}")
+    print(f"  - Combined ROI    : {data['stats']['comb']['roi']}%")
+
     return data
+
 
 if __name__ == '__main__':
     try:
@@ -351,6 +374,5 @@ if __name__ == '__main__':
         print(f"\n✓ data.json written successfully!")
     except Exception as e:
         print(f"\n✗ Error: {e}", file=sys.stderr)
-        import traceback
-        traceback.print_exc()
+        import traceback; traceback.print_exc()
         sys.exit(1)
