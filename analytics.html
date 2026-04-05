@@ -460,7 +460,7 @@ const DATA = {"updated":"05/04/26","months":["Feb 25","Mar 25","Apr 25","May 25"
 const AUTO_PALETTE = ['#D4A840','#3FE088','#B06FE0','#E06F6F','#E0B06F','#6FE0D4','#6F9FE0','#E06FB0','#A0E06F','#E0C46F'];
 
 // If fetch_data.py exports DATA.strategies, use it. Otherwise auto-detect from _daily keys.
-let STRATS, STRAT_LABELS, STRAT_FULL, STRAT_COLORS, CAPITALS;
+let STRATS, STRAT_LABELS, STRAT_FULL, STRAT_COLORS, CAPITALS, STRAT_SHEETS;
 
 if (DATA.strategies && DATA.strategies.length) {
   // Structured config from fetch_data.py — zero manual work needed
@@ -469,6 +469,7 @@ if (DATA.strategies && DATA.strategies.length) {
   STRAT_FULL   = Object.fromEntries(DATA.strategies.map(s => [s.key, s.label]));
   STRAT_COLORS = Object.fromEntries(DATA.strategies.map((s, i) => [s.key, s.color || AUTO_PALETTE[i % AUTO_PALETTE.length]]));
   CAPITALS     = Object.fromEntries(DATA.strategies.map(s => [s.key, s.capital ?? 250000]));
+  STRAT_SHEETS = Object.fromEntries(DATA.strategies.map(s => [s.key, s.sheet || 'DAILY P&L']));
 } else {
   // Fallback: auto-detect from _daily keys in DATA
   STRATS = Object.keys(DATA)
@@ -478,6 +479,7 @@ if (DATA.strategies && DATA.strategies.length) {
   STRAT_LABELS = Object.fromEntries(STRATS.map(k => [k, k.toUpperCase()]));
   STRAT_FULL   = { ...STRAT_LABELS };
   CAPITALS     = Object.fromEntries(STRATS.map(k => [k, 250000]));
+  STRAT_SHEETS = Object.fromEntries(STRATS.map(k => [k, 'DAILY P&L']));
 }
 
 let activeStrats = new Set(STRATS);
@@ -737,7 +739,8 @@ function ddCell(curDd, maxDd) {
 let bdRows = [];
 
 function buildBdRows() {
-  const dailyKey = { nap:'nap_daily', sap:'sap_daily', napv2:'napv2_daily', napv3:'napv3_daily', sapv2:'sapv2_daily', sapv3:'sapv3_daily' };
+  // Build dailyKey map dynamically from all known STRATS
+  const dailyKey = Object.fromEntries(STRATS.map(k => [k, k + '_daily']));
   const cfg = loadStratConfig();
   bdRows = STRATS.filter(k => {
     const cat = cfg[k]?.category || 'nfo';
@@ -754,7 +757,8 @@ function buildBdRows() {
     const { cur: curDd, max: computedMax } = computeCurrentDrawdown(series, cap);
     // Use stats max_dd as authoritative max (matches existing display), computed current for live state
     const maxDd = maxDdFromStats;
-    return { k, cap, today, monthly, yearly, curDd, maxDd };
+    const sheet = (STRAT_SHEETS && STRAT_SHEETS[k]) || 'DAILY P&L';
+    return { k, cap, today, monthly, yearly, curDd, maxDd, sheet };
   });
 }
 
@@ -763,8 +767,12 @@ function renderBreakdownTable(filter='') {
   let rows = [...bdRows];
   if (filter) rows = rows.filter(r => STRAT_LABELS[r.k].toLowerCase().includes(filter.toLowerCase()) || STRAT_FULL[r.k].toLowerCase().includes(filter.toLowerCase()));
 
-  // Sort
+  // Sort — keep Standard before Hedged as primary group, then user sort within group
+  const _hedgedSheet = 'DAILY P&L HEDGED';
   rows.sort((a, b) => {
+    const ga = a.sheet === _hedgedSheet ? 1 : 0;
+    const gb = b.sheet === _hedgedSheet ? 1 : 0;
+    if (ga !== gb) return ga - gb; // Standard always first
     let va, vb;
     if (bdSortKey === 'name') { va = STRAT_LABELS[a.k]; vb = STRAT_LABELS[b.k]; return bdSortAsc ? va.localeCompare(vb) : vb.localeCompare(va); }
     if (bdSortKey === 'capital') { va = a.cap; vb = b.cap; }
@@ -782,16 +790,35 @@ function renderBreakdownTable(filter='') {
   const totalYearly = rows.reduce((s,r) => s + r.yearly, 0);
 
   const tbody = document.getElementById('bdBody');
-  tbody.innerHTML = rows.map(r => `
+
+  // Build rows with subgroup separators (Standard vs Hedged)
+  const HEDGED_SHEET = 'DAILY P&L HEDGED';
+  const hasHedged = rows.some(r => r.sheet === HEDGED_SHEET);
+  const hasStandard = rows.some(r => r.sheet !== HEDGED_SHEET);
+  const showGroups = hasHedged && hasStandard;
+
+  let rowsHtml = '';
+  let lastSheet = null;
+  rows.forEach(r => {
+    const isHedged = r.sheet === HEDGED_SHEET;
+    const groupKey = isHedged ? HEDGED_SHEET : 'DAILY P&L';
+    if (showGroups && groupKey !== lastSheet) {
+      const groupLabel = isHedged ? '&#128737; Hedged Strategies' : '&#128200; Standard Strategies';
+      rowsHtml += `<tr class="subgroup-row"><td colspan="6"><div class="subgroup-label">${groupLabel}</div></td></tr>`;
+      lastSheet = groupKey;
+    }
+    rowsHtml += `
     <tr>
       <td><div class="strat-name-cell"><span class="dot" style="background:${STRAT_COLORS[r.k]}"></span><span class="strat-name-text">${STRAT_FULL[r.k]}</span></div></td>
-      <td><span class="cap-cell">₹${r.cap.toLocaleString('en-IN')}</span></td>
+      <td><span class="cap-cell">&#8377;${r.cap.toLocaleString('en-IN')}</span></td>
       <td>${pnlPill(r.today, r.cap)}</td>
       <td>${pnlPill(r.monthly, r.cap)}</td>
       <td>${pnlPill(r.yearly, r.cap)}</td>
       <td>${ddCell(r.curDd, r.maxDd)}</td>
-    </tr>
-  `).join('') + `
+    </tr>`;
+  });
+
+  tbody.innerHTML = rowsHtml + `
     <tr class="total-row">
       <td><div class="strat-name-cell"><span style="font-family:'Inter',sans-serif;font-size:0.65rem;letter-spacing:0.1em;">TOTAL / AVERAGE</span></div></td>
       <td><span class="cap-cell" style="font-weight:700;">₹${totalCap.toLocaleString('en-IN')}</span></td>
