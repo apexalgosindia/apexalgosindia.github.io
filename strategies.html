@@ -1037,6 +1037,11 @@
           badge.style.borderColor = 'rgba(78,160,110,0.35)';
           badge.style.color       = '#7EC8A0';
         }
+        // Apply visibility from data.json strategies array
+        if (d.strategies && !window._stratGrouped) {
+          window._stratGrouped = true;
+          groupStrategies(d.strategies);
+        }
       } catch(e) {
         const badge = document.getElementById('live-status');
         if (badge) badge.textContent = 'CACHED';
@@ -1044,6 +1049,8 @@
       }
     }
 
+    // Immediate fallback: group using only localStorage (no data.json yet)
+    groupStrategies(null);
     refreshPnL();
     setInterval(refreshPnL, 5 * 60 * 1000);
 
@@ -1108,10 +1115,17 @@
     loadAvgROIs();
 
     // ── STRATEGY CATEGORY GROUPING ──────────────────────────────────────────
-    (function groupStrategies() {
+    // dataStrategies: optional array from data.json — used as default visibility
+    function groupStrategies(dataStrategies) {
       const CONFIG_KEY = 'apexStratConfig_v1';
       let cfg = {};
       try { cfg = JSON.parse(localStorage.getItem(CONFIG_KEY)) || {}; } catch {}
+
+      // Build a quick lookup: key → default visible from data.json
+      const dataVis = {};
+      if (dataStrategies && dataStrategies.length) {
+        dataStrategies.forEach(s => { dataVis[s.key] = s.visible !== false; });
+      }
 
       const pool    = document.getElementById('card-pool');
       const gridNfo = document.getElementById('grid-nfo');
@@ -1123,8 +1137,18 @@
 
       cards.forEach(card => {
         const key = card.dataset.key;
-        const cat     = cfg[key]?.category || 'nfo';
-        const visible = cfg[key]?.visible !== false;
+        const cat = cfg[key]?.category || 'nfo';
+
+        // Visibility: localStorage override first, then data.json default, then true
+        let visible;
+        if (cfg[key] && cfg[key].visible !== undefined) {
+          visible = cfg[key].visible;
+        } else if (dataVis[key] !== undefined) {
+          visible = dataVis[key];
+        } else {
+          visible = true;
+        }
+
         if (!visible || cat === 'hidden') return;
         (cat === 'mcx' ? gridMcx : gridNfo).appendChild(card);
       });
@@ -1132,7 +1156,7 @@
       // Show/hide section headers based on whether grids have any cards
       if (gridNfo.children.length === 0) secNfo.style.display = 'none';
       if (gridMcx.children.length > 0)  secMcx.style.display = '';
-    })();
+    }
   </script>
 
   <footer>
