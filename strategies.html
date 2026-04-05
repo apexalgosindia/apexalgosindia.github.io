@@ -751,52 +751,6 @@
         </div>
       </div>
 
-      <!-- CAP -->
-      <div class="strat-card">
-        <div class="card-header">
-          <div>
-            <div class="card-name">CAP</div>
-            <div class="card-subtitle">Crude Capital Reuse Selling</div>
-          </div>
-          <span class="card-tag">Main</span>
-        </div>
-        <div class="card-params">
-          <div class="param">
-            <div class="param-label">Target</div>
-            <div class="param-val pos">&#8377;3,000</div>
-          </div>
-          <div class="param">
-            <div class="param-label">Stop Loss</div>
-            <div class="param-val neg">&#8377;2,500</div>
-          </div>
-        </div>
-        <div class="card-roi-row">
-          <span class="card-roi-label">Avg Monthly ROI</span>
-          <span class="card-roi-val loading" id="roi-cap">—</span>
-        </div>
-        <div class="card-links">
-          <a class="card-link" href="https://tradetron.tech/strategy/8616893" target="_blank" rel="noopener">
-            <span class="card-link-icon">&#128279;</span>
-            <div class="card-link-text">
-              <div class="card-link-label">Strategy Link</div>
-              <div class="card-link-val">tradetron.tech/strategy/8616893</div>
-            </div>
-          </a>
-          <div class="share-code-row" onclick="copyCode(this,'3ee49dff-0202-47fe-853c-56dd4c602fe9')">
-            <div style="flex:1">
-              <div class="share-code-label">Share Code</div>
-              <div class="share-code-val">3ee49dff-0202-47fe-853c-56dd4c602fe9</div>
-            </div>
-            <button class="copy-btn">Copy</button>
-          </div>
-          <div class="hedged-note">
-            &#128737; Hedged strategies details &rarr;
-            <a href="https://t.me/apexalgos/67" target="_blank" rel="noopener">t.me/apexalgos/67</a><br>
-            Target &amp; SL same as unhedged version.
-          </div>
-        </div>
-      </div>
-
     </div><!-- /main grid -->
 
     <!-- DIVERSIFY STRATEGIES -->
@@ -1075,8 +1029,7 @@
     const CAPITALS = {
       nap:   250000,
       sap:   250000,
-      cap:   500000,
-      napv2: 250000,
+            napv2: 250000,
       napv3: 250000,
       sapv2: 250000,
       sapv3: 250000,
@@ -1118,7 +1071,6 @@
 
         setRoiEl('roi-nap',   s.nap?.avg_month_roi   ?? null);
         setRoiEl('roi-sap',   s.sap?.avg_month_roi   ?? null);
-        setRoiEl('roi-cap',   s.cap?.avg_month_roi   ?? null);
         setRoiEl('roi-napv2', s.napv2?.avg_month_roi ?? null);
         setRoiEl('roi-napv3', s.napv3?.avg_month_roi ?? null);
         setRoiEl('roi-sapv2', s.sapv2?.avg_month_roi ?? null);
@@ -1126,7 +1078,7 @@
 
       } catch(e) {
         console.warn('Avg ROI load failed:', e.message);
-        ['roi-nap','roi-sap','roi-cap','roi-napv2','roi-napv3','roi-sapv2','roi-sapv3']
+        ['roi-nap','roi-sap','roi-napv2','roi-napv3','roi-sapv2','roi-sapv3']
           .forEach(id => setRoiEl(id, null));
       }
     }
