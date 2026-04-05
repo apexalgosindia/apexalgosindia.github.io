@@ -652,15 +652,24 @@
     </a>
 
     <!-- MAIN STRATEGIES -->
-    <div class="section-header">
-      <span class="section-badge">Main</span>
-      <h2 class="section-heading">Main Strategies</h2>
+    <div class="section-header" id="section-nfo">
+      <span class="section-badge">NFO / BFO</span>
+      <h2 class="section-heading">NFO / BFO Strategies</h2>
     </div>
+    <div class="strategy-grid" id="grid-nfo"></div>
 
-    <div class="strategy-grid">
+    <!-- MCX STRATEGIES -->
+    <div class="section-header" id="section-mcx" style="display:none;">
+      <span class="section-badge" style="background:var(--surface2);color:var(--accent);border:1px solid rgba(212,168,64,0.4);">MCX</span>
+      <h2 class="section-heading">MCX Strategies</h2>
+    </div>
+    <div class="strategy-grid" id="grid-mcx"></div>
+
+    <!-- ALL CARDS (hidden pool) -->
+    <div id="card-pool" style="display:none;">
 
       <!-- NAP -->
-      <div class="strat-card">
+      <div class="strat-card" data-key="nap">
         <div class="card-header">
           <div>
             <div class="card-name">NAP</div>
@@ -707,7 +716,7 @@
       </div>
 
       <!-- SAP -->
-      <div class="strat-card">
+      <div class="strat-card" data-key="sap">
         <div class="card-header">
           <div>
             <div class="card-name">SAP</div>
@@ -751,18 +760,10 @@
         </div>
       </div>
 
-    </div><!-- /main grid -->
-
-    <!-- DIVERSIFY STRATEGIES -->
-    <div class="section-header">
-      <span class="section-badge" style="background:var(--surface2);color:var(--accent);border:1px solid rgba(212,168,64,0.4);">Diversify</span>
-      <h2 class="section-heading">Diversify Strategies</h2>
-    </div>
-
-    <div class="strategy-grid">
+    <!-- DIVERSIFY STRATEGIES (now merged into pool) -->
 
       <!-- NAP v2 -->
-      <div class="strat-card">
+      <div class="strat-card" data-key="napv2">
         <div class="card-header">
           <div>
             <div class="card-name">NAP v2</div>
@@ -807,7 +808,7 @@
       </div>
 
       <!-- NAP v3 -->
-      <div class="strat-card">
+      <div class="strat-card" data-key="napv3">
         <div class="card-header">
           <div>
             <div class="card-name">NAP v3</div>
@@ -852,7 +853,7 @@
       </div>
 
       <!-- SAP v2 -->
-      <div class="strat-card">
+      <div class="strat-card" data-key="sapv2">
         <div class="card-header">
           <div>
             <div class="card-name">SAP v2</div>
@@ -897,7 +898,7 @@
       </div>
 
       <!-- SAP v3 -->
-      <div class="strat-card">
+      <div class="strat-card" data-key="sapv3">
         <div class="card-header">
           <div>
             <div class="card-name">SAP v3</div>
@@ -941,7 +942,7 @@
         </div>
       </div>
 
-    </div><!-- /diversify grid -->
+    </div><!-- /card-pool -->
 
     <!-- Telegram -->
     <a class="tg-card" href="https://t.me/apexalgoschat" target="_blank" rel="noopener">
@@ -1084,6 +1085,33 @@
     }
 
     loadAvgROIs();
+
+    // ── STRATEGY CATEGORY GROUPING ──────────────────────────────────────────
+    (function groupStrategies() {
+      const CONFIG_KEY = 'apexStratConfig_v1';
+      let cfg = {};
+      try { cfg = JSON.parse(localStorage.getItem(CONFIG_KEY)) || {}; } catch {}
+
+      const pool    = document.getElementById('card-pool');
+      const gridNfo = document.getElementById('grid-nfo');
+      const gridMcx = document.getElementById('grid-mcx');
+      const secNfo  = document.getElementById('section-nfo');
+      const secMcx  = document.getElementById('section-mcx');
+
+      const cards = Array.from(pool.querySelectorAll('.strat-card'));
+
+      cards.forEach(card => {
+        const key = card.dataset.key;
+        const cat     = cfg[key]?.category || 'nfo';
+        const visible = cfg[key]?.visible !== false;
+        if (!visible || cat === 'hidden') return;
+        (cat === 'mcx' ? gridMcx : gridNfo).appendChild(card);
+      });
+
+      // Show/hide section headers based on whether grids have any cards
+      if (gridNfo.children.length === 0) secNfo.style.display = 'none';
+      if (gridMcx.children.length > 0)  secMcx.style.display = '';
+    })();
   </script>
 
   <footer>
