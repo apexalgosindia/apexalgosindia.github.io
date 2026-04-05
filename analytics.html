@@ -671,7 +671,19 @@ function getFilteredIndices() {
     return true;
   }).map(x => x.i);
 }
-function getAllTotal(i) { return STRATS.reduce((s,k) => s+(DATA[k+'_daily']?.[i]||0), 0); }
+function getFilteredStrats() {
+  const cfg = loadStratConfig();
+  return STRATS.filter(k => {
+    if (!getStratVisible(k)) return false;
+    const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
+    const cat = cfg[k]?.category || 'nfo';
+    if (activeCatFilter === 'hedged')   return isHedged;
+    if (activeCatFilter === 'unhedged') return !isHedged;
+    if (activeCatFilter !== 'all')      return cat === activeCatFilter;
+    return true;
+  });
+}
+function getAllTotal(i) { return getFilteredStrats().reduce((s,k) => s+(DATA[k+'_daily']?.[i]||0), 0); }
 function getRangeLabel() { return {all:'All Time',ytd:'Year-to-Date','6m':'Last 6 Months','3m':'Last 3 Months','1m':'Last Month'}[currentRange]; }
 
 // ── INIT ──
@@ -1025,7 +1037,7 @@ function renderCumulChart() {
   const idxs = getFilteredIndices();
   const labels = idxs.map(i => DATA.daily_dates[i]);
   const cd = chartDefaults();
-  const datasets = STRATS.map(k => {
+  const datasets = getFilteredStrats().map(k => {
     let cum = 0;
     const vals = idxs.map(i => { cum += DATA[k+'_daily']?.[i]||0; return cum; });
     if (!vals.some(v=>v!==0)) return null;
@@ -1059,7 +1071,7 @@ function renderDailyBarChart() {
 function renderStratPie() {
   const idx = currentDateIdx;
   document.getElementById('pieDate').textContent = DATA.daily_dates[idx];
-  const active = STRATS.filter(k => DATA[k+'_daily']?.[idx] !== 0);
+  const active = getFilteredStrats().filter(k => DATA[k+'_daily']?.[idx] !== 0);
   const cd = chartDefaults();
   if (charts.pie) charts.pie.destroy();
   if (!active.length) return;
