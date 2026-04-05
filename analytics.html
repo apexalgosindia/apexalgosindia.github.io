@@ -125,11 +125,15 @@
     .pnl-pct { opacity: 0.8; white-space: nowrap; font-size: 0.62rem; }
 
     /* Drawdown cell */
-    .dd-cell { min-width: 160px; }
+    .dd-cell { min-width: 170px; }
     .dd-pct { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 700; color: var(--neg); }
-    .dd-max { font-family: 'Inter', sans-serif; font-size: 0.58rem; color: var(--muted); margin-top: 0.15rem; }
-    .dd-bar-bg { background: var(--neg-bg); height: 4px; width: 100%; margin-top: 0.35rem; border-radius: 1px; }
-    .dd-bar-fill { background: var(--neg); height: 100%; border-radius: 1px; transition: width 0.5s ease; }
+    .dd-label-row { display: flex; align-items: baseline; gap: 0.3rem; }
+    .dd-cur { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 700; color: var(--neg); }
+    .dd-sep { font-family: 'Inter', sans-serif; font-size: 0.7rem; color: var(--muted); }
+    .dd-max-val { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 500; color: var(--muted); }
+    .dd-bar-track { position: relative; background: var(--neg-bg); height: 5px; width: 100%; margin-top: 0.4rem; border-radius: 2px; overflow: hidden; }
+    .dd-bar-max { position: absolute; left: 0; top: 0; height: 100%; border-radius: 2px; background: rgba(220,60,60,0.28); transition: width 0.5s ease; }
+    .dd-bar-cur { position: absolute; left: 0; top: 0; height: 100%; border-radius: 2px; background: var(--neg); transition: width 0.5s ease; }
     .dd-zero { color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.72rem; }
 
     /* ── TODAY BANNER ── */
@@ -477,29 +481,61 @@ function pnlPill(v, cap) {
   return `<span class="pnl-pill ${cls}"><span class="pnl-amount">${amtStr}</span><span class="pnl-pct">${pctStr}</span></span>`;
 }
 
-function ddCell(dd, maxDd) {
-  if (dd === 0 && maxDd === 0) return '<span class="dd-zero">—</span>';
-  const barPct = Math.min(100, Math.abs(dd) / Math.max(Math.abs(maxDd), 0.01) * 100);
+// Compute current drawdown (%) from a daily PnL array and capital
+function computeCurrentDrawdown(dailyArr, capital) {
+  let cumPnl = 0, peak = 0, maxDd = 0, curDd = 0;
+  const nonZero = dailyArr.filter(v => v !== 0);
+  if (!nonZero.length) return { cur: 0, max: 0 };
+  // Find first non-zero index to start tracking
+  let started = false;
+  for (let i = 0; i < dailyArr.length; i++) {
+    const v = dailyArr[i];
+    if (!started && v === 0) continue;
+    started = true;
+    cumPnl += v;
+    if (cumPnl > peak) peak = cumPnl;
+    const dd = peak > 0 ? ((cumPnl - peak) / capital * 100) : 0;
+    if (dd < maxDd) maxDd = dd;
+    curDd = dd;
+  }
+  return { cur: curDd, max: maxDd };
+}
+
+function ddCell(curDd, maxDd) {
+  if (curDd === 0 && maxDd === 0) return '<span class="dd-zero">—</span>';
+  // maxPct is always 100% (full bar width = max DD)
+  // curPct is current DD as proportion of max DD
+  const curPct = Math.min(100, maxDd !== 0 ? Math.abs(curDd) / Math.abs(maxDd) * 100 : 0);
+  const curStr = curDd === 0 ? '0.00%' : curDd.toFixed(2) + '%';
+  const maxStr = maxDd.toFixed(2) + '%';
   return `<div class="dd-cell">
-    <div class="dd-pct">${dd.toFixed(2)}%</div>
-    <div class="dd-max">max: ${maxDd.toFixed(2)}%</div>
-    <div class="dd-bar-bg"><div class="dd-bar-fill" style="width:${barPct}%"></div></div>
+    <div class="dd-label-row">
+      <span class="dd-cur">${curStr}</span>
+      <span class="dd-sep">/</span>
+      <span class="dd-max-val">${maxStr}</span>
+    </div>
+    <div class="dd-bar-track">
+      <div class="dd-bar-max" style="width:100%"></div>
+      <div class="dd-bar-cur" style="width:${curPct}%"></div>
+    </div>
   </div>`;
 }
 
 let bdRows = [];
 
 function buildBdRows() {
+  const dailyKey = { nap:'nap_daily', sap:'sap_daily', napv2:'napv2_daily', napv3:'napv3_daily', sapv2:'sapv2_daily', sapv3:'sapv3_daily' };
   bdRows = STRATS.map(k => {
     const cap = CAPITALS[k];
     const today = getTodayPnl(k);
     const monthly = getMonthlyPnl(k);
     const yearly = getYearlyPnl(k);
-    const dd = DATA.stats[k]?.max_dd || 0;
-    // Current drawdown: approximate from stats
-    const maxDd = dd;
-    // Running drawdown: use the actual current drawdown (use max_dd from stats as proxy)
-    return { k, cap, today, monthly, yearly, dd: maxDd, maxDd };
+    const maxDdFromStats = DATA.stats[k]?.max_dd || 0;
+    const series = DATA[dailyKey[k]] || [];
+    const { cur: curDd, max: computedMax } = computeCurrentDrawdown(series, cap);
+    // Use stats max_dd as authoritative max (matches existing display), computed current for live state
+    const maxDd = maxDdFromStats;
+    return { k, cap, today, monthly, yearly, curDd, maxDd };
   });
 }
 
@@ -516,7 +552,7 @@ function renderBreakdownTable(filter='') {
     if (bdSortKey === 'today') { va = a.today; vb = b.today; }
     if (bdSortKey === 'monthly') { va = a.monthly; vb = b.monthly; }
     if (bdSortKey === 'yearly') { va = a.yearly; vb = b.yearly; }
-    if (bdSortKey === 'drawdown') { va = a.dd; vb = b.dd; }
+    if (bdSortKey === 'drawdown') { va = a.curDd; vb = b.curDd; }
     return bdSortAsc ? va - vb : vb - va;
   });
 
@@ -534,7 +570,7 @@ function renderBreakdownTable(filter='') {
       <td>${pnlPill(r.today, r.cap)}</td>
       <td>${pnlPill(r.monthly, r.cap)}</td>
       <td>${pnlPill(r.yearly, r.cap)}</td>
-      <td>${ddCell(r.dd, r.maxDd)}</td>
+      <td>${ddCell(r.curDd, r.maxDd)}</td>
     </tr>
   `).join('') + `
     <tr class="total-row">
@@ -574,7 +610,7 @@ function exportCSV() {
       r.today.toFixed(0), pct(r.today, r.cap),
       r.monthly.toFixed(0), pct(r.monthly, r.cap),
       r.yearly.toFixed(0), pct(r.yearly, r.cap),
-      r.dd.toFixed(2)
+      r.curDd.toFixed(2) + '/' + r.maxDd.toFixed(2)
     ].join(','));
   });
   const blob = new Blob([lines.join('\n')], {type:'text/csv'});
