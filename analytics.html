@@ -8,7 +8,37 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+// ── LIVE SYNC from data.json — keeps STRATS in sync without re-injecting HTML ──
+(async function liveSync() {
+  try {
+    const res = await fetch('./data.json?t=' + Date.now());
+    if (!res.ok) return;
+    const d = await res.json();
+    if (!d?.strategies?.length) return;
+    // Re-init all strategy maps from live data.json
+    STRATS       = d.strategies.map(s => s.key);
+    STRAT_LABELS = Object.fromEntries(d.strategies.map(s => [s.key, s.label]));
+    STRAT_FULL   = Object.fromEntries(d.strategies.map(s => [s.key, s.label]));
+    STRAT_COLORS = Object.fromEntries(d.strategies.map((s,i) => [s.key, s.color || AUTO_PALETTE[i % AUTO_PALETTE.length]]));
+    CAPITALS     = Object.fromEntries(d.strategies.map(s => [s.key, s.capital ?? 250000]));
+    STRAT_SHEETS = Object.fromEntries(d.strategies.map(s => [s.key, s.sheet || 'DAILY P&L']));
+    // Merge new daily/monthly arrays + stats into DATA
+    d.strategies.forEach(s => {
+      if (d[s.key + '_daily'])   DATA[s.key + '_daily']   = d[s.key + '_daily'];
+      if (d[s.key + '_monthly']) DATA[s.key + '_monthly'] = d[s.key + '_monthly'];
+    });
+    if (d.stats)      Object.assign(DATA.stats = DATA.stats || {}, d.stats);
+    if (d.months)     DATA.months      = d.months;
+    if (d.daily_dates) DATA.daily_dates = d.daily_dates;
+    DATA.strategies = d.strategies;
+    DATA.updated    = d.updated || DATA.updated;
+    // Re-render everything with fresh data
+    init();
+  } catch(e) { console.warn('liveSync:', e.message); }
+})();
+
+</script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -338,10 +368,12 @@
   <div class="breakdown-wrap">
     <div class="breakdown-toolbar">
       <div style="display:flex;gap:0;align-items:center;margin-right:0.5rem;">
-        <button class="range-btn active" id="cat-all"   onclick="setCatFilter('all',this)">All</button>
+        <button class="range-btn active" id="cat-all"    onclick="setCatFilter('all',this)">All</button>
         <span style="display:inline-block;width:1px;height:18px;background:var(--rule);margin:0 6px;flex-shrink:0;opacity:0.6;"></span>
-        <button class="range-btn"        id="cat-nfo"   onclick="setCatFilter('nfo',this)">NFO / BFO</button>
-        <button class="range-btn"        id="cat-mcx"   onclick="setCatFilter('mcx',this)">MCX</button>
+        <button class="range-btn"        id="cat-nfo"    onclick="setCatFilter('nfo',this)">NFO / BFO</button>
+        <button class="range-btn"        id="cat-mcx"    onclick="setCatFilter('mcx',this)">MCX</button>
+        <span style="display:inline-block;width:1px;height:18px;background:var(--rule);margin:0 6px;flex-shrink:0;opacity:0.6;"></span>
+        <button class="range-btn"        id="cat-hedged" onclick="setCatFilter('hedged',this)">Hedged</button>
       </div>
       <div class="search-box">
         <span class="search-icon">&#128269;</span>
@@ -568,7 +600,7 @@ function setStratCat(k, cat) {
 
 function setCatFilter(cat, btn) {
   activeCatFilter = cat;
-  ['all','nfo','mcx'].forEach(c => {
+  ['all','nfo','mcx','hedged'].forEach(c => {
     const el = document.getElementById('cat-'+c);
     if (el) el.classList.toggle('active', c === cat);
   });
@@ -756,8 +788,13 @@ function buildBdRows() {
   const dailyKey = Object.fromEntries(STRATS.map(k => [k, k + '_daily']));
   const cfg = loadStratConfig();
   bdRows = STRATS.filter(k => {
-    const cat = cfg[k]?.category || 'nfo';
-    if (activeCatFilter !== 'all' && cat !== activeCatFilter) return false;
+    const cat      = cfg[k]?.category || 'nfo';
+    const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
+    if (activeCatFilter === 'hedged') {
+      if (!isHedged) return false;
+    } else if (activeCatFilter !== 'all') {
+      if (cat !== activeCatFilter) return false;
+    }
     if (!getStratVisible(k)) return false;   // respect visible flag
     return true;
   }).map(k => {
