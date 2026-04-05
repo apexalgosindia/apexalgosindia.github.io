@@ -253,6 +253,12 @@
       </div>
       <button class="export-btn" onclick="exportCSV()">&#8595; Export CSV</button>
       <button class="export-btn" onclick="exportExcel()">&#8595; Export Excel</button>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:0;">
+        <button class="nav-btn" onclick="navDate(-1)">&#8592;</button>
+      <div class="date-label" id="dateLabel">&mdash;</div>
+        <button class="nav-btn" onclick="navDate(1)">&#8594;</button>
+        <button class="nav-btn active-today" onclick="navToday()" style="margin-left:0.4rem;">&#9679; Today</button>
+      </div>
     </div>
 
     <div class="bd-today-strip" id="bdTodayStrip"></div>
@@ -297,12 +303,7 @@
     <div class="view-toggle">
       <button class="view-btn active" onclick="setDisplayView('calendar',this)">&#10727; Calendar</button>
     </div>
-    <div class="date-nav">
-      <button class="nav-btn" onclick="navDate(-1)">&#8592;</button>
-      <div class="date-label" id="dateLabel">&mdash;</div>
-      <button class="nav-btn" onclick="navDate(1)">&#8594;</button>
-      <button class="nav-btn active-today" onclick="navToday()">&#9679; Today</button>
-    </div>
+    <div class="date-nav"></div>
   </div>
 
 
