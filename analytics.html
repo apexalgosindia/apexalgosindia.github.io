@@ -548,7 +548,11 @@ function saveStratConfig(cfg) {
   localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg));
 }
 function getStratCat(k) {
-  return (loadStratConfig()[k]?.category) || 'nfo';
+  const cfg = loadStratConfig();
+  if (cfg[k]?.category) return cfg[k].category;
+  // Fall back to baked value from fetch_data.py
+  const def_ = DATA.strategies?.find(s => s.key === k);
+  return def_?.category || 'nfo';
 }
 function getStratVisible(k) {
   const cfg = loadStratConfig();
@@ -593,7 +597,35 @@ function renderStratToggles() {
     </div>`;
   });
 
+  // ── Save reminder footer ──
+  html += `<div style="margin-top:1rem;padding-top:0.75rem;border-top:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+    <span style="font-family:'Inter',sans-serif;font-size:0.55rem;color:var(--muted);line-height:1.6;">
+      ⚠ Changes are saved in this browser only.<br>
+      To make permanent, update <code style="color:var(--accent);">fetch_data.py</code> and re-run.
+    </span>
+    <button onclick="copyStratConfig()"
+      style="font-family:'Inter',sans-serif;font-size:0.6rem;letter-spacing:0.08em;padding:0.4rem 1rem;border:1px solid var(--accent);background:var(--accent-glow);color:var(--accent);cursor:pointer;">
+      ⎘ Copy fetch_data.py snippet
+    </button>
+  </div>`;
+
   bar.innerHTML = html;
+}
+
+function copyStratConfig() {
+  const cfg = loadStratConfig();
+  const lines = STRATS.map(k => {
+    const s = DATA.strategies?.find(s => s.key === k) || {};
+    const cat = cfg[k]?.category || s.category || 'nfo';
+    const vis = cfg[k]?.visible !== undefined ? cfg[k].visible : (s.visible !== false);
+    return `    # key='${k}' → category='${cat}', visible=${vis}`;
+  });
+  const out = "# Paste these category/visible values into fetch_data.py STRATEGIES:\n" + lines.join("\n");
+  navigator.clipboard.writeText(out).then(() => {
+    alert('Copied to clipboard! Paste into fetch_data.py as a reference.');
+  }).catch(() => {
+    prompt('Copy this:', out);
+  });
 }
 
 function setStratCat(k, cat) {
@@ -867,7 +899,8 @@ function buildBdRows() {
     // Use stats max_dd as authoritative max (matches existing display), computed current for live state
     const maxDd = maxDdFromStats;
     const sheet = (STRAT_SHEETS && STRAT_SHEETS[k]) || 'DAILY P&L';
-    return { k, cap, today, monthly, yearly, curDd, maxDd, sheet };
+    const cat = getStratCat(k);
+    return { k, cap, today, monthly, yearly, curDd, maxDd, sheet, cat };
   });
 }
 
@@ -893,11 +926,17 @@ function renderBreakdownTable(filter='') {
   });
 
   const HEDGED_SHEET = 'DAILY P&L HEDGED';
-  const stdRows    = rows.filter(r => r.sheet !== HEDGED_SHEET);
-  const hedgedRows = rows.filter(r => r.sheet === HEDGED_SHEET);
-  const hasHedged   = hedgedRows.length > 0;
-  const hasStandard = stdRows.length > 0;
-  const showGroups  = hasHedged && hasStandard;
+  // Split rows into NFO-standard, NFO-hedged, MCX
+  const nfoStdRows  = rows.filter(r => r.sheet !== HEDGED_SHEET && r.cat !== 'mcx');
+  const nfoHedRows  = rows.filter(r => r.sheet === HEDGED_SHEET);
+  const mcxRows     = rows.filter(r => r.cat === 'mcx');
+  // Legacy aliases for subTotalRow/showGroups logic
+  const stdRows    = nfoStdRows;
+  const hedgedRows = nfoHedRows;
+  const hasHedged   = nfoHedRows.length > 0;
+  const hasStandard = nfoStdRows.length > 0;
+  const hasMcx      = mcxRows.length > 0;
+  const showGroups  = (hasHedged || hasMcx) && hasStandard;
 
   // Helper: subtotal row html
   function subTotalRow(label, rws, isOverall) {
@@ -935,11 +974,12 @@ function renderBreakdownTable(filter='') {
         <td>${ddCell(r.curDd, r.maxDd)}</td>
       </tr>`;
     });
-    if (showGroups) rowsHtml += subTotalRow(label ? label + ' Total' : 'Standard Total', grpRows, false);
+    if (showGroups) rowsHtml += subTotalRow((label || 'Standard') + ' Total', grpRows, false);
   }
 
-  renderGroupRows(stdRows,    '', '');
-  renderGroupRows(hedgedRows, 'Hedged', '');
+  renderGroupRows(nfoStdRows,  'NFO / BFO', '');
+  renderGroupRows(nfoHedRows,  'NFO / BFO — Hedged', '');
+  renderGroupRows(mcxRows,     'MCX', '');
 
   // Overall total row — only show if more than one group or single filter
   const allRows = rows;
