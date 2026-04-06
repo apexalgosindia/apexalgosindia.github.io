@@ -224,6 +224,64 @@
     .footer-bottom { display: flex; justify-content: space-between; font-family: 'Inter', sans-serif; font-size: 0.58rem; letter-spacing: 0.1em; color: var(--muted); }
     @media (max-width: 768px) { nav { padding: 1rem 1.2rem; } .nav-links { display: none; } }
 
+    /* ── HAMBURGER MENU ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      z-index: 200;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--cream);
+      border-radius: 2px;
+      transition: all 0.25s ease;
+      transform-origin: center;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 64px; left: 0; right: 0;
+      background: var(--nav-bg);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(237,230,214,0.08);
+      padding: 1.5rem 2rem;
+      z-index: 99;
+      flex-direction: column;
+      gap: 0;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem; font-weight: 500;
+      color: var(--mid);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid rgba(237,230,214,0.07);
+      transition: color 0.2s;
+    }
+    .mobile-nav a:last-child { border-bottom: none; }
+    .mobile-nav a:hover { color: var(--accent); }
+    .mobile-nav a.active { color: var(--accent); }
+    :root.light .mobile-nav a { color: var(--mid); }
+    :root.light .mobile-nav a:hover { color: var(--accent); }
+
+    @media (max-width: 768px) {
+      .hamburger { display: flex !important; }
+    }
+
     @media (max-width: 768px) {
       main { padding: 72px 0.75rem 3rem; }
 
@@ -356,8 +414,23 @@
   <div class="nav-right">
     <button class="theme-btn" onclick="toggleTheme()"><span id="themeIcon">&#9728;</span> <span id="themeLabel">Light</span></button>
     <a class="nav-cta" href="./index.html#contact">Get Started</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" onclick="
+      var nav = document.getElementById('mobileNav');
+      var btn = this;
+      var isOpen = nav.classList.contains('open');
+      if (isOpen) { nav.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+      else { nav.classList.add('open'); btn.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+    "><span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="./index.html">Home</a>
+  <a href="./strategies.html">Strategies</a>
+  <a href="./analytics.html" class="active">Performance</a>
+  <a href="./portfolio.html">Portfolio Builder</a>
+  <a href="./index.html#contact">Contact</a>
+</div>
 
 <main>
   <p class="page-eyebrow">Apex Algos &middot; Daily P&amp;L Dashboard</p>
