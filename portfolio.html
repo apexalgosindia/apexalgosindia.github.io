@@ -1241,10 +1241,7 @@ function renderResults(alloc, capital, meta) {
   // Why this portfolio
   try { document.getElementById('whySection').innerHTML = renderWhySection(alloc, capital); } catch(e) { console.warn('whySection error',e); }
 
-  // Correlation matrix
-  try { document.getElementById('corrMatrix').innerHTML = renderCorrMatrix(alloc); } catch(e) { console.warn('corrMatrix error',e); }
-
-  // Portfolio historical analytics charts
+  // Portfolio historical analytics charts (includes correlation matrix)
   try { renderPortfolioAnalytics(alloc); } catch(e) { console.warn('pfAnalytics error',e); }
 
   document.getElementById('resultsSection').style.display = 'block';
@@ -1370,7 +1367,7 @@ function pearsonCorr(a, b) {
 function renderCorrMatrix(alloc) {
   if(alloc.length < 2) return '';
   const pnlMap = {};
-  alloc.forEach(a => { pnlMap[a.key] = liveData?.daily_pnl?.[a.key] || []; });
+  alloc.forEach(a => { pnlMap[a.key] = liveData?.[a.key+'_daily'] || []; });
   const labels = alloc.map(a=>a.label);
   const keys   = alloc.map(a=>a.key);
   const colors = alloc.map(a=>a.color);
@@ -1581,6 +1578,21 @@ function renderPortfolioAnalytics(alloc) {
     if (v===0) div.style.border='1px solid var(--rule)';
     heatBar.appendChild(div);
   });
+
+  // ── Correlation matrix (appended after heatmap) ──
+  const corrHTML = renderCorrMatrix(alloc);
+  if (corrHTML) {
+    const corrWrap = document.createElement('div');
+    corrWrap.style.cssText = 'margin-top:1.2rem;';
+    corrWrap.innerHTML = corrHTML;
+    el.appendChild(corrWrap);
+  }
+
+  // ── Disclaimer ──
+  const disc = document.createElement('p');
+  disc.style.cssText = 'font-size:0.68rem;color:var(--muted);margin-top:1rem;line-height:1.7;padding:0.6rem 0.8rem;background:var(--surface2);border-left:3px solid var(--rule);';
+  disc.innerHTML = '⚠ Past performance does not guarantee future returns. These are our account returns with simulated lot-scaling. Kindly consult your financial adviser before deploying capital.';
+  el.appendChild(disc);
 }
 
 // ── INIT ──
