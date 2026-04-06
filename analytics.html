@@ -500,7 +500,7 @@
     </div>
     <div class="footer-bottom">
       <p>© 2025 Apex Algos. All rights reserved.</p>
-      <p>Built for performance. Engineered with discipline.</p>
+      <p id="footerUpdated">Built for performance. Engineered with discipline.</p>
     </div>
   </footer>
 
@@ -748,10 +748,11 @@ function getLastValidIdx() {
 function init() {
   const last = DATA.daily_dates.length - 1;
   currentDateIdx = getLastValidIdx();
-  document.getElementById('updatedTag').textContent = 'Last updated: ' + DATA.updated;
-  document.getElementById('footerUpdated').textContent = 'Data as of ' + DATA.updated;
-  document.getElementById('liveBadge').textContent = 'LIVE · ' + DATA.updated;
-  document.getElementById('bdDatePill').textContent = DATA.daily_dates[currentDateIdx];
+  const _set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  _set('updatedTag',    'Last updated: ' + DATA.updated);
+  _set('footerUpdated', 'Data as of '    + DATA.updated);
+  _set('liveBadge',    'LIVE · '        + DATA.updated);
+  _set('bdDatePill',   DATA.daily_dates[currentDateIdx]);
   updateDateNav();
   renderStratToggles();
   setTimeout(() => {
@@ -785,7 +786,7 @@ function getYearlyPnl(k) {
   return sum;
 }
 function getTodayPnl(k) {
-  return DATA[k+'_daily']?.[DATA.daily_dates.length-1] || 0;
+  return DATA[k+'_daily']?.[currentDateIdx] || 0;
 }
 
 function pnlPill(v, cap) {
