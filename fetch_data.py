@@ -27,17 +27,22 @@ SHEET_ID = '1Rgy-HH8bcY7guN7PuH6biiK-JVV-PaFOH5aDII8oVf8'
 STRATEGIES = [
     # ── Standard strategies (DAILY P&L tab) ──────────────────────────────────────────────────────────────────
     # key      label     capital    col  sheet           color       visible  tradetron_id  share_code                              subtitle                    sl
-    {'key':'nap',   'label':'NAP',   'capital':250_000, 'col':1,  'sheet':'DAILY P&L', 'color':'#D4A840', 'visible':True,  'tradetron_id':'7324677', 'share_code':'d404a9df-c1de-49e5-a6e4-c431a7a34c37', 'subtitle':'Nifty Intraday Selling',            'sl':5000},
-    {'key':'sap',   'label':'SAP',   'capital':250_000, 'col':4,  'sheet':'DAILY P&L', 'color':'#3FE088', 'visible':True,  'tradetron_id':'7324685', 'share_code':'5e606810-edce-46e3-bd89-f1ded1f6f4f6', 'subtitle':'Sensex Intraday Selling',           'sl':5000},
+    {'key':'nap',   'label':'NAP',   'capital':250_000, 'col':1,  'sheet':'DAILY P&L', 'color':'#D4A840', 'visible':True,  'tradetron_id':'7324677', 'share_code':'d404a9df-c1de-49e5-a6e4-c431a7a34c37', 'subtitle':'Nifty Apex Predator',            'sl':5000},
+    {'key':'sap',   'label':'SAP',   'capital':250_000, 'col':4,  'sheet':'DAILY P&L', 'color':'#3FE088', 'visible':True,  'tradetron_id':'7324685', 'share_code':'5e606810-edce-46e3-bd89-f1ded1f6f4f6', 'subtitle':'Sensex Apex Predator',           'sl':5000},
     #{'key':'cap',   'label':'CAP',   'capital':500_000, 'col':11, 'sheet':'DAILY P&L', 'color':'#B06FE0', 'visible':True,  'tradetron_id':'',        'share_code':'',                                     'subtitle':'Combined Auto Portfolio',           'sl':0},
-    {'key':'napv2', 'label':'NAPv2', 'capital':250_000, 'col':18, 'sheet':'DAILY P&L', 'color':'#E06F6F', 'visible':True,  'tradetron_id':'7803165', 'share_code':'f10c10c5-3bbf-415f-8aee-a59e56a01856', 'subtitle':'Nifty Intraday Selling',            'sl':3500},
-    {'key':'napv3', 'label':'NAPv3', 'capital':250_000, 'col':21, 'sheet':'DAILY P&L', 'color':'#E0B06F', 'visible':True,  'tradetron_id':'8678425', 'share_code':'98a1a981-2594-415a-9dd8-b39cdfa571e9', 'subtitle':'Nifty Intraday Selling',            'sl':3500},
-    {'key':'sapv2', 'label':'SAPv2', 'capital':250_000, 'col':24, 'sheet':'DAILY P&L', 'color':'#6FE0D4', 'visible':True,  'tradetron_id':'8838677', 'share_code':'e906d9cf-8076-4958-800b-e02a5967ef98', 'subtitle':'Sensex Intraday Selling',           'sl':3500},
-    {'key':'sapv3', 'label':'SAPv3', 'capital':250_000, 'col':27, 'sheet':'DAILY P&L', 'color':'#6F9FE0', 'visible':True,  'tradetron_id':'8680369', 'share_code':'a2a10dfa-3c31-47d9-b720-e183681ebc5f', 'subtitle':'Sensex Intraday Selling',           'sl':3500},
+    {'key':'napv2', 'label':'NAPv2', 'capital':250_000, 'col':22, 'sheet':'DAILY P&L', 'color':'#E06F6F', 'visible':True,  'tradetron_id':'7803165', 'share_code':'f10c10c5-3bbf-415f-8aee-a59e56a01856', 'subtitle':'Nifty Apex Predator v2',            'sl':3500},
+    {'key':'napv3', 'label':'NAPv3', 'capital':250_000, 'col':25, 'sheet':'DAILY P&L', 'color':'#E0B06F', 'visible':True,  'tradetron_id':'8678425', 'share_code':'98a1a981-2594-415a-9dd8-b39cdfa571e9', 'subtitle':'Nifty Apex Predator v3',            'sl':3500},
+    {'key':'sapv2', 'label':'SAPv2', 'capital':250_000, 'col':28, 'sheet':'DAILY P&L', 'color':'#6FE0D4', 'visible':True,  'tradetron_id':'8838677', 'share_code':'e906d9cf-8076-4958-800b-e02a5967ef98', 'subtitle':'Sensex Apex Predator v2',           'sl':3500},
+    {'key':'sapv3', 'label':'SAPv3', 'capital':250_000, 'col':31, 'sheet':'DAILY P&L', 'color':'#6F9FE0', 'visible':True,  'tradetron_id':'8680369', 'share_code':'a2a10dfa-3c31-47d9-b720-e183681ebc5f', 'subtitle':'Sensex Apex Predator v3',           'sl':3500},
 
     # ── Hedged strategies (DAILY P&L HEDGED tab) ─────────────────────────────────────────────────────────────
-    {'key':'naph',  'label':'NAP-H', 'capital':150_000, 'col':1,  'sheet':'DAILY P&L HEDGED', 'color':'#A0E06F', 'visible':True, 'tradetron_id':'7286441', 'share_code':'65ad2c9c-0ceb-4076-932f-5430d14b4530', 'subtitle':'Nifty Intraday Selling — Hedged',  'sl':3500},
-    {'key':'saph',  'label':'SAP-H', 'capital':150_000, 'col':4,  'sheet':'DAILY P&L HEDGED', 'color':'#E06FB0', 'visible':True, 'tradetron_id':'7324673', 'share_code':'YOUR-SAPH-SHARE-CODE',                 'subtitle':'Sensex Intraday Selling — Hedged', 'sl':3500},
+    {'key':'naph',  'label':'NAP-H', 'capital':150_000, 'col':1,  'sheet':'DAILY P&L HEDGED', 'color':'#A0E06F', 'visible':True, 'tradetron_id':'7286441', 'share_code':'65ad2c9c-0ceb-4076-932f-5430d14b4530', 'subtitle':'Nifty Apex Predator — Hedged',  'sl':5000},
+    {'key':'saph',  'label':'SAP-H', 'capital':150_000, 'col':4,  'sheet':'DAILY P&L HEDGED', 'color':'#E06FB0', 'visible':True, 'tradetron_id':'7324673', 'share_code':'YOUR-SAPH-SHARE-CODE',                 'subtitle':'Sensex Apex Predator — Hedged', 'sl':5000},
+    
+    # MCX strategies
+    {'key':'ngap', 'label':'NAGAP', 'capital':220_000, 'col':9, 'sheet':'DAILY P&L', 'color':'#6F9FE2', 'visible':True,  'tradetron_id':'7927425', 'share_code':'', 'subtitle':'NG Apex Predator',           'sl':1800},
+    {'key':'ngap', 'label':'NAGAPM', 'capital':50_000, 'col':12, 'sheet':'DAILY P&L', 'color':'#6F9FE9', 'visible':True,  'tradetron_id':'9444470', 'share_code':'', 'subtitle':'NG Apex Predator MINI',           'sl':500},
+
 ]
 
 _S = {s['key']: s for s in STRATEGIES}   # quick lookup by key
