@@ -1010,21 +1010,23 @@ function getRangeLabel() { return {all:'All Time',ytd:'Year-to-Date','6m':'Last 
 
 // ── INIT ──
 function init() {
-  const last = DATA.daily_dates.length - 1;
   currentDateIdx = getLastValidIdx();
   document.getElementById('updatedTag').textContent = 'Last updated: ' + DATA.updated;
   document.getElementById('footerUpdated').textContent = 'Data as of ' + DATA.updated;
   document.getElementById('liveBadge').textContent = 'LIVE · ' + DATA.updated;
-  document.getElementById('bdDatePill').textContent = DATA.daily_dates[last];
+  document.getElementById('bdDatePill').textContent = DATA.daily_dates[currentDateIdx];
   updateDateNav();
   renderStratToggles();
-  renderBreakdownTable();
-  renderTodayBanner();
-  renderRollingStats();
-  renderCharts();
-  renderHeatmap();
-  renderCalendar();
-  renderSummaryStrip();
+  // Defer all heavy renders to next tick so DOM is fully painted first
+  setTimeout(() => {
+    renderBreakdownTable();
+    renderTodayBanner();
+    renderRollingStats();
+    renderCharts();
+    renderHeatmap();
+    renderCalendar();
+    renderSummaryStrip();
+  }, 0);
 }
 
 // ══════════════════════════════════
