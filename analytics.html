@@ -41,8 +41,8 @@
     .live-badge { font-family: 'Inter', sans-serif; font-size: 0.6rem; letter-spacing: 0.12em; background: rgba(63,224,136,0.1); border: 1px solid rgba(63,224,136,0.3); color: #7EC8A0; padding: 0.3rem 0.75rem; }
     .theme-btn { background: transparent; border: 1px solid var(--tab-border, #3E3B2E); color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 400; letter-spacing: 0.1em; padding: 0.4rem 0.9rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.45rem; }
     .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
-    
-    
+    .nav-cta { font-family: 'Inter', sans-serif; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); text-decoration: none; border: 1px solid rgba(212,168,64,0.45); padding: 0.5rem 1.2rem; transition: background 0.2s, color 0.2s; }
+    .nav-cta:hover { background: var(--accent); color: var(--ink); }
 
     main { max-width: 1380px; margin: 0 auto; padding: 88px 2rem 5rem; }
     .page-eyebrow { font-family: 'Inter', sans-serif; font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.7rem; }
@@ -319,338 +319,43 @@
   font-size: 0.68rem;
 }
 
-    /* ── HAMBURGER + MOBILE NAV ── */
-    .theme-toggle {
-      background: transparent;
-      border: 1px solid var(--tab-border);
-      color: var(--muted);
+    .nav-cta {
       font-family: 'Inter', sans-serif;
-      font-size: 0.65rem;
-      font-weight: 400;
-      letter-spacing: 0.1em;
-      padding: 0.4rem 0.9rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex; align-items: center; gap: 0.45rem;
-    }
-    .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
-    .theme-toggle .icon { font-size: 0.85rem; }
-
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      gap: 5px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 6px;
-      z-index: 200;
-    }
-    .hamburger span {
-      display: block; width: 22px; height: 2px;
-      background: var(--cream); border-radius: 2px;
-      transition: all 0.25s ease; transform-origin: center;
-    }
-    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-    .mobile-nav {
-      display: none;
-      position: fixed;
-      top: 64px; left: 0; right: 0;
-      background: var(--nav-bg);
-      backdrop-filter: blur(18px);
-      border-bottom: 1px solid rgba(237,230,214,0.08);
-      padding: 1.5rem 2rem;
-      z-index: 99;
-      flex-direction: column;
-      gap: 0;
-    }
-    .mobile-nav.open { display: flex; }
-    .mobile-nav a {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.9rem; font-weight: 500;
-      color: var(--mid);
-      text-decoration: none;
-      padding: 0.9rem 0;
-      border-bottom: 1px solid rgba(237,230,214,0.06);
-      transition: color 0.2s;
-    }
-    .mobile-nav a:hover, .mobile-nav a.active { color: var(--accent); }
-
-    /* ── MOBILE ANALYTICS FIXES ── */
-    @media (max-width: 768px) {
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { display: none; }
-      .hamburger { display: flex !important; }
-      main { padding: 80px 1.2rem 4rem; }
-
-      /* Filter bar wraps */
-      .breakdown-toolbar { flex-wrap: wrap; gap: 0.5rem; }
-      .breakdown-toolbar > div { flex-wrap: wrap; }
-
-      /* Hide Monthly, Yearly, DD on mobile — keep Today only */
-      .bd-table th:nth-child(4),
-      .bd-table td:nth-child(4),
-      .bd-table th:nth-child(5),
-      .bd-table td:nth-child(5),
-      .bd-table th:nth-child(6),
-      .bd-table td:nth-child(6) { display: none; }
-
-      /* Banner strip pills wrap */
-      .strip-totals { flex-wrap: wrap; gap: 0.5rem; }
-      .strip-item { min-width: 80px; }
-
-      /* Charts single column */
-      .charts-grid { grid-template-columns: 1fr !important; }
-      .chart-wrap { min-height: 220px; }
-
-      /* Rolling stats 2 col */
-      .rolling-grid { grid-template-columns: repeat(2,1fr) !important; }
-
-      /* Heatmap smaller cells */
-      .heat-day { width: 10px !important; height: 10px !important; }
-
-      /* Export buttons hidden on mobile */
-      .export-btn-group { display: none; }
-
-      /* Date nav compact */
-      .date-nav { gap: 0.3rem; }
-      #bdDatePill { font-size: 0.7rem; padding: 0.3rem 0.6rem; }
-
-      /* Search full width */
-      #searchInput { width: 100% !important; }
-
-      /* Strategy manager wrap */
-      #stratToggleBar { flex-wrap: wrap; gap: 0.5rem; }
-    }
-
-    
-    /* Get Started — hide on mobile */
-    @media (max-width: 900px) {
-      
-    }
-    /* Shared footer styles */
-    footer { border-top: 1px solid rgba(237,230,214,0.07); padding: 2rem 3rem 1.5rem; }
-    .footer-disclaimer { margin-bottom: 1rem; }
-    .footer-disclaimer-text { font-size: 0.62rem; color: #4A4440; line-height: 1.6; letter-spacing: 0.02em; }
-    .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
-    .footer-bottom p { font-size: 0.62rem; color: #3A3530; letter-spacing: 0.05em; }
-
-        .nav-cta {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.68rem;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--accent);
-      text-decoration: none;
+      font-size: 0.68rem; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent); text-decoration: none;
       border: 1px solid rgba(212,168,64,0.45);
       padding: 0.5rem 1.2rem;
       transition: background 0.2s, color 0.2s;
     }
     .nav-cta:hover { background: var(--accent); color: var(--ink); }
     @media (max-width: 900px) { .nav-cta { display: none !important; } }
-    
-    /* ════════════════════════════════════
-       UNIFIED DESIGN TOKENS — ALL PAGES
-       ════════════════════════════════════ */
 
-    /* Body base */
-    body { font-size: 15px !important; line-height: 1.65 !important; }
+  
+    footer { border-top: 1px solid rgba(237,230,214,0.07); padding: 2rem 3rem 1.5rem; margin-top: 2rem; }
+    .footer-disclaimer { margin-bottom: 1rem; }
+    .footer-disclaimer-text { font-size: 0.62rem; color: var(--muted); line-height: 1.7; }
+    .footer-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+    .footer-bottom p { font-size: 0.62rem; color: var(--muted); letter-spacing: 0.05em; }
 
-    /* ── Page header typography ── */
-    .page-label {
-      font-family: 'Inter', sans-serif !important;
-      font-size: 0.6rem !important;
-      font-weight: 500 !important;
-      letter-spacing: 0.22em !important;
-      text-transform: uppercase !important;
-      color: var(--muted) !important;
-      margin-bottom: 0.6rem !important;
-    }
-    .page-title {
-      font-family: 'Inter', sans-serif !important;
-      font-size: clamp(1.8rem, 3.2vw, 2.6rem) !important;
-      font-weight: 300 !important;
-      line-height: 1.15 !important;
-      color: var(--cream) !important;
-      letter-spacing: -0.01em !important;
-      margin-bottom: 0.6rem !important;
-    }
-    .page-subtitle, .page-sub {
-      font-family: 'Inter', sans-serif !important;
-      font-size: 0.88rem !important;
-      font-weight: 400 !important;
-      color: var(--muted) !important;
-      line-height: 1.7 !important;
-      max-width: 54ch !important;
-      margin-bottom: 2rem !important;
-    }
-
-    /* ── Section / card wrappers ── */
-    .section-card, .panel-card, .filter-panel {
-      background: var(--surface) !important;
-      border: 1px solid var(--rule) !important;
-      padding: 1.8rem 2rem !important;
-      margin-bottom: 1.4rem !important;
-    }
-    .section-header {
-      display: flex !important;
-      align-items: center !important;
-      gap: 1rem !important;
-      margin-bottom: 1.4rem !important;
-    }
-    .section-num {
-      width: 28px; height: 28px;
-      background: var(--accent) !important;
-      color: var(--ink) !important;
-      font-size: 0.72rem !important;
-      font-weight: 700 !important;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .stitle {
-      font-family: 'Inter', sans-serif !important;
-      font-size: 0.82rem !important;
-      font-weight: 600 !important;
-      color: var(--cream) !important;
-      letter-spacing: 0.02em !important;
-    }
-    .ssub {
-      font-size: 0.7rem !important;
-      color: var(--muted) !important;
-      margin-top: 0.15rem !important;
-    }
-
-    /* ── Strategy cards (portfolio custom mode) ── */
-    .strat-card {
-      padding: 1rem 1.25rem !important;
-      border-radius: 0 !important;
-    }
-    .sname {
-      font-size: 0.82rem !important;
-      font-weight: 600 !important;
-      color: var(--cream) !important;
-    }
-    .smeta, .sstats {
-      font-size: 0.68rem !important;
-      color: var(--muted) !important;
-      margin-top: 0.18rem !important;
-    }
-
-    /* ── Strategy cards (strategies page) ── */
-    .strat-card .card-title,
-    .strat-card h3,
-    .card-name {
-      font-family: 'Inter', sans-serif !important;
-      font-size: 0.88rem !important;
-      font-weight: 600 !important;
-      color: var(--cream) !important;
-      letter-spacing: 0.01em !important;
-    }
-    .strat-card .card-sub,
-    .card-meta {
-      font-size: 0.7rem !important;
-      color: var(--muted) !important;
-      line-height: 1.5 !important;
-    }
-
-    /* ── Stat chips / badges ── */
-    .stat-chip, .badge, .tag {
-      font-size: 0.62rem !important;
-      font-weight: 500 !important;
-      letter-spacing: 0.06em !important;
-      padding: 0.18rem 0.5rem !important;
-    }
-
-    /* ── Section title labels (inside cards) ── */
-    .section-label, .card-section-label {
-      font-size: 0.58rem !important;
-      font-weight: 600 !important;
-      letter-spacing: 0.2em !important;
-      text-transform: uppercase !important;
-      color: var(--muted) !important;
-      margin-bottom: 0.8rem !important;
-    }
-
-    /* ── Table cells ── */
-    td, th {
-      font-family: 'Inter', sans-serif !important;
-    }
-    th {
-      font-size: 0.62rem !important;
-      font-weight: 500 !important;
-      letter-spacing: 0.12em !important;
-      text-transform: uppercase !important;
-    }
-    td {
-      font-size: 0.78rem !important;
-    }
-
-    /* ── Form inputs ── */
-    .form-label {
-      font-size: 0.68rem !important;
-      font-weight: 500 !important;
-      letter-spacing: 0.08em !important;
-      color: var(--mid) !important;
-      text-transform: uppercase !important;
-      margin-bottom: 0.4rem !important;
-    }
-    .form-input {
-      font-family: 'Inter', sans-serif !important;
-      font-size: 0.82rem !important;
-    }
-
-    /* ── Buttons ── */
-    .pill, .mode-tab, .cta-btn, button.primary {
-      font-family: 'Inter', sans-serif !important;
-      font-size: 0.7rem !important;
-      font-weight: 500 !important;
-      letter-spacing: 0.08em !important;
-    }
-
-    </style>
+  </style>
 </head>
 <body>
 
 <nav>
-  <a class="nav-logo" href="./index.html" style="display:flex;align-items:center;gap:0.6rem;" title="Home">
-    <img src="logo.jpg" alt="Apex Algos" style="width:32px;height:32px;object-fit:contain;border-radius:4px;" />
-    <span style="color:var(--accent);">Apex <span style="color:var(--cream);">Algos</span></span>
-  </a>
+  <a class="nav-logo" href="./index.html" style="display:flex;align-items:center;gap:0.6rem;" title="Home"><img src="logo.jpg" alt="Apex Algos" style="width:32px;height:32px;object-fit:contain;border-radius:4px;" /><span style="color:var(--accent);">Apex <span style="color:var(--cream);">Algos</span></span></a>
   <ul class="nav-links">
-      <li><a href="./index.html">Home</a></li>
-      <li><a href="./strategies.html">Strategies</a></li>
-      <li><a href="./analytics.html" class="active">Performance</a></li>
-      <li><a href="./portfolio.html">Portfolio Builder</a></li>
-      <li><a href="./index.html#contact">Contact</a></li>
-    </ul>
-  <div style="display:flex;align-items:center;gap:0.8rem;">
+    <li><a href="./index.html">Home</a></li>
+    <li><a href="./strategies.html">Strategies</a></li>
+    <li><a href="./analytics.html" class="active">Performance</a></li>
+    <li><a href="./portfolio.html">Portfolio Builder</a></li>
+    <li><a href="./index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-btn" onclick="toggleTheme()"><span id="themeIcon">&#9728;</span> <span id="themeLabel">Light</span></button>
     <a class="nav-cta" href="./index.html#contact">Get Started</a>
-    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
-      <span class="icon" id="themeIcon">&#9728;</span><span id="themeLabel">Light</span>
-    </button>
-    <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" onclick="
-      var nav = document.getElementById('mobileNav');
-      var btn = this;
-      var isOpen = nav.classList.contains('open');
-      if (isOpen) { nav.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
-      else { nav.classList.add('open'); btn.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
-    "><span></span><span></span><span></span>
-    </button>
   </div>
 </nav>
-
-<div class="mobile-nav" id="mobileNav">
-      <a href="./index.html">Home</a>
-      <a href="./strategies.html">Strategies</a>
-      <a href="./analytics.html" class="active">Performance</a>
-      <a href="./portfolio.html">Portfolio Builder</a>
-      <a href="./index.html#contact">Contact</a>
-    </div>
 
 <main>
   <p class="page-eyebrow">Apex Algos &middot; Daily P&amp;L Dashboard</p>
@@ -1008,8 +713,40 @@ function getFilteredStrats() {
 function getAllTotal(i) { return getFilteredStrats().reduce((s,k) => s+(DATA[k+'_daily']?.[i]||0), 0); }
 function getRangeLabel() { return {all:'All Time',ytd:'Year-to-Date','6m':'Last 6 Months','3m':'Last 3 Months','1m':'Last Month'}[currentRange]; }
 
+
+// ── LAST VALID DATE (data cutoff: 3:30 PM IST) ──
+function getLastValidIdx() {
+  try {
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const ist = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + istOffset);
+    const pastCutoff = (ist.getHours() > 15) || (ist.getHours() === 15 && ist.getMinutes() >= 30);
+    // Build today in DD/MM/YY format matching DATA.daily_dates
+    const dd = String(ist.getDate()).padStart(2,'0');
+    const mm = String(ist.getMonth() + 1).padStart(2,'0');
+    const yy = String(ist.getFullYear()).slice(2);
+    const todayStr = dd + '/' + mm + '/' + yy;
+    // Walk backwards to find last index with actual non-zero data
+    const keys = Object.keys(DATA).filter(k => k.endsWith('_daily'));
+    let lastValid = DATA.daily_dates.length - 1;
+    for (let i = DATA.daily_dates.length - 1; i >= 0; i--) {
+      const hasData = keys.some(k => { const v = DATA[k]?.[i]; return v !== undefined && v !== null && v !== 0; });
+      if (hasData) { lastValid = i; break; }
+    }
+    // If before 3:30 PM IST and today is in array, go to previous day
+    if (!pastCutoff) {
+      const todayIdx = DATA.daily_dates.indexOf(todayStr);
+      if (todayIdx > -1) lastValid = Math.max(0, todayIdx - 1);
+    }
+    return lastValid;
+  } catch(e) {
+    return Math.max(0, DATA.daily_dates.length - 1);
+  }
+}
+
 // ── INIT ──
 function init() {
+  const last = DATA.daily_dates.length - 1;
   currentDateIdx = getLastValidIdx();
   document.getElementById('updatedTag').textContent = 'Last updated: ' + DATA.updated;
   document.getElementById('footerUpdated').textContent = 'Data as of ' + DATA.updated;
@@ -1017,7 +754,6 @@ function init() {
   document.getElementById('bdDatePill').textContent = DATA.daily_dates[currentDateIdx];
   updateDateNav();
   renderStratToggles();
-  // Defer all heavy renders to next tick so DOM is fully painted first
   setTimeout(() => {
     renderBreakdownTable();
     renderTodayBanner();
@@ -1049,7 +785,7 @@ function getYearlyPnl(k) {
   return sum;
 }
 function getTodayPnl(k) {
-  return DATA[k+'_daily']?.[currentDateIdx] || 0;
+  return DATA[k+'_daily']?.[DATA.daily_dates.length-1] || 0;
 }
 
 function pnlPill(v, cap) {
@@ -1251,59 +987,15 @@ function exportCSV() {
 function exportExcel() { exportCSV(); } // simplified — same CSV for now
 
 // ── DATE NAV ──
-// ── LAST VALID DATE (data cutoff: 3:30 PM IST) ──
-function getLastValidIdx() {
-  try {
-    const now = new Date();
-    // Convert to IST (UTC+5:30)
-    const istOffset = 5.5 * 60 * 60 * 1000;
-    const ist = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + istOffset);
-    const pastCutoff = (ist.getHours() > 15) || (ist.getHours() === 15 && ist.getMinutes() >= 30);
-
-    // Build today in DATA format: DD/MM/YY
-    const dd = String(ist.getDate()).padStart(2,'0');
-    const mm = String(ist.getMonth() + 1).padStart(2,'0');
-    const yy = String(ist.getFullYear()).slice(2);
-    const todayStr = dd + '/' + mm + '/' + yy;
-
-    const keys = Object.keys(DATA).filter(k => k.endsWith('_daily'));
-    let lastValid = DATA.daily_dates.length - 1; // default: raw last
-
-    // Walk backwards to find last index with actual non-zero data
-    for (let i = DATA.daily_dates.length - 1; i >= 0; i--) {
-      const hasData = keys.some(k => {
-        const v = DATA[k]?.[i];
-        return v !== undefined && v !== null && v !== 0;
-      });
-      if (hasData) { lastValid = i; break; }
-    }
-
-    // If before 3:30 PM IST and today is already in the array, step back one
-    if (!pastCutoff) {
-      const todayIdx = DATA.daily_dates.indexOf(todayStr);
-      if (todayIdx > -1) lastValid = Math.max(0, todayIdx - 1);
-    }
-
-    return lastValid;
-  } catch(e) {
-    // Fallback: just return last index safely
-    return Math.max(0, DATA.daily_dates.length - 1);
-  }
-}
-
 function updateDateNav() {
-  const lastValid = getLastValidIdx();
-  const d = document.getElementById('dateLabel');
-  if (d) d.textContent = DATA.daily_dates[currentDateIdx];
-  // Disable next button if at last valid date
-  const nextBtn = document.querySelector('.nav-btn[onclick*="1"]');
-  if (nextBtn) nextBtn.disabled = currentDateIdx >= lastValid;
-  if (nextBtn) nextBtn.style.opacity = currentDateIdx >= lastValid ? '0.3' : '';
-  if (nextBtn) nextBtn.style.pointerEvents = currentDateIdx >= lastValid ? 'none' : '';
+  document.getElementById('dateLabel').textContent = DATA.daily_dates[currentDateIdx];
 }
 function navDate(dir) {
   const lastValid = getLastValidIdx();
   currentDateIdx = Math.max(0, Math.min(lastValid, currentDateIdx + dir));
+  // Disable next btn at boundary
+  const nextBtn = document.querySelector('.nav-btn[onclick*="1"]');
+  if (nextBtn) { nextBtn.disabled = currentDateIdx >= lastValid; nextBtn.style.opacity = currentDateIdx >= lastValid ? '0.3' : '1'; }
   updateDateNav(); renderTodayBanner(); renderStratPie();
 }
 function navToday() {
