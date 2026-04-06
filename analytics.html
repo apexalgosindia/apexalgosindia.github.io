@@ -462,6 +462,7 @@
       <button class="export-btn" onclick="exportCSV()">&#8595; Export CSV</button>
       <button class="export-btn" onclick="exportExcel()">&#8595; Export Excel</button>
       <button class="export-btn" id="pdfExportBtn" onclick="exportPDF()" style="border-color:rgba(212,168,64,0.45);color:var(--accent);">&#128438; Export PDF</button>
+      <button class="export-btn" id="snapshotBtn" onclick="snapshotTable()" style="border-color:rgba(63,224,136,0.45);color:#3FE088;">&#128247; Snapshot</button>
       <div style="margin-left:auto;display:flex;align-items:center;gap:0;">
         <button class="nav-btn" onclick="navDate(-1)">&#8592;</button>
       <div class="date-label" id="dateLabel">&mdash;</div>
@@ -1157,6 +1158,79 @@ function sortBd(key) {
 
 function filterBreakdown() {
   renderBreakdownTable(document.getElementById('searchInput').value);
+}
+
+// ── SNAPSHOT ──
+async function snapshotTable() {
+  const btn = document.getElementById('snapshotBtn');
+  const origText = btn.innerHTML;
+  btn.innerHTML = '⏳ Capturing…';
+  btn.disabled = true;
+
+  // Build a wrapper div that contains today strip + bd-header + table
+  const todayStrip  = document.getElementById('bdTodayStrip');
+  const bdHeader    = document.querySelector('.bd-header');
+  const tableWrap   = document.querySelector('.bd-table-wrap');
+  const disclaimer  = document.querySelector('p[style*="Past performance"]');
+
+  // Create off-screen snapshot container
+  const wrap = document.createElement('div');
+  wrap.style.cssText = `
+    position:fixed; left:-9999px; top:0;
+    background:${getComputedStyle(document.documentElement).getPropertyValue('--ink').trim()};
+    width:${tableWrap.offsetWidth + 2}px;
+    font-family:'Inter',sans-serif;
+  `;
+
+  // Clone the nodes
+  const todayClone   = todayStrip.cloneNode(true);
+  const headerClone  = bdHeader.cloneNode(true);
+  const tableClone   = tableWrap.cloneNode(true);
+  const discClone    = document.createElement('p');
+  discClone.style.cssText = 'font-family:Inter,sans-serif;font-size:0.65rem;color:#8a7a60;padding:0.6rem 1.1rem 0.75rem;';
+  discClone.textContent   = '⚠ Past performance does not guarantee future returns, these are our account returns. Kindly consult your financial adviser.';
+
+  // Strip pnl-pill background/border for clean snapshot look
+  [todayClone, headerClone, tableClone].forEach(node => {
+    node.querySelectorAll('.pnl-pill').forEach(el => {
+      el.style.background = 'transparent';
+      el.style.border = 'none';
+      el.style.padding = '0.32rem 0';
+    });
+    // Hide sort arrows / interactive buttons in header
+    node.querySelectorAll('#yearlyToggleBtn, button').forEach(el => el.style.display = 'none');
+  });
+
+  // Also strip search/export toolbar if cloned (not needed)
+  wrap.appendChild(todayClone);
+  wrap.appendChild(headerClone);
+  wrap.appendChild(tableClone);
+  wrap.appendChild(discClone);
+  document.body.appendChild(wrap);
+
+  try {
+    const canvas = await html2canvas(wrap, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#121008',
+      logging: false,
+    });
+
+    // Auto-download as PNG
+    const link = document.createElement('a');
+    const filterLabel = ['all','nfo','mcx','unhedged','hedged'].find(c => document.getElementById('cat-'+c)?.classList.contains('active')) || 'all';
+    const dateStr = DATA.daily_dates[currentDateIdx]?.replace(/\//g,'-') || 'snapshot';
+    link.download = `ApexAlgos_${filterLabel}_${dateStr}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  } catch(e) {
+    console.error('Snapshot error:', e);
+    alert('Snapshot failed: ' + e.message);
+  } finally {
+    document.body.removeChild(wrap);
+    btn.innerHTML = origText;
+    btn.disabled = false;
+  }
 }
 
 function exportCSV() {
