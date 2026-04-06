@@ -677,7 +677,7 @@ function renderStratToggles() {
   let html = `<div style="font-family:'Inter',sans-serif;font-size:0.55rem;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--rule);">Strategy Manager — Category &amp; Visibility</div>`;
 
   STRATS.forEach(k => {
-    const cat = cfg[k]?.category || 'nfo';
+    const cat = getStratCat(k);
     const vis = cfg[k]?.visible !== false;
     html += `<div style="display:flex;align-items:center;gap:1rem;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);">
       <span style="display:flex;align-items:center;gap:0.5rem;min-width:90px;">
@@ -720,7 +720,7 @@ function copyStratConfig() {
   const cfg = loadStratConfig();
   const lines = STRATS.map(k => {
     const s = DATA.strategies?.find(s => s.key === k) || {};
-    const cat = cfg[k]?.category || s.category || 'nfo';
+    const cat = getStratCat(k);
     const vis = cfg[k]?.visible !== undefined ? cfg[k].visible : (s.visible !== false);
     return `    # key='${k}' → category='${cat}', visible=${vis}`;
   });
@@ -839,7 +839,7 @@ function getFilteredStrats() {
   return STRATS.filter(k => {
     if (!getStratVisible(k)) return false;
     const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
-    const cat = cfg[k]?.category || 'nfo';
+    const cat = getStratCat(k);
     if (activeCatFilter === 'hedged')   return isHedged;
     if (activeCatFilter === 'unhedged') return !isHedged;
     if (activeCatFilter !== 'all')      return cat === activeCatFilter;
@@ -1021,7 +1021,7 @@ function buildBdRows() {
   const dailyKey = Object.fromEntries(STRATS.map(k => [k, k + '_daily']));
   const cfg = loadStratConfig();
   bdRows = STRATS.filter(k => {
-    const cat      = cfg[k]?.category || 'nfo';
+    const cat      = getStratCat(k);
     const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
     if (activeCatFilter === 'hedged') {
       if (!isHedged) return false;
@@ -1282,7 +1282,7 @@ function renderTodayBanner() {
   const _bannerCfg = loadStratConfig();
   STRATS.forEach(k => {
     if (!getStratVisible(k)) return;
-    const cat      = _bannerCfg[k]?.category || 'nfo';
+    const cat      = getStratCat(k);
     const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
     if (activeCatFilter === 'hedged' && !isHedged) return;
     if (activeCatFilter === 'unhedged' && isHedged) return;
@@ -1309,7 +1309,7 @@ function renderTodayBanner() {
     const stripCfg = loadStratConfig();
     STRATS.filter(k => {
       if (!getStratVisible(k)) return false;
-      const cat      = stripCfg[k]?.category || 'nfo';
+      const cat      = getStratCat(k);
       const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
       if (activeCatFilter === 'hedged')   return isHedged;
       if (activeCatFilter === 'unhedged') return !isHedged;
