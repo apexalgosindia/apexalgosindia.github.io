@@ -1201,23 +1201,6 @@ async function snapshotTable() {
     node.querySelectorAll('#yearlyToggleBtn, button').forEach(el => el.style.display = 'none');
   });
 
-  // ── Upscale fonts for readability ──
-  const SCALE = 2.2;
-  wrap.querySelectorAll('*').forEach(el => {
-    const cs = getComputedStyle(el);
-    const fs = parseFloat(cs.fontSize);
-    if (fs && fs > 0) el.style.fontSize = (fs * SCALE) + 'px';
-    // Also bump padding/gap slightly so things don't feel cramped
-    const pd = parseFloat(cs.paddingTop);
-    if (pd && pd > 0) {
-      el.style.paddingTop    = (parseFloat(cs.paddingTop)    * SCALE) + 'px';
-      el.style.paddingBottom = (parseFloat(cs.paddingBottom) * SCALE) + 'px';
-      el.style.paddingLeft   = (parseFloat(cs.paddingLeft)   * SCALE) + 'px';
-      el.style.paddingRight  = (parseFloat(cs.paddingRight)  * SCALE) + 'px';
-    }
-  });
-  discClone.style.fontSize = (parseFloat(getComputedStyle(discClone).fontSize || 10) * SCALE) + 'px';
-
   // Also strip search/export toolbar if cloned (not needed)
   wrap.appendChild(todayClone);
   wrap.appendChild(headerClone);
@@ -1227,7 +1210,7 @@ async function snapshotTable() {
 
   try {
     const canvas = await html2canvas(wrap, {
-      scale: 3,
+      scale: 2,
       useCORS: true,
       backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#121008',
       logging: false,
