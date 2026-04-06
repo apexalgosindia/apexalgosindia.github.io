@@ -1000,7 +1000,7 @@ function generateAuto() {
 
   // Filter pool — always exclude MCX from NFO capital pool (they get allocated via reuse pass)
   let pool = STRAT_META.filter(s => {
-    if(s.idx === 'mcx') return false;          // MCX always handled separately via reuse pass
+    if(s.idx === 'mcx') return false;
     if(prefs.hedge !== 'both' && s.hedge !== prefs.hedge) return false;
     if(prefs.idx   !== 'all'  && s.idx   !== prefs.idx)   return false;
     if(capital < s.minCap) return false;
@@ -1045,42 +1045,84 @@ function generateAuto() {
     remaining -= capUsed;
   }
 
-  // Surplus pass: give leftover lots one-at-a-time to highest-Sharpe strategies
+  // ── FIX 1: Enforce minStrats ──
+  // If allocated strategies are fewer than minS, relax DD filter and fill up to minS
+  if (alloc.length < minS) {
+    // Build a relaxed pool (no DD filter) of strategies not already in alloc
+    const allocatedKeys = new Set(alloc.map(a => a.key));
+    const relaxedPool = STRAT_META.filter(s => {
+      if (s.idx === 'mcx') return false;
+      if (prefs.hedge !== 'both' && s.hedge !== prefs.hedge) return false;
+      if (prefs.idx   !== 'all'  && s.idx   !== prefs.idx)   return false;
+      if (capital < s.minCap) return false;
+      if (allocatedKeys.has(s.key)) return false;
+      return true;
+    }).map(s => ({ ...s, stats: getStats(s.key) }))
+      .map(s => {
+        let score = 0;
+        const st = s.stats;
+        if(prefs.rank === 'sharpe')  score = st.sharpe;
+        if(prefs.rank === 'roi')     score = st.roi;
+        if(prefs.rank === 'winrate') score = st.win_rate;
+        if(prefs.rank === 'dd')      score = -Math.abs(st.max_dd);
+        return { ...s, score };
+      }).sort((a, b) => b.score - a.score);
+
+    for (const s of relaxedPool) {
+      if (alloc.length >= minS) break;
+      if (remaining < s.lotCap) continue;
+      const lots = Math.max(1, Math.floor(remaining / s.lotCap));
+      const capUsed = lots * s.lotCap;
+      if (capUsed > remaining) continue;
+      alloc.push({ ...s, lots, capUsed, ddRelaxed: true });
+      remaining -= capUsed;
+    }
+
+    // If still below minS even after relaxing, show a warning but continue with what we have
+    if (alloc.length < minS) {
+      const needed = minS - alloc.length;
+      console.warn(`Could not reach minStrats=${minS}: only ${alloc.length} strategy(s) fit the capital.`);
+      // We still proceed — don't silently show 0 results
+    }
+  }
+
+  if(alloc.length === 0) { renderNoResult(); return; }
+
+  // ── FIX 2: Round-robin surplus pass — no greedy top-bias ──
+  // Sort once by Sharpe descending; rotate after each awarded lot so every strategy gets a fair turn
+  const sortedForSurplus = [...alloc].sort((x, y) => y.stats.sharpe - x.stats.sharpe);
   let scalePass = 0;
-  while (alloc.length > 0 && remaining >= Math.min(...alloc.map(a => a.lotCap)) && scalePass < 100) {
+  while (remaining >= Math.min(...alloc.map(a => a.lotCap)) && scalePass < 200) {
     scalePass++;
     let boosted = false;
-    for (const a of [...alloc].sort((x, y) => y.stats.sharpe - x.stats.sharpe)) {
+    for (let i = 0; i < sortedForSurplus.length; i++) {
+      const a = sortedForSurplus[i];
       if (remaining < a.lotCap) continue;
       a.lots    += 1;
       a.capUsed += a.lotCap;
       remaining -= a.lotCap;
       boosted = true;
-      break; // one lot per pass keeps distribution fair
+      // Rotate: move this strategy to end so next pass favours others first
+      sortedForSurplus.push(sortedForSurplus.splice(i, 1)[0]);
+      break;
     }
     if (!boosted) break;
   }
 
-  if(alloc.length === 0) {
-    renderNoResult(); return;
-  }
-
-  // ── MCX Capital Reuse pass ────────────────────────────────────────
+  // ── MCX Capital Reuse pass ──
   if (prefs.mcxreuse === 'on') {
-    // Capital freed = sum of NFO/BFO strategies that exit by 3:30 PM
     const nfoFreed = alloc
       .filter(a => a.idx !== 'mcx')
       .reduce((s, a) => s + a.capUsed, 0);
     const reusePct  = parseFloat(prefs.mcxpct) / 100;
     let mcxBudget   = Math.floor(nfoFreed * reusePct);
 
-    // Build MCX candidate pool
     let mcxPool = STRAT_META
       .filter(s => s.idx === 'mcx')
       .filter(s => {
         if (prefs.mcxstrats === 'ngap')  return s.key === 'ngap';
         if (prefs.mcxstrats === 'ngapm') return s.key === 'ngapm';
-        return true; // 'all'
+        return true;
       })
       .map(s => ({ ...s, stats: getStats(s.key) }))
       .filter(s => Math.abs(s.stats.max_dd) <= maxDD)
@@ -1100,7 +1142,6 @@ function generateAuto() {
       const lots   = Math.floor(mcxBudget / s.lotCap);
       if (lots < 1) continue;
       const capUsed = lots * s.lotCap;
-      // Mark as reused capital so renderResults can display it differently
       alloc.push({ ...s, lots, capUsed, reuseCapital: true });
       mcxBudget -= capUsed;
     }
@@ -1110,6 +1151,7 @@ function generateAuto() {
   renderResults(alloc, capital, `Auto Portfolio · ${prefs.rank} ranked · Max DD ${maxDD}%${hasMcxReuse ? ' · MCX reuse ♻' : ''}`);
   } catch(e) { console.error('generateAuto error:', e); alert('Error generating portfolio: ' + e.message); }
 }
+
 
 // ── CUSTOM GENERATE ──
 let customMcxReuse = 'on';
