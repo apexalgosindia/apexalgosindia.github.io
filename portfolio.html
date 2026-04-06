@@ -515,99 +515,14 @@
     }
 
     
-    /* ════════════════════════════════════
-       CARD SIZE UNIFICATION — match analytics
-       ════════════════════════════════════ */
-
-    /* strategies page — strat-card */
-    .strat-card {
-      padding: 1rem 1.5rem !important;
-      border-radius: 0 !important;
-      border: 1px solid var(--rule) !important;
-    }
-
-    /* strategies page — tg-card (Tradetron strategy cards) */
-    .tg-card {
-      padding: 1rem 1.5rem !important;
-      border-radius: 0 !important;
-      border: 1px solid var(--rule) !important;
-      margin-bottom: 1.5rem !important;
-    }
-    .tg-card-title {
-      font-size: 0.88rem !important;
-      font-weight: 600 !important;
-      color: var(--cream) !important;
-    }
-    .tg-card-label {
-      font-size: 0.62rem !important;
-      font-weight: 500 !important;
-      letter-spacing: 0.12em !important;
-      text-transform: uppercase !important;
-      color: var(--muted) !important;
-    }
-
-    /* strategies page — section headings */
-    .section-heading {
-      font-size: 1rem !important;
-      font-weight: 500 !important;
-      color: var(--cream) !important;
-      letter-spacing: 0.01em !important;
-    }
-    .sub-section-heading {
-      font-size: 0.82rem !important;
-      font-weight: 400 !important;
-      color: var(--muted) !important;
-    }
-    .section-badge, .sub-section-badge {
-      font-size: 0.55rem !important;
-      letter-spacing: 0.15em !important;
-    }
-
-    /* portfolio page — section-card */
-    .section-card {
-      padding: 1rem 1.5rem !important;
-      border-radius: 0 !important;
-      border: 1px solid var(--rule) !important;
-      margin-bottom: 1.2rem !important;
-    }
-    .section-num {
-      width: 24px !important;
-      height: 24px !important;
-      font-size: 0.68rem !important;
-    }
-    .stitle {
-      font-size: 0.8rem !important;
-    }
-    .ssub {
-      font-size: 0.68rem !important;
-    }
-
-    /* portfolio strat-cards (custom builder grid) */
-    .strat-cards-grid .strat-card {
-      padding: 0.75rem 1rem !important;
-    }
-    .sname { font-size: 0.78rem !important; }
-    .smeta, .sstats { font-size: 0.65rem !important; }
-
-    /* analytics — match bd-header padding consistency */
-    .bd-header { padding: 1rem 1.5rem !important; }
-    .chart-panel { padding: 1.4rem 1.5rem !important; }
-    .rolling-grid > div { padding: 1rem 1.5rem !important; }
-
-    /* sheet-banner (strategies page top banner) */
-    .sheet-banner {
-      padding: 1rem 1.5rem !important;
-      border-radius: 0 !important;
-    }
-
-    /* mode-tabs (portfolio) */
-    .mode-tabs {
-      margin-bottom: 1.2rem !important;
-    }
-    .mode-tab {
-      padding: 0.75rem 1.5rem !important;
-      border-radius: 0 !important;
-    }
+    /* ── FOOTER (match other pages) ── */
+    footer { border-top: 1px solid rgba(237,230,214,0.07); padding: 2rem 3rem 1.5rem; margin-top: 3rem; }
+    .footer-disclaimer { margin-bottom: 1rem; }
+    .footer-disclaimer-text { font-size: 0.62rem; color: var(--muted); line-height: 1.7; letter-spacing: 0.02em; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+    .footer-bottom p { font-size: 0.62rem; color: var(--muted); letter-spacing: 0.05em; }
+    :root.light .footer-disclaimer-text { color: var(--muted); }
+    :root.light .footer-bottom p { color: var(--muted); }
 
     </style>
 </head>
@@ -964,6 +879,7 @@ function changeMult(key, delta) {
 
 // ── AUTO GENERATE ──
 function generateAuto() {
+  try {
   const capital   = parseInt(document.getElementById('capitalInput').value)||0;
   const maxDD     = parseFloat(document.getElementById('maxDDInput').value)||20;
   const targetROI = parseFloat(document.getElementById('targetROIInput').value)||0;
@@ -1011,11 +927,12 @@ function generateAuto() {
     remaining -= capUsed;
   }
 
-  if(alloc.length < minS && alloc.length === 0) {
+  if(alloc.length === 0) {
     renderNoResult(); return;
   }
 
-  renderResults(alloc, capital, `Auto Portfolio &middot; ${prefs.rank} ranked &middot; Max DD ${maxDD}%`);
+  renderResults(alloc, capital, `Auto Portfolio · ${prefs.rank} ranked · Max DD ${maxDD}%`);
+  } catch(e) { console.error('generateAuto error:', e); alert('Error generating portfolio: ' + e.message); }
 }
 
 // ── CUSTOM GENERATE ──
@@ -1126,16 +1043,16 @@ function renderResults(alloc, capital, meta) {
   document.getElementById('noResult').style.display = 'none';
 
   // Risk warnings
-  document.getElementById('riskWarnings').innerHTML = renderWarnings(alloc, capital);
+  try { document.getElementById('riskWarnings').innerHTML = renderWarnings(alloc, capital); } catch(e) { console.warn('riskWarnings error',e); }
 
   // Score breakdown
-  document.getElementById('scoreBreakdown').innerHTML = renderScoreSection(alloc, capital);
+  try { document.getElementById('scoreBreakdown').innerHTML = renderScoreSection(alloc, capital); } catch(e) { console.warn('scoreBreakdown error',e); }
 
   // Why this portfolio
-  document.getElementById('whySection').innerHTML = renderWhySection(alloc, capital);
+  try { document.getElementById('whySection').innerHTML = renderWhySection(alloc, capital); } catch(e) { console.warn('whySection error',e); }
 
   // Correlation matrix
-  document.getElementById('corrMatrix').innerHTML = renderCorrMatrix(alloc);
+  try { document.getElementById('corrMatrix').innerHTML = renderCorrMatrix(alloc); } catch(e) { console.warn('corrMatrix error',e); }
 
   document.getElementById('resultsSection').style.display = 'block';
   document.getElementById('resultsSection').scrollIntoView({ behavior:'smooth', block:'start' });
