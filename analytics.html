@@ -462,7 +462,7 @@
       <button class="export-btn" onclick="exportCSV()">&#8595; Export CSV</button>
       <button class="export-btn" onclick="exportExcel()">&#8595; Export Excel</button>
       <button class="export-btn" id="pdfExportBtn" onclick="exportPDF()" style="border-color:rgba(212,168,64,0.45);color:var(--accent);">&#128438; Export PDF</button>
-      <button class="export-btn" id="snapshotBtn" onclick="snapshotTable()">&#128247; Snapshot</button>
+      <button class="export-btn" id="snapshotBtn" onclick="snapshotTable()" style="border-color:rgba(63,224,136,0.45);color:#3FE088;">&#128247; Snapshot</button>
       <div style="margin-left:auto;display:flex;align-items:center;gap:0;">
         <button class="nav-btn" onclick="navDate(-1)">&#8592;</button>
       <div class="date-label" id="dateLabel">&mdash;</div>
@@ -651,21 +651,12 @@ function loadStratConfig() {
 function saveStratConfig(cfg) {
   localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg));
 }
-const STRAT_CAT_DEFAULT = {
-  nap:'nfo', napv2:'nfo', napv3:'nfo',
-  sap:'nfo', sapv2:'nfo', sapv3:'nfo',
-  naph:'nfo', saph:'nfo',
-  nagap:'mcx', nagapm:'mcx'
-};
 function getStratCat(k) {
-  // 1. User override stored in localStorage (non-incognito)
   const cfg = loadStratConfig();
   if (cfg[k]?.category) return cfg[k].category;
-  // 2. Category baked into DATA by fetch_data.py — works in incognito too
+  // Fall back to baked value from fetch_data.py
   const def_ = DATA.strategies?.find(s => s.key === k);
-  if (def_?.category) return def_.category;
-  // 3. Hardcoded fallback — last resort, covers incognito + missing data
-  return STRAT_CAT_DEFAULT[k] || 'nfo';
+  return def_?.category || 'nfo';
 }
 function getStratVisible(k) {
   const cfg = loadStratConfig();
@@ -1210,37 +1201,6 @@ async function snapshotTable() {
     node.querySelectorAll('#yearlyToggleBtn, button').forEach(el => el.style.display = 'none');
   });
 
-  // ── SNAPSHOT-ONLY font enlargement (clone only, live page untouched) ─────────
-  [todayClone, headerClone, tableClone].forEach(node => {
-    node.querySelectorAll('th').forEach(el => {
-      el.style.fontSize = '0.95rem';
-      el.style.padding  = '1rem 1.2rem';
-    });
-    node.querySelectorAll('td').forEach(el => {
-      el.style.fontSize = '0.95rem';
-      el.style.padding  = '1rem 1.2rem';
-    });
-    node.querySelectorAll('.strat-name-text').forEach(el => el.style.fontSize = '1rem');
-    node.querySelectorAll('.pnl-amount').forEach(el => el.style.fontSize = '0.95rem');
-    node.querySelectorAll('.pnl-pct').forEach(el => el.style.fontSize = '0.8rem');
-    node.querySelectorAll('.dd-cur, .dd-pct').forEach(el => el.style.fontSize = '0.95rem');
-    node.querySelectorAll('.dd-max-val, .dd-sep').forEach(el => el.style.fontSize = '0.82rem');
-    node.querySelectorAll('.cap-cell').forEach(el => el.style.fontSize = '0.92rem');
-    node.querySelectorAll('.total-row td').forEach(el => el.style.fontSize = '1rem');
-    node.querySelectorAll('.subtotal-row td').forEach(el => el.style.fontSize = '0.88rem');
-    node.querySelectorAll('.subgroup-label').forEach(el => el.style.fontSize = '0.75rem');
-    node.querySelectorAll('.strip-item-val').forEach(el => el.style.fontSize = '1.1rem');
-    node.querySelectorAll('.strip-item-val.combined').forEach(el => el.style.fontSize = '1.25rem');
-    node.querySelectorAll('.strip-item-label').forEach(el => el.style.fontSize = '0.65rem');
-    node.querySelectorAll('.strip-date-main').forEach(el => el.style.fontSize = '0.85rem');
-    node.querySelectorAll('.bd-title').forEach(el => el.style.fontSize = '1.15rem');
-    node.querySelectorAll('.bd-sub').forEach(el => el.style.fontSize = '0.7rem');
-    node.querySelectorAll('.bd-date-pill').forEach(el => el.style.fontSize = '0.72rem');
-    node.querySelectorAll('.today-total-val').forEach(el => el.style.fontSize = '1rem');
-    node.querySelectorAll('.today-total-lbl').forEach(el => el.style.fontSize = '0.62rem');
-  });
-  // ─────────────────────────────────────────────────────────────────────────────
-
   // Also strip search/export toolbar if cloned (not needed)
   wrap.appendChild(todayClone);
   wrap.appendChild(headerClone);
@@ -1250,7 +1210,7 @@ async function snapshotTable() {
 
   try {
     const canvas = await html2canvas(wrap, {
-      scale: 3,
+      scale: 2,
       useCORS: true,
       backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#121008',
       logging: false,
@@ -1568,7 +1528,7 @@ async function exportPDF() {
       if (!el) return;
 
       const canvas = await html2canvas(el, {
-        scale: 3,                    // full 2× for sharp text and chart lines
+        scale: 2,                    // full 2× for sharp text and chart lines
         useCORS: true,
         logging: false,
         backgroundColor: '#F1EDE3', // light-mode bg always
