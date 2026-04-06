@@ -453,6 +453,167 @@
     }
     .nav-cta:hover { background: var(--accent); color: var(--ink); }
     @media (max-width: 900px) { .nav-cta { display: none !important; } }
+    
+    /* ════════════════════════════════════
+       UNIFIED DESIGN TOKENS — ALL PAGES
+       ════════════════════════════════════ */
+
+    /* Body base */
+    body { font-size: 15px !important; line-height: 1.65 !important; }
+
+    /* ── Page header typography ── */
+    .page-label {
+      font-family: 'Inter', sans-serif !important;
+      font-size: 0.6rem !important;
+      font-weight: 500 !important;
+      letter-spacing: 0.22em !important;
+      text-transform: uppercase !important;
+      color: var(--muted) !important;
+      margin-bottom: 0.6rem !important;
+    }
+    .page-title {
+      font-family: 'Inter', sans-serif !important;
+      font-size: clamp(1.8rem, 3.2vw, 2.6rem) !important;
+      font-weight: 300 !important;
+      line-height: 1.15 !important;
+      color: var(--cream) !important;
+      letter-spacing: -0.01em !important;
+      margin-bottom: 0.6rem !important;
+    }
+    .page-subtitle, .page-sub {
+      font-family: 'Inter', sans-serif !important;
+      font-size: 0.88rem !important;
+      font-weight: 400 !important;
+      color: var(--muted) !important;
+      line-height: 1.7 !important;
+      max-width: 54ch !important;
+      margin-bottom: 2rem !important;
+    }
+
+    /* ── Section / card wrappers ── */
+    .section-card, .panel-card, .filter-panel {
+      background: var(--surface) !important;
+      border: 1px solid var(--rule) !important;
+      padding: 1.8rem 2rem !important;
+      margin-bottom: 1.4rem !important;
+    }
+    .section-header {
+      display: flex !important;
+      align-items: center !important;
+      gap: 1rem !important;
+      margin-bottom: 1.4rem !important;
+    }
+    .section-num {
+      width: 28px; height: 28px;
+      background: var(--accent) !important;
+      color: var(--ink) !important;
+      font-size: 0.72rem !important;
+      font-weight: 700 !important;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .stitle {
+      font-family: 'Inter', sans-serif !important;
+      font-size: 0.82rem !important;
+      font-weight: 600 !important;
+      color: var(--cream) !important;
+      letter-spacing: 0.02em !important;
+    }
+    .ssub {
+      font-size: 0.7rem !important;
+      color: var(--muted) !important;
+      margin-top: 0.15rem !important;
+    }
+
+    /* ── Strategy cards (portfolio custom mode) ── */
+    .strat-card {
+      padding: 1rem 1.25rem !important;
+      border-radius: 0 !important;
+    }
+    .sname {
+      font-size: 0.82rem !important;
+      font-weight: 600 !important;
+      color: var(--cream) !important;
+    }
+    .smeta, .sstats {
+      font-size: 0.68rem !important;
+      color: var(--muted) !important;
+      margin-top: 0.18rem !important;
+    }
+
+    /* ── Strategy cards (strategies page) ── */
+    .strat-card .card-title,
+    .strat-card h3,
+    .card-name {
+      font-family: 'Inter', sans-serif !important;
+      font-size: 0.88rem !important;
+      font-weight: 600 !important;
+      color: var(--cream) !important;
+      letter-spacing: 0.01em !important;
+    }
+    .strat-card .card-sub,
+    .card-meta {
+      font-size: 0.7rem !important;
+      color: var(--muted) !important;
+      line-height: 1.5 !important;
+    }
+
+    /* ── Stat chips / badges ── */
+    .stat-chip, .badge, .tag {
+      font-size: 0.62rem !important;
+      font-weight: 500 !important;
+      letter-spacing: 0.06em !important;
+      padding: 0.18rem 0.5rem !important;
+    }
+
+    /* ── Section title labels (inside cards) ── */
+    .section-label, .card-section-label {
+      font-size: 0.58rem !important;
+      font-weight: 600 !important;
+      letter-spacing: 0.2em !important;
+      text-transform: uppercase !important;
+      color: var(--muted) !important;
+      margin-bottom: 0.8rem !important;
+    }
+
+    /* ── Table cells ── */
+    td, th {
+      font-family: 'Inter', sans-serif !important;
+    }
+    th {
+      font-size: 0.62rem !important;
+      font-weight: 500 !important;
+      letter-spacing: 0.12em !important;
+      text-transform: uppercase !important;
+      color: var(--muted) !important;
+    }
+    td {
+      font-size: 0.78rem !important;
+      color: var(--mid) !important;
+    }
+
+    /* ── Form inputs ── */
+    .form-label {
+      font-size: 0.68rem !important;
+      font-weight: 500 !important;
+      letter-spacing: 0.08em !important;
+      color: var(--mid) !important;
+      text-transform: uppercase !important;
+      margin-bottom: 0.4rem !important;
+    }
+    .form-input {
+      font-family: 'Inter', sans-serif !important;
+      font-size: 0.82rem !important;
+    }
+
+    /* ── Buttons ── */
+    .pill, .mode-tab, .cta-btn, button.primary {
+      font-family: 'Inter', sans-serif !important;
+      font-size: 0.7rem !important;
+      font-weight: 500 !important;
+      letter-spacing: 0.08em !important;
+    }
+
     </style>
 </head>
 <body>
@@ -852,7 +1013,7 @@ function getRangeLabel() { return {all:'All Time',ytd:'Year-to-Date','6m':'Last 
 // ── INIT ──
 function init() {
   const last = DATA.daily_dates.length - 1;
-  currentDateIdx = last;
+  currentDateIdx = getLastValidIdx();
   document.getElementById('updatedTag').textContent = 'Last updated: ' + DATA.updated;
   document.getElementById('footerUpdated').textContent = 'Data as of ' + DATA.updated;
   document.getElementById('liveBadge').textContent = 'LIVE · ' + DATA.updated;
@@ -1090,15 +1251,51 @@ function exportCSV() {
 function exportExcel() { exportCSV(); } // simplified — same CSV for now
 
 // ── DATE NAV ──
+// ── LAST VALID DATE (data cutoff: 3:30 PM IST) ──
+function getLastValidIdx() {
+  const now = new Date();
+  // IST = UTC+5:30
+  const istOffset = 5.5 * 60 * 60 * 1000;
+  const ist = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + istOffset);
+  const cutoffHour = 15, cutoffMin = 30;
+  const pastCutoff = (ist.getHours() > cutoffHour) || (ist.getHours() === cutoffHour && ist.getMinutes() >= cutoffMin);
+
+  // Build today's date string in DATA format (DD Mon YY or similar)
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const todayStr = ist.getDate().toString().padStart(2,'0') + ' ' + MONTHS[ist.getMonth()] + ' ' + String(ist.getFullYear()).slice(2);
+
+  // Find last index where at least one strategy has non-zero PNL data
+  const keys = Object.keys(DATA).filter(k => k.endsWith('_daily'));
+  let lastValid = 0;
+  for (let i = 0; i < DATA.daily_dates.length; i++) {
+    const hasData = keys.some(k => DATA[k]?.[i] !== 0 && DATA[k]?.[i] !== undefined);
+    if (hasData) lastValid = i;
+    // Also respect cutoff: if today's date is in the array but cutoff not passed, stop before it
+    if (!pastCutoff && DATA.daily_dates[i] === todayStr) {
+      lastValid = Math.max(0, i - 1);
+      break;
+    }
+  }
+  return lastValid;
+}
+
 function updateDateNav() {
-  document.getElementById('dateLabel').textContent = DATA.daily_dates[currentDateIdx];
+  const lastValid = getLastValidIdx();
+  const d = document.getElementById('dateLabel');
+  if (d) d.textContent = DATA.daily_dates[currentDateIdx];
+  // Disable next button if at last valid date
+  const nextBtn = document.querySelector('.nav-btn[onclick*="1"]');
+  if (nextBtn) nextBtn.disabled = currentDateIdx >= lastValid;
+  if (nextBtn) nextBtn.style.opacity = currentDateIdx >= lastValid ? '0.3' : '';
+  if (nextBtn) nextBtn.style.pointerEvents = currentDateIdx >= lastValid ? 'none' : '';
 }
 function navDate(dir) {
-  currentDateIdx = Math.max(0, Math.min(DATA.daily_dates.length-1, currentDateIdx+dir));
+  const lastValid = getLastValidIdx();
+  currentDateIdx = Math.max(0, Math.min(lastValid, currentDateIdx + dir));
   updateDateNav(); renderTodayBanner(); renderStratPie();
 }
 function navToday() {
-  currentDateIdx = DATA.daily_dates.length - 1;
+  currentDateIdx = getLastValidIdx();
   updateDateNav(); renderTodayBanner(); renderStratPie();
 }
 
