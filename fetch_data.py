@@ -41,7 +41,7 @@ STRATEGIES = [
     
     # MCX strategies
     {'key':'ngap', 'label':'NAGAP', 'capital':220_000, 'col':9, 'sheet':'DAILY P&L', 'color':'#6F9FE2', 'visible':True,  'tradetron_id':'7927425', 'share_code':'', 'subtitle':'NG Apex Predator',           'sl':1800},
-    {'key':'ngap', 'label':'NAGAPM', 'capital':50_000, 'col':12, 'sheet':'DAILY P&L', 'color':'#6F9FE9', 'visible':True,  'tradetron_id':'9444470', 'share_code':'', 'subtitle':'NG Apex Predator MINI',           'sl':500},
+    {'key':'ngapm', 'label':'NAGAPM', 'capital':50_000, 'col':12, 'sheet':'DAILY P&L', 'color':'#6F9FE9', 'visible':True,  'tradetron_id':'9444470', 'share_code':'', 'subtitle':'NG Apex Predator MINI',           'sl':500},
 
 ]
 
