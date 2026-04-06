@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Portfolio Builder — Apex Algos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --ink:#141210;--cream:#EDE6D6;--accent:#D4A840;--accent-glow:rgba(212,168,64,0.08);
+      --muted:#6B6155;--mid:#9A8F7E;--surface:#1C1A17;--surface2:#221F1B;
+      --rule:rgba(237,230,214,0.07);--nav-bg:rgba(20,18,16,0.92);
+      --pos:#4EA86E;--neg:#E05555;--tab-border:rgba(237,230,214,0.12);--tab-text:#7A6E5E;
+    }
+    :root.light{
+      --ink:#F5F0E8;--cream:#1A1714;--accent:#A07820;--accent-glow:rgba(160,120,32,0.08);
+      --muted:#5A5040;--mid:#6B5E4A;--surface:#EAE5DC;--surface2:#DDD8CE;
+      --rule:rgba(90,80,64,0.15);--nav-bg:rgba(245,240,232,0.95);
+      --pos:#2A6B3E;--neg:#9B3030;--tab-border:rgba(90,80,64,0.2);--tab-text:#5A5040;
+    }
+    body{background:var(--ink);color:var(--cream);font-family:'Inter',sans-serif;min-height:100vh;}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:var(--nav-bg);backdrop-filter:blur(16px);border-bottom:1px solid var(--rule);}
+    .nav-logo{font-size:1.1rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--cream);text-decoration:none;display:flex;align-items:center;gap:0.6rem;}
+    .nav-links{display:flex;gap:2.5rem;list-style:none;}
+    .nav-links a{font-size:0.82rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--cream);}
+    .theme-toggle{background:transparent;border:1px solid var(--tab-border);color:var(--muted);font-family:'Inter',sans-serif;font-size:0.65rem;letter-spacing:0.1em;padding:0.4rem 0.9rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:0.45rem;}
+    .theme-toggle:hover{border-color:var(--accent);color:var(--accent);}
+    .hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:6px;z-index:200;}
+    .hamburger span{display:block;width:22px;height:2px;background:var(--cream);border-radius:2px;transition:all 0.25s ease;transform-origin:center;}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .mobile-nav{display:none;position:fixed;top:64px;left:0;right:0;background:var(--nav-bg);backdrop-filter:blur(18px);border-bottom:1px solid var(--rule);padding:1.5rem 2rem;z-index:99;flex-direction:column;gap:0;}
+    .mobile-nav.open{display:flex;}
+    .mobile-nav a{font-size:0.9rem;font-weight:500;color:var(--mid);text-decoration:none;padding:0.9rem 0;border-bottom:1px solid var(--rule);transition:color 0.2s;}
+    .mobile-nav a:hover,.mobile-nav a.active{color:var(--accent);}
+
+    /* LAYOUT */
+    main{max-width:1100px;margin:0 auto;padding:100px 3rem 6rem;}
+    .page-label{font-size:0.6rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem;}
+    .page-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:400;color:var(--cream);margin-bottom:0.6rem;}
+    .page-sub{font-size:0.88rem;color:var(--muted);max-width:52ch;margin-bottom:2.5rem;line-height:1.7;}
+
+    /* MODE TABS */
+    .mode-tabs{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--rule);margin-bottom:2rem;}
+    .mode-tab{padding:1.2rem 2rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:0.8rem;border:none;background:var(--surface2);color:var(--muted);font-family:'Inter',sans-serif;font-size:0.82rem;font-weight:500;}
+    .mode-tab:first-child{border-right:1px solid var(--rule);}
+    .mode-tab.active{background:var(--accent);color:var(--ink);}
+    .mode-tab .tab-icon{font-size:1.1rem;}
+    .mode-tab .tab-text .tab-title{font-weight:600;font-size:0.88rem;display:block;}
+    .mode-tab .tab-text .tab-sub{font-size:0.7rem;opacity:0.75;display:block;margin-top:0.1rem;}
+
+    /* SECTIONS */
+    .section-card{background:var(--surface);border:1px solid var(--rule);padding:2rem;margin-bottom:1.5rem;}
+    .section-header{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.8rem;}
+    .section-num{width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--ink);font-size:0.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0.1rem;}
+    .section-title-block .stitle{font-size:1rem;font-weight:600;color:var(--cream);}
+    .section-title-block .ssub{font-size:0.75rem;color:var(--muted);margin-top:0.2rem;}
+
+    /* FORM */
+    .form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem 1.8rem;}
+    .form-grid.two-col{grid-template-columns:1fr 1fr;}
+    .form-group{display:flex;flex-direction:column;gap:0.4rem;}
+    .form-group.full{grid-column:1/-1;}
+    .form-label{font-size:0.6rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
+    .form-label .hint-icon{display:inline-block;width:14px;height:14px;border-radius:50%;border:1px solid var(--tab-border);color:var(--muted);font-size:0.55rem;text-align:center;line-height:14px;cursor:help;margin-left:0.3rem;vertical-align:middle;}
+    .form-input{background:var(--surface2);border:1px solid var(--tab-border);color:var(--cream);font-family:'Inter',sans-serif;font-size:0.9rem;padding:0.65rem 1rem;outline:none;transition:border-color 0.2s;width:100%;}
+    .form-input:focus{border-color:var(--accent);}
+    .input-prefix{position:relative;}
+    .input-prefix .prefix{position:absolute;left:0.8rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.85rem;pointer-events:none;}
+    .input-prefix .form-input{padding-left:1.8rem;}
+    .input-sub{font-size:0.68rem;color:var(--accent);margin-top:0.25rem;font-weight:500;}
+
+    /* PILL TOGGLES */
+    .pill-group{display:flex;gap:0.4rem;flex-wrap:wrap;}
+    .pill{font-family:'Inter',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;background:var(--surface2);border:1px solid var(--tab-border);color:var(--tab-text);padding:0.4rem 0.9rem;cursor:pointer;transition:all 0.18s;border-radius:2px;}
+    .pill:hover{border-color:var(--accent);color:var(--accent);}
+    .pill.active{background:var(--accent);border-color:var(--accent);color:var(--ink);font-weight:600;}
+
+    /* MIN-MAX GRID */
+    .minmax-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .minmax-label{font-size:0.55rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem;}
+
+    /* STRATEGY CARDS GRID (custom mode) */
+    .strat-cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;}
+    .strat-card{background:var(--surface2);border:1px solid var(--tab-border);padding:1rem 1.2rem;display:flex;align-items:center;gap:1rem;cursor:pointer;transition:all 0.18s;position:relative;}
+    .strat-card.selected{border-color:var(--accent);background:var(--accent-glow);}
+    .strat-card:hover{border-color:var(--mid);}
+    .strat-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+    .strat-info{flex:1;min-width:0;}
+    .strat-info .sname{font-size:0.88rem;font-weight:600;color:var(--cream);}
+    .strat-info .smeta{font-size:0.68rem;color:var(--muted);margin-top:0.15rem;}
+    .strat-info .sstats{font-size:0.65rem;color:var(--mid);margin-top:0.2rem;}
+    .strat-multiplier{display:flex;align-items:center;gap:0.4rem;flex-shrink:0;}
+    .mult-btn{width:24px;height:24px;border:1px solid var(--tab-border);background:var(--surface);color:var(--cream);font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;line-height:1;}
+    .mult-btn:hover{border-color:var(--accent);color:var(--accent);}
+    .mult-val{font-size:0.88rem;font-weight:600;color:var(--cream);min-width:24px;text-align:center;}
+    .strat-checkbox{width:18px;height:18px;border:1.5px solid var(--tab-border);background:var(--surface);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:all 0.15s;}
+    .strat-card.selected .strat-checkbox{background:var(--accent);border-color:var(--accent);}
+    .strat-checkbox::after{content:'✓';font-size:0.65rem;color:var(--ink);opacity:0;font-weight:700;}
+    .strat-card.selected .strat-checkbox::after{opacity:1;}
+    .badge-h{font-size:0.5rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.15rem 0.4rem;background:rgba(160,224,111,0.12);color:#A0E06F;border:1px solid rgba(160,224,111,0.3);margin-left:0.4rem;vertical-align:middle;}
+
+    /* GENERATE BUTTON */
+    .gen-btn{width:100%;background:var(--accent);color:var(--ink);font-family:'Inter',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;border:none;padding:1.1rem;cursor:pointer;transition:opacity 0.2s;margin-top:0.5rem;display:flex;align-items:center;justify-content:center;gap:0.6rem;}
+    .gen-btn:hover{opacity:0.88;}
+    .gen-btn .bolt{font-size:1rem;}
+
+    /* RESULTS */
+    #resultsSection{display:none;margin-top:2rem;}
+    .results-topbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;background:var(--surface2);border:1px solid var(--rule);margin-bottom:1.5rem;}
+    .results-topbar .rlabel{font-size:0.6rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);}
+    .results-topbar .rsub{font-size:0.75rem;color:var(--muted);margin-top:0.2rem;}
+    .results-topbar .reset-btn{font-size:0.65rem;color:var(--muted);cursor:pointer;background:none;border:1px solid var(--tab-border);padding:0.35rem 0.8rem;font-family:'Inter',sans-serif;transition:all 0.2s;}
+    .reset-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+    /* SUMMARY STRIP */
+    .summary-strip{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--rule);margin-bottom:1.5rem;}
+    .sum-cell{padding:1rem 1.2rem;border-right:1px solid var(--rule);}
+    .sum-cell:last-child{border-right:none;}
+    .sum-lbl{font-size:0.52rem;font-weight:500;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted);margin-bottom:0.35rem;}
+    .sum-val{font-size:1.15rem;font-weight:400;color:var(--cream);}
+    .sum-val.pos{color:var(--pos);}
+    .sum-val.neg{color:var(--neg);}
+    .sum-sub{font-size:0.65rem;color:var(--muted);margin-top:0.15rem;}
+
+    /* ALLOC TABLE */
+    .alloc-wrap{background:var(--surface);border:1px solid var(--rule);overflow:hidden;}
+    .alloc-table{width:100%;border-collapse:collapse;}
+    .alloc-table th{font-size:0.52rem;font-weight:500;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted);text-align:left;padding:0.7rem 1rem;border-bottom:1px solid var(--rule);background:var(--surface2);}
+    .alloc-table td{padding:0.9rem 1rem;border-bottom:1px solid var(--rule);font-size:0.85rem;vertical-align:middle;}
+    .alloc-table tr:last-child td{border-bottom:none;}
+    .alloc-table tr:hover td{background:var(--accent-glow);}
+    .alloc-table tr.total-row td{background:var(--surface2);font-weight:600;font-size:0.78rem;letter-spacing:0.05em;}
+    .strat-name-cell{display:flex;align-items:center;gap:0.6rem;}
+    .strat-name-cell .sn{font-weight:600;}
+    .strat-name-cell .ss{font-size:0.7rem;color:var(--muted);display:block;margin-top:0.1rem;}
+    .lot-num{font-size:1.05rem;font-weight:700;color:var(--cream);}
+    .lot-x{font-size:0.65rem;color:var(--muted);}
+    .cap-val{font-size:0.82rem;}
+    .cap-sl{font-size:0.65rem;color:var(--muted);margin-top:0.1rem;}
+    .pct-bar-wrap{width:70px;height:3px;background:var(--surface2);border-radius:2px;display:inline-block;vertical-align:middle;margin-right:0.4rem;}
+    .pct-bar{height:100%;border-radius:2px;background:var(--accent);}
+    .stat-chip{font-size:0.65rem;padding:0.15rem 0.4rem;background:var(--surface2);border:1px solid var(--tab-border);color:var(--mid);}
+    .ttron-link{font-size:0.65rem;color:var(--accent);text-decoration:none;display:block;margin-top:0.25rem;}
+    .ttron-link:hover{text-decoration:underline;}
+
+    /* NO RESULT */
+    .no-result{text-align:center;padding:3rem;color:var(--muted);font-size:0.88rem;border:1px solid var(--rule);}
+
+    /* LOADING */
+    .loading{text-align:center;padding:2rem;color:var(--muted);font-size:0.8rem;}
+
+    footer{text-align:center;padding:2rem;font-size:0.68rem;color:var(--muted);border-top:1px solid var(--rule);margin-top:4rem;}
+
+    @media(max-width:768px){
+      nav{padding:1rem 1.5rem;}
+      .nav-links{display:none;}
+      .hamburger{display:flex!important;}
+      main{padding:80px 1.2rem 4rem;}
+      .form-grid{grid-template-columns:1fr!important;}
+      .strat-cards-grid{grid-template-columns:1fr;}
+      .summary-strip{grid-template-columns:repeat(2,1fr);}
+      .sum-cell:nth-child(2){border-right:none;}
+      .sum-cell:nth-child(3),.sum-cell:nth-child(4),.sum-cell:nth-child(5){border-top:1px solid var(--rule);}
+      .sum-cell:nth-child(4){border-right:none;}
+      .alloc-table th:nth-child(4),.alloc-table td:nth-child(4){display:none;}
+      .mode-tab .tab-text .tab-sub{display:none;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="./index.html" title="Home">
+    <img src="logo.jpg" alt="Apex Algos" style="width:32px;height:32px;object-fit:contain;border-radius:4px;"/>
+    <span style="color:var(--accent);">Apex <span style="color:var(--cream);">Algos</span></span>
+  </a>
+  <ul class="nav-links">
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./strategies.html">Strategies</a></li>
+      <li><a href="./analytics.html">Performance</a></li>
+      <li><a href="./portfolio.html" class="active">Portfolio Builder</a></li>
+      <li><a href="./index.html#contact">Contact</a></li>
+    </ul>
+  <div style="display:flex;align-items:center;gap:0.8rem;">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+      <span class="icon" id="themeIcon">&#9728;</span><span id="themeLabel">Light</span>
+    </button>
+    <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" onclick="
+      var n=document.getElementById('mobileNav'),b=this,o=n.classList.contains('open');
+      if(o){n.classList.remove('open');b.classList.remove('open');b.setAttribute('aria-expanded','false');}
+      else{n.classList.add('open');b.classList.add('open');b.setAttribute('aria-expanded','true');}
+    "><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobileNav">
+      <a href="./index.html">Home</a>
+      <a href="./strategies.html">Strategies</a>
+      <a href="./analytics.html">Performance</a>
+      <a href="./portfolio.html" class="active">Portfolio Builder</a>
+      <a href="./index.html#contact">Contact</a>
+    </div>
+
+<main>
+  <div class="page-label">Apex Algos &middot; Portfolio Builder</div>
+  <h1 class="page-title">Portfolio Builder</h1>
+  <p class="page-sub">Smart allocation engine powered by live strategy performance data. Build an optimal portfolio based on your capital, risk tolerance and preferences.</p>
+
+  <!-- MODE TABS -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="tab-auto" onclick="setMode('auto')">
+      <span class="tab-icon">&#9881;</span>
+      <span class="tab-text">
+        <span class="tab-title">Auto Portfolio</span>
+        <span class="tab-sub">System generates best combo</span>
+      </span>
+    </button>
+    <button class="mode-tab" id="tab-custom" onclick="setMode('custom')">
+      <span class="tab-icon">&#9965;</span>
+      <span class="tab-text">
+        <span class="tab-title">Custom Builder</span>
+        <span class="tab-sub">Pick your own strategies</span>
+      </span>
+    </button>
+  </div>
+
+  <!-- ══ AUTO MODE ══ -->
+  <div id="autoMode">
+    <!-- Section 1: Capital & Risk -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div class="section-title-block">
+          <div class="stitle">Capital &amp; Risk Limits</div>
+          <div class="ssub">Enter your available capital and drawdown tolerance</div>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Total Capital (&#8377;) <span class="hint-icon" title="Total capital you want to deploy across strategies">?</span></label>
+          <div class="input-prefix">
+            <span class="prefix">&#8377;</span>
+            <input class="form-input" type="number" id="capitalInput" placeholder="e.g. 500000" min="50000" step="50000" oninput="updateCapitalHint()"/>
+          </div>
+          <div class="input-sub" id="capitalHint">&nbsp;</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Max Acceptable Drawdown (%) <span class="hint-icon" title="Maximum % of capital you can tolerate losing from peak">?</span></label>
+          <input class="form-input" type="number" id="maxDDInput" placeholder="e.g. 15" value="20" min="5" max="60" step="1"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Target Annual ROI % <span class="hint-icon" title="Optional. Helps rank strategies by return preference">?</span></label>
+          <input class="form-input" type="number" id="targetROIInput" placeholder="e.g. 40 (optional)" min="0" step="5"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Preferences -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div class="section-title-block">
+          <div class="stitle">Preferences <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">(Optional)</span></div>
+          <div class="ssub">Fine-tune your portfolio filters</div>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Hedge Preference</label>
+          <div class="pill-group" id="pg-hedge">
+            <button class="pill active" data-val="both" onclick="setPill('hedge',this)">All</button>
+            <button class="pill" data-val="unhedged" onclick="setPill('hedge',this)">Unhedged</button>
+            <button class="pill" data-val="hedged" onclick="setPill('hedge',this)">Hedged</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Underlying</label>
+          <div class="pill-group" id="pg-idx">
+            <button class="pill active" data-val="both" onclick="setPill('idx',this)">Both</button>
+            <button class="pill" data-val="nifty" onclick="setPill('idx',this)">Nifty</button>
+            <button class="pill" data-val="sensex" onclick="setPill('idx',this)">Sensex</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ranking Priority</label>
+          <div class="pill-group" id="pg-rank">
+            <button class="pill active" data-val="sharpe" onclick="setPill('rank',this)">Sharpe Ratio</button>
+            <button class="pill" data-val="roi" onclick="setPill('rank',this)">ROI</button>
+            <button class="pill" data-val="winrate" onclick="setPill('rank',this)">Win Rate</button>
+            <button class="pill" data-val="dd" onclick="setPill('rank',this)">Low Drawdown</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Strategies in Portfolio</label>
+          <div class="minmax-grid">
+            <div>
+              <div class="minmax-label">Min</div>
+              <input class="form-input" type="number" id="minStrats" value="2" min="1" max="8" step="1"/>
+            </div>
+            <div>
+              <div class="minmax-label">Max</div>
+              <input class="form-input" type="number" id="maxStrats" value="6" min="1" max="8" step="1"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="gen-btn" onclick="generateAuto()"><span class="bolt">&#9889;</span> Generate Optimal Portfolio</button>
+  </div>
+
+  <!-- ══ CUSTOM MODE ══ -->
+  <div id="customMode" style="display:none;">
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div class="section-title-block">
+          <div class="stitle">Select Strategies &amp; Multipliers</div>
+          <div class="ssub">Choose which strategies to include and set lot multipliers</div>
+        </div>
+      </div>
+      <div class="strat-cards-grid" id="stratCardsGrid">
+        <div class="loading">Loading strategies from data.json...</div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div class="section-title-block">
+          <div class="stitle">Your Capital</div>
+          <div class="ssub">Enter total available capital for risk analysis</div>
+        </div>
+      </div>
+      <div class="form-grid two-col">
+        <div class="form-group">
+          <label class="form-label">Total Capital (&#8377;)</label>
+          <div class="input-prefix">
+            <span class="prefix">&#8377;</span>
+            <input class="form-input" type="number" id="customCapital" placeholder="e.g. 500000" min="50000" step="50000" oninput="updateCustomHint()"/>
+          </div>
+          <div class="input-sub" id="customHint">&nbsp;</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="gen-btn" onclick="generateCustom()"><span class="bolt">&#9889;</span> Build My Portfolio</button>
+  </div>
+
+  <!-- ══ RESULTS ══ -->
+  <div id="resultsSection">
+    <div class="results-topbar">
+      <div>
+        <div class="rlabel">Recommended Allocation</div>
+        <div class="rsub" id="resultsMeta"></div>
+      </div>
+      <button class="reset-btn" onclick="resetResults()">&#8592; Rebuild</button>
+    </div>
+    <div class="summary-strip" id="summaryStrip"></div>
+    <div class="alloc-wrap">
+      <table class="alloc-table">
+        <thead>
+          <tr>
+            <th>Strategy</th>
+            <th style="text-align:center;">Lots</th>
+            <th>Capital Required</th>
+            <th>Key Stats</th>
+            <th>Allocation</th>
+          </tr>
+        </thead>
+        <tbody id="allocBody"></tbody>
+      </table>
+    </div>
+    <div id="noResult" class="no-result" style="display:none;">No strategies match your criteria. Try adjusting your preferences or increasing capital.</div>
+    <p style="font-size:0.68rem;color:var(--muted);margin-top:1rem;line-height:1.6;padding:0 0.2rem;">
+      &#9432; Allocations are calculated using live Sharpe ratio, drawdown and ROI data from your strategies. Past performance does not guarantee future results. This is not financial advice.
+    </p>
+  </div>
+</main>
+
+<footer>&copy; 2026 Apex Algos &mdash; Portfolio Builder &mdash; Past performance is not indicative of future results.</footer>
+
+<script>
+// ── THEME ──
+(function(){
+  const saved = localStorage.getItem('apex-theme');
+  if(saved==='light') document.documentElement.classList.add('light');
+  const isLight = document.documentElement.classList.contains('light');
+  setTimeout(()=>{
+    const i=document.getElementById('themeIcon'),l=document.getElementById('themeLabel');
+    if(i) i.textContent=isLight?'☀':'☾';
+    if(l) l.textContent=isLight?'Light':'Dark';
+  },0);
+})();
+function toggleTheme(){
+  const isLight=document.documentElement.classList.toggle('light');
+  document.getElementById('themeIcon').textContent=isLight?'☀':'☾';
+  document.getElementById('themeLabel').textContent=isLight?'Light':'Dark';
+  localStorage.setItem('apex-theme',isLight?'light':'dark');
+}
+
+// ── STATE ──
+let activeMode = 'auto';
+const prefs = { hedge:'both', idx:'both', rank:'sharpe' };
+let liveData = null;   // data.json payload
+let customMults = {};  // key → lots
+
+// ── STRATEGY CATALOGUE (static metadata, stats augmented from data.json) ──
+const STRAT_META = [
+  { key:'nap',   label:'NAP',   subtitle:'Nifty Intraday Selling',            color:'#D4A840', minCap:250000, lotCap:250000, hedge:'unhedged', idx:'nifty',  sl:5000,  tradetron:'7324677' },
+  { key:'sap',   label:'SAP',   subtitle:'Sensex Intraday Selling',           color:'#3FE088', minCap:250000, lotCap:250000, hedge:'unhedged', idx:'sensex', sl:5000,  tradetron:'7324685' },
+  { key:'napv2', label:'NAPv2', subtitle:'Nifty Intraday Selling v2',         color:'#E06F6F', minCap:250000, lotCap:250000, hedge:'unhedged', idx:'nifty',  sl:3500,  tradetron:'7803165' },
+  { key:'napv3', label:'NAPv3', subtitle:'Nifty Intraday Selling v3',         color:'#E0B06F', minCap:250000, lotCap:250000, hedge:'unhedged', idx:'nifty',  sl:3500,  tradetron:'8678425' },
+  { key:'sapv2', label:'SAPv2', subtitle:'Sensex Intraday Selling v2',        color:'#6FE0D4', minCap:250000, lotCap:250000, hedge:'unhedged', idx:'sensex', sl:3500,  tradetron:'8838677' },
+  { key:'sapv3', label:'SAPv3', subtitle:'Sensex Intraday Selling v3',        color:'#6F9FE0', minCap:250000, lotCap:250000, hedge:'unhedged', idx:'sensex', sl:3500,  tradetron:'8680369' },
+  { key:'naph',  label:'NAP-H', subtitle:'Nifty Intraday — Hedged',           color:'#A0E06F', minCap:150000, lotCap:150000, hedge:'hedged',   idx:'nifty',  sl:3500,  tradetron:'7286441' },
+  { key:'saph',  label:'SAP-H', subtitle:'Sensex Intraday — Hedged',          color:'#E06FB0', minCap:150000, lotCap:150000, hedge:'hedged',   idx:'sensex', sl:3500,  tradetron:'7324673' },
+];
+
+// ── LOAD data.json ──
+async function loadData() {
+  try {
+    const res = await fetch('./data.json?t=' + Date.now());
+    if(!res.ok) return null;
+    return await res.json();
+  } catch(e) { return null; }
+}
+
+// ── MODE SWITCH ──
+function setMode(m) {
+  activeMode = m;
+  document.getElementById('autoMode').style.display   = m==='auto'   ? 'block' : 'none';
+  document.getElementById('customMode').style.display = m==='custom' ? 'block' : 'none';
+  document.getElementById('tab-auto').classList.toggle('active',   m==='auto');
+  document.getElementById('tab-custom').classList.toggle('active', m==='custom');
+  resetResults();
+  if(m==='custom') renderStratCards();
+}
+
+// ── PILL TOGGLE ──
+function setPill(group, btn) {
+  document.querySelectorAll(`#pg-${group} .pill`).forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  prefs[group] = btn.dataset.val;
+}
+
+// ── CAPITAL HINT ──
+function fmtIN(v) {
+  if(Math.abs(v)>=10000000) return '₹'+(v/10000000).toFixed(1)+'Cr';
+  if(Math.abs(v)>=100000)   return '₹'+(v/100000).toFixed(1)+'L';
+  return '₹'+v.toLocaleString('en-IN');
+}
+function updateCapitalHint() {
+  const v=parseInt(document.getElementById('capitalInput').value)||0;
+  const el=document.getElementById('capitalHint');
+  if(!v){el.textContent='';return;}
+  el.textContent = v>=10000000?'₹'+v/10000000+'Cr':v>=100000?'₹'+v/100000+'L':'₹'+v.toLocaleString('en-IN');
+}
+function updateCustomHint() {
+  const v=parseInt(document.getElementById('customCapital').value)||0;
+  const el=document.getElementById('customHint');
+  if(!v){el.textContent='';return;}
+  el.textContent = v>=10000000?'₹'+v/10000000+'Cr':v>=100000?'₹'+v/100000+'L':'₹'+v.toLocaleString('en-IN');
+}
+
+// ── STRATEGY CARDS (custom mode) ──
+function getStats(key) {
+  return liveData?.stats?.[key] || { sharpe:0, max_dd:0, win_rate:0, roi:0, avg_month_roi:0 };
+}
+
+function renderStratCards() {
+  const grid = document.getElementById('stratCardsGrid');
+  grid.innerHTML = STRAT_META.map(s => {
+    const st = getStats(s.key);
+    const isHedged = s.hedge === 'hedged';
+    const lots = customMults[s.key] ?? 1;
+    const isSelected = lots > 0 && customMults[s.key] !== 0;
+    return `<div class="strat-card ${isSelected?'selected':''}" id="sc-${s.key}" onclick="toggleCard('${s.key}')">
+      <span class="strat-dot" style="background:${s.color}"></span>
+      <div class="strat-info">
+        <div class="sname">${s.label}${isHedged?'<span class="badge-h">Hedged</span>':''}</div>
+        <div class="smeta">${s.idx==='nifty'?'NIFTY':'SENSEX'} &middot; 1x=&#8377;${(s.lotCap/100000).toFixed(1)}L &middot; DD:${st.max_dd}%</div>
+        <div class="sstats">Sharpe ${st.sharpe} &middot; WR ${st.win_rate}% &middot; ROI ${st.roi}%</div>
+      </div>
+      <div class="strat-multiplier" onclick="event.stopPropagation()">
+        <button class="mult-btn" onclick="changeMult('${s.key}',-1)">&#8722;</button>
+        <span class="mult-val" id="mv-${s.key}">${lots}x</span>
+        <button class="mult-btn" onclick="changeMult('${s.key}',+1)">+</button>
+      </div>
+      <div class="strat-checkbox" id="chk-${s.key}"></div>
+    </div>`;
+  }).join('');
+}
+
+function toggleCard(key) {
+  if(customMults[key] === undefined) customMults[key] = 1;
+  else if(customMults[key] === 0) customMults[key] = 1;
+  else customMults[key] = 0;
+  renderStratCards();
+}
+
+function changeMult(key, delta) {
+  const cur = customMults[key] ?? 1;
+  const nv = Math.max(0, Math.min(5, cur + delta));
+  customMults[key] = nv;
+  document.getElementById('mv-'+key).textContent = nv+'x';
+  const card = document.getElementById('sc-'+key);
+  if(card) card.classList.toggle('selected', nv > 0);
+  const chk = document.getElementById('chk-'+key);
+  if(chk) { chk.style.background = nv>0?'var(--accent)':''; chk.style.borderColor=nv>0?'var(--accent)':''; chk.textContent = nv>0?'✓':''; }
+}
+
+// ── AUTO GENERATE ──
+function generateAuto() {
+  const capital   = parseInt(document.getElementById('capitalInput').value)||0;
+  const maxDD     = parseFloat(document.getElementById('maxDDInput').value)||20;
+  const targetROI = parseFloat(document.getElementById('targetROIInput').value)||0;
+  const minS      = parseInt(document.getElementById('minStrats').value)||1;
+  const maxS      = parseInt(document.getElementById('maxStrats').value)||6;
+
+  if(capital < 50000) { alert('Please enter a valid capital (min ₹50,000)'); return; }
+
+  // Filter pool
+  let pool = STRAT_META.filter(s => {
+    if(prefs.hedge !== 'both' && s.hedge !== prefs.hedge) return false;
+    if(prefs.idx   !== 'both' && s.idx   !== prefs.idx)   return false;
+    if(capital < s.minCap) return false;
+    return true;
+  });
+
+  // Augment with live stats
+  pool = pool.map(s => ({ ...s, stats: getStats(s.key) }));
+
+  // Filter by max DD
+  pool = pool.filter(s => Math.abs(s.stats.max_dd) <= maxDD);
+
+  // Score by ranking priority
+  pool = pool.map(s => {
+    let score = 0;
+    const st = s.stats;
+    if(prefs.rank === 'sharpe')  score = st.sharpe;
+    if(prefs.rank === 'roi')     score = st.roi;
+    if(prefs.rank === 'winrate') score = st.win_rate;
+    if(prefs.rank === 'dd')      score = -Math.abs(st.max_dd); // lower DD = higher score
+    return { ...s, score };
+  }).sort((a,b) => b.score - a.score);
+
+  // Greedy allocation
+  let remaining = capital;
+  const alloc = [];
+  for(const s of pool) {
+    if(alloc.length >= maxS) break;
+    if(remaining < s.lotCap) continue;
+    const maxLots = Math.floor(remaining / s.lotCap);
+    const lots = Math.min(maxLots, 3);
+    if(lots < 1) continue;
+    const capUsed = lots * s.lotCap;
+    alloc.push({ ...s, lots, capUsed });
+    remaining -= capUsed;
+  }
+
+  if(alloc.length < minS && alloc.length === 0) {
+    renderNoResult(); return;
+  }
+
+  renderResults(alloc, capital, `Auto Portfolio &middot; ${prefs.rank} ranked &middot; Max DD ${maxDD}%`);
+}
+
+// ── CUSTOM GENERATE ──
+function generateCustom() {
+  const capital = parseInt(document.getElementById('customCapital').value)||0;
+  if(capital < 50000) { alert('Please enter a valid capital (min ₹50,000)'); return; }
+
+  const alloc = [];
+  for(const s of STRAT_META) {
+    const lots = customMults[s.key] ?? 0;
+    if(lots < 1) continue;
+    const capUsed = lots * s.lotCap;
+    alloc.push({ ...s, stats: getStats(s.key), lots, capUsed });
+  }
+  if(!alloc.length) { alert('Please select at least one strategy'); return; }
+  renderResults(alloc, capital, `Custom Portfolio &middot; ${alloc.length} strategies selected`);
+}
+
+// ── RENDER RESULTS ──
+function renderResults(alloc, capital, meta) {
+  const totalCap  = alloc.reduce((s,a)=>s+a.capUsed, 0);
+  const totalSL   = alloc.reduce((s,a)=>s+(a.sl*a.lots), 0);
+  const unused    = capital - totalCap;
+  const avgSharpe = alloc.length ? (alloc.reduce((s,a)=>s+a.stats.sharpe,0)/alloc.length).toFixed(2) : 0;
+  const avgDD     = alloc.length ? (alloc.reduce((s,a)=>s+Math.abs(a.stats.max_dd),0)/alloc.length).toFixed(1) : 0;
+
+  document.getElementById('resultsMeta').textContent = meta;
+
+  // Summary strip
+  document.getElementById('summaryStrip').innerHTML = `
+    <div class="sum-cell">
+      <div class="sum-lbl">Capital Deployed</div>
+      <div class="sum-val pos">${fmtIN(totalCap)}</div>
+      <div class="sum-sub">${((totalCap/capital)*100).toFixed(1)}% utilised</div>
+    </div>
+    <div class="sum-cell">
+      <div class="sum-lbl">Buffer (Undeployed)</div>
+      <div class="sum-val">${fmtIN(unused)}</div>
+      <div class="sum-sub">Keep as margin buffer</div>
+    </div>
+    <div class="sum-cell">
+      <div class="sum-lbl">Max Daily SL</div>
+      <div class="sum-val neg">&#8377;${totalSL.toLocaleString('en-IN')}</div>
+      <div class="sum-sub">Combined stop loss</div>
+    </div>
+    <div class="sum-cell">
+      <div class="sum-lbl">Avg Sharpe Ratio</div>
+      <div class="sum-val">${avgSharpe}</div>
+      <div class="sum-sub">Annualised</div>
+    </div>
+    <div class="sum-cell">
+      <div class="sum-lbl">Avg Max Drawdown</div>
+      <div class="sum-val neg">${avgDD}%</div>
+      <div class="sum-sub">Across strategies</div>
+    </div>`;
+
+  // Alloc table
+  const tbody = document.getElementById('allocBody');
+  tbody.innerHTML = alloc.map(a => {
+    const pct = capital > 0 ? ((a.capUsed/capital)*100).toFixed(1) : 0;
+    const st = a.stats;
+    const ttron = a.tradetron
+      ? `<a class="ttron-link" href="https://tradetron.tech/strategy/${a.tradetron}" target="_blank">Tradetron &rarr;</a>` : '';
+    return `<tr>
+      <td>
+        <div class="strat-name-cell">
+          <span class="strat-dot" style="background:${a.color}"></span>
+          <div>
+            <span class="sn">${a.label}</span>
+            <span class="ss">${a.subtitle}</span>
+            ${ttron}
+          </div>
+        </div>
+      </td>
+      <td style="text-align:center;"><span class="lot-num">${a.lots}</span><span class="lot-x"> x</span></td>
+      <td>
+        <div class="cap-val">&#8377;${a.capUsed.toLocaleString('en-IN')}</div>
+        <div class="cap-sl">SL: &#8377;${(a.sl*a.lots).toLocaleString('en-IN')}/day</div>
+      </td>
+      <td>
+        <span class="stat-chip">Sharpe ${st.sharpe}</span>
+        <span class="stat-chip">WR ${st.win_rate}%</span>
+        <span class="stat-chip">DD ${st.max_dd}%</span>
+        <span class="stat-chip">ROI ${st.roi}%</span>
+      </td>
+      <td>
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <div class="pct-bar-wrap"><div class="pct-bar" style="width:${Math.min(pct,100)}%"></div></div>
+          <span style="font-size:0.78rem;color:var(--muted);">${pct}%</span>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // Total row
+  tbody.innerHTML += `<tr class="total-row">
+    <td>TOTAL &mdash; ${alloc.length} Strategies</td>
+    <td style="text-align:center;">${alloc.reduce((s,a)=>s+a.lots,0)}x</td>
+    <td>&#8377;${totalCap.toLocaleString('en-IN')}</td>
+    <td></td>
+    <td>${((totalCap/capital)*100).toFixed(1)}%</td>
+  </tr>`;
+
+  document.getElementById('noResult').style.display = 'none';
+  document.getElementById('resultsSection').style.display = 'block';
+  document.getElementById('resultsSection').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function renderNoResult() {
+  document.getElementById('allocBody').innerHTML = '';
+  document.getElementById('summaryStrip').innerHTML = '';
+  document.getElementById('noResult').style.display = 'block';
+  document.getElementById('resultsSection').style.display = 'block';
+}
+
+function resetResults() {
+  document.getElementById('resultsSection').style.display = 'none';
+}
+
+// ── INIT ──
+(async function init() {
+  liveData = await loadData();
+  if(liveData) {
+    console.log('Portfolio Builder: data.json loaded ✓', Object.keys(liveData.stats||{}).length, 'strategies');
+  } else {
+    console.warn('Portfolio Builder: data.json not available, stats will show 0');
+  }
+})();
+</script>
+</body>
+</html>
