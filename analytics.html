@@ -462,7 +462,7 @@
       <button class="export-btn" onclick="exportCSV()">&#8595; Export CSV</button>
       <button class="export-btn" onclick="exportExcel()">&#8595; Export Excel</button>
       <button class="export-btn" id="pdfExportBtn" onclick="exportPDF()" style="border-color:rgba(212,168,64,0.45);color:var(--accent);">&#128438; Export PDF</button>
-      <button class="export-btn" id="snapshotBtn" onclick="snapshotTable()" style="border-color:rgba(63,224,136,0.45);color:#3FE088;">&#128247; Snapshot</button>
+      <button class="export-btn" id="snapshotBtn" onclick="snapshotTable()">&#128247; Snapshot</button>
       <div style="margin-left:auto;display:flex;align-items:center;gap:0;">
         <button class="nav-btn" onclick="navDate(-1)">&#8592;</button>
       <div class="date-label" id="dateLabel">&mdash;</div>
@@ -1200,6 +1200,40 @@ async function snapshotTable() {
     // Hide sort arrows / interactive buttons in header
     node.querySelectorAll('#yearlyToggleBtn, button').forEach(el => el.style.display = 'none');
   });
+
+  // ── SNAPSHOT-ONLY font enlargement (does NOT affect live page) ──────────────
+  [todayClone, headerClone, tableClone].forEach(node => {
+    node.querySelectorAll('th').forEach(el => {
+      el.style.fontSize = '1.35rem';
+      el.style.padding  = '1.5rem 1.7rem';
+    });
+    node.querySelectorAll('td').forEach(el => {
+      el.style.fontSize = '1.35rem';
+      el.style.padding  = '1.5rem 1.7rem';
+    });
+    node.querySelectorAll('.strat-name-text').forEach(el => el.style.fontSize = '1.45rem');
+    node.querySelectorAll('.pnl-amount').forEach(el => el.style.fontSize = '1.35rem');
+    node.querySelectorAll('.pnl-pct').forEach(el => el.style.fontSize = '1.1rem');
+    node.querySelectorAll('.pnl-pill').forEach(el => el.style.minWidth = '230px');
+    node.querySelectorAll('.dd-cur, .dd-pct').forEach(el => el.style.fontSize = '1.4rem');
+    node.querySelectorAll('.dd-max-val, .dd-sep').forEach(el => el.style.fontSize = '1.15rem');
+    node.querySelectorAll('.dd-cell').forEach(el => el.style.minWidth = '230px');
+    node.querySelectorAll('.cap-cell').forEach(el => el.style.fontSize = '1.3rem');
+    node.querySelectorAll('.total-row td').forEach(el => el.style.fontSize = '1.45rem');
+    node.querySelectorAll('.subtotal-row td').forEach(el => el.style.fontSize = '1.2rem');
+    node.querySelectorAll('.strip-item-val').forEach(el => el.style.fontSize = '1.6rem');
+    node.querySelectorAll('.strip-item-val.combined').forEach(el => el.style.fontSize = '1.85rem');
+    node.querySelectorAll('.strip-item-label').forEach(el => el.style.fontSize = '0.95rem');
+    node.querySelectorAll('.strip-date-main').forEach(el => el.style.fontSize = '1.3rem');
+    node.querySelectorAll('.strip-date-sub').forEach(el => el.style.fontSize = '0.9rem');
+    node.querySelectorAll('.bd-title').forEach(el => el.style.fontSize = '1.6rem');
+    node.querySelectorAll('.bd-sub').forEach(el => el.style.fontSize = '1rem');
+    node.querySelectorAll('.bd-date-pill').forEach(el => el.style.fontSize = '0.95rem');
+    node.querySelectorAll('.subgroup-label').forEach(el => el.style.fontSize = '1.05rem');
+    node.querySelectorAll('.today-total-val').forEach(el => el.style.fontSize = '1.4rem');
+    node.querySelectorAll('.today-total-lbl').forEach(el => el.style.fontSize = '0.85rem');
+  });
+  // ────────────────────────────────────────────────────────────────────────────
 
   // Also strip search/export toolbar if cloned (not needed)
   wrap.appendChild(todayClone);
