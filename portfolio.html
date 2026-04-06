@@ -1229,7 +1229,29 @@ function renderCorrMatrix(alloc) {
   } else {
     console.warn('Portfolio Builder: data.json not available, stats will show 0');
   }
+  // Always render strategy cards regardless of data availability
+  initCustomMults();
+  renderStratCards();
 })();
+
+// ── SECRET KEYWORD: apexstrategyedit ──
+let _secretBuf = '';
+document.addEventListener('keydown', e => {
+  if (document.activeElement.tagName === 'INPUT' ||
+      document.activeElement.tagName === 'TEXTAREA') return;
+  _secretBuf = (_secretBuf + e.key.toLowerCase()).slice(-16);
+  if (_secretBuf === 'apexstrategyedit') {
+    // Force show ALL strategies including any hidden ones, reset all to selected
+    STRAT_META.forEach(s => { customMults[s.key] = customMults[s.key] || 1; });
+    renderStratCards();
+    // Also force show hidden cards
+    document.querySelectorAll('#stratCardsGrid .strat-card').forEach(el => {
+      el.style.display = '';
+    });
+    console.log('🔓 apexstrategyedit: strategy edit mode activated');
+    _secretBuf = '';
+  }
+});
 </script>
 </body>
 </html>
