@@ -127,32 +127,21 @@
       transition: color 0.25s;
     }
     .nav-links a:hover { color: var(--cream); }
-    .nav-cta {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.68rem;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--accent);
-      text-decoration: none;
-      border: 1px solid rgba(212,168,64,0.45);
-      padding: 0.5rem 1.2rem;
-      transition: background 0.2s, color 0.2s;
-    }
-    .nav-cta:hover { background: var(--accent); color: var(--ink); }
+    
+    
     :root.light nav { border-bottom-color: var(--rule); }
     :root.light .nav-logo { color: var(--cream); }
     :root.light .nav-links a { color: var(--muted); }
     :root.light .nav-links a:hover { color: var(--cream); }
-    :root.light .nav-cta { color: var(--accent); border-color: var(--accent); }
-    :root.light .nav-cta:hover { background: var(--accent); color: #FFF8E8; }
+    :root.light 
+    :root.light 
     :root.light .theme-toggle { color: var(--muted); border-color: var(--tab-border); }
 
     @media (max-width: 900px) {
       nav { padding: 1.2rem 2rem !important; }
       .nav-logo { font-size: 1.3rem; font-weight: 800; letter-spacing: 0.1em; }
       .nav-links { display: none; }
-      .nav-cta { display: none !important; }
+      
       .hamburger { display: flex !important; }
     }
 
@@ -442,7 +431,7 @@
     @media (max-width: 700px) {
       nav { padding: 0 1.2rem; }
       .nav-links { display: none; }
-      .nav-cta { display: none !important; }
+      
       .hamburger { display: flex !important; }
       main { padding: 80px 1rem 3rem; }
       .strategy-grid { grid-template-columns: 1fr; }
@@ -608,7 +597,33 @@
   font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 400; color: var(--muted);
 }
 .sub-section-divider { flex: 1; height: 1px; background: var(--rule); opacity: 0.5; }
-</style>
+
+    /* Get Started — hide on mobile */
+    @media (max-width: 900px) {
+      
+    }
+    /* Shared footer styles */
+    footer { border-top: 1px solid rgba(237,230,214,0.07); padding: 2rem 3rem 1.5rem; }
+    .footer-disclaimer { margin-bottom: 1rem; }
+    .footer-disclaimer-text { font-size: 0.62rem; color: #4A4440; line-height: 1.6; letter-spacing: 0.02em; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+    .footer-bottom p { font-size: 0.62rem; color: #3A3530; letter-spacing: 0.05em; }
+
+        .nav-cta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-decoration: none;
+      border: 1px solid rgba(212,168,64,0.45);
+      padding: 0.5rem 1.2rem;
+      transition: background 0.2s, color 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent); color: var(--ink); }
+    @media (max-width: 900px) { .nav-cta { display: none !important; } }
+    </style>
 </head>
 <body>
   <nav>
@@ -624,7 +639,8 @@
       <li><a href="./index.html#contact">Contact</a></li>
     </ul>
     <div style="display:flex;align-items:center;gap:0.8rem;">
-      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+      <a class="nav-cta" href="./index.html#contact">Get Started</a>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
         <span class="icon" id="themeIcon">&#9728;</span><span id="themeLabel">Light</span>
       </button>
       <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" onclick="
