@@ -282,6 +282,77 @@
       background: linear-gradient(135deg, var(--surface) 0%, rgba(160,120,32,0.04) 100%) !important;
     }
 
+    
+    /* ── TOTAL ROW HIGHLIGHT ── */
+    .total-row td { background: linear-gradient(90deg,rgba(212,168,64,0.12),rgba(212,168,64,0.05)); font-weight:700; font-size:0.82rem; color:var(--cream); border-top:1px solid rgba(212,168,64,0.3);}
+
+    /* ── MONTHLY ROI / DD COLS ── */
+    .col-roi  { color:var(--pos); font-weight:600; font-size:0.82rem; }
+    .col-dd   { color:var(--neg); font-weight:600; font-size:0.82rem; }
+
+    /* ── RISK WARNINGS ── */
+    .risk-warnings { margin:1rem 0; display:flex; flex-direction:column; gap:0.5rem; }
+    .risk-warn {
+      display:flex; align-items:flex-start; gap:0.6rem;
+      padding:0.65rem 1rem;
+      background:linear-gradient(135deg,rgba(212,168,64,0.07) 0%,rgba(212,168,64,0.02) 100%);
+      border:1px solid rgba(212,168,64,0.2); border-left:3px solid #D4A840;
+      font-size:0.72rem; color:var(--mid); line-height:1.5;
+    }
+    .risk-warn.danger {
+      background:linear-gradient(135deg,rgba(224,85,85,0.07) 0%,rgba(224,85,85,0.02) 100%);
+      border-color:rgba(224,85,85,0.2); border-left-color:#E05555; color:#E07777;
+    }
+    .risk-warn .wi { flex-shrink:0; font-size:0.9rem; margin-top:1px; }
+
+    /* ── SCORE BREAKDOWN ── */
+    .score-section { margin-top:1.5rem; padding:1.4rem 1.6rem;
+      background:linear-gradient(135deg,var(--surface2) 0%,rgba(212,168,64,0.04) 100%);
+      border:1px solid rgba(212,168,64,0.1); position:relative; overflow:hidden;
+    }
+    .score-section::before { content:''; position:absolute; top:0; left:0; right:0; height:1px;
+      background:linear-gradient(90deg,transparent,rgba(212,168,64,0.35),transparent); }
+    .score-title { font-size:0.58rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:1rem; }
+    .score-rows { display:flex; flex-direction:column; gap:0.65rem; }
+    .score-row { display:grid; grid-template-columns:180px 1fr 32px; align-items:center; gap:0.8rem; }
+    .score-lbl { font-size:0.7rem; color:var(--mid); }
+    .score-track { height:5px; background:rgba(237,230,214,0.08); border-radius:3px; overflow:hidden; }
+    .score-bar { height:100%; background:linear-gradient(90deg,#D4A840,rgba(212,168,64,0.6)); border-radius:3px; transition:width 0.6s cubic-bezier(0.25,1,0.5,1); }
+    .score-val { font-size:0.75rem; font-weight:600; color:var(--cream); text-align:right; }
+    .score-total { margin-top:1rem; padding-top:0.8rem; border-top:1px solid rgba(237,230,214,0.07);
+      display:flex; justify-content:space-between; align-items:center; }
+    .score-total-lbl { font-size:0.62rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; }
+    .score-total-val { font-size:1.4rem; font-weight:700; color:var(--accent); }
+    .score-total-grade { font-size:0.65rem; font-weight:600; letter-spacing:0.1em; padding:0.2rem 0.6rem;
+      border:1px solid rgba(212,168,64,0.4); color:var(--accent); }
+
+    /* ── WHY THIS PORTFOLIO ── */
+    .why-section { margin-top:1.5rem; padding:1.2rem 1.6rem;
+      background:linear-gradient(135deg,rgba(78,168,110,0.05) 0%,transparent 100%);
+      border:1px solid rgba(78,168,110,0.15); border-left:3px solid #4EA86E;
+    }
+    .why-label { font-size:0.58rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:#4EA86E; margin-bottom:0.6rem; display:flex; align-items:center; gap:0.4rem; }
+    .why-text { font-size:0.78rem; color:var(--mid); line-height:1.8; }
+    .why-text strong { color:var(--cream); font-weight:600; }
+
+    /* ── CORRELATION MATRIX ── */
+    .corr-section { margin-top:1.5rem; overflow-x:auto; }
+    .corr-header { font-size:0.58rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:0.8rem; display:flex; align-items:center; gap:0.6rem; }
+    .corr-header span { font-size:0.62rem; font-weight:400; color:#6B6155; letter-spacing:0.05em; text-transform:none; }
+    .corr-table { width:100%; border-collapse:collapse; font-size:0.72rem; }
+    .corr-table th { padding:0.6rem 1rem; font-size:0.58rem; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid rgba(237,230,214,0.08); text-align:left; white-space:nowrap; }
+    .corr-table td { padding:0.7rem 1rem; border-bottom:1px solid rgba(237,230,214,0.05); white-space:nowrap; }
+    .corr-table td.strat-col { font-size:0.72rem; color:var(--mid); display:flex; align-items:center; gap:0.5rem; }
+    .corr-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .corr-cell { text-align:center; font-weight:600; font-size:0.78rem; border-radius:3px; }
+    .corr-self { color:var(--muted); font-weight:400; }
+    .corr-high { background:rgba(224,85,85,0.15); color:#E07777; }
+    .corr-mid  { background:rgba(212,168,64,0.12); color:#D4A840; }
+    .corr-low  { background:rgba(78,168,110,0.12); color:#4EA86E; }
+    .corr-legend { display:flex; gap:1.5rem; margin-top:0.8rem; flex-wrap:wrap; }
+    .corr-leg-item { display:flex; align-items:center; gap:0.4rem; font-size:0.62rem; color:var(--muted); }
+    .corr-leg-box { width:12px; height:10px; border-radius:2px; }
+
     </style>
 </head>
 <body>
@@ -482,13 +553,12 @@
             <th>Strategy</th>
             <th style="text-align:center;">Lots</th>
             <th>Capital Required</th>
+            <th>Monthly ROI</th>
+            <th>Max DD</th>
             <th>Key Stats</th>
             <th>Allocation</th>
           </tr>
-        </thead>
-        <tbody id="allocBody"></tbody>
-      </table>
-    </div>
+        </thead>div>
     <div id="noResult" class="no-result" style="display:none;">No strategies match your criteria. Try adjusting your preferences or increasing capital.</div>
     <p style="font-size:0.68rem;color:var(--muted);margin-top:1rem;line-height:1.6;padding:0 0.2rem;">
       &#9432; Allocations are calculated using live Sharpe ratio, drawdown and ROI data from your strategies. Past performance does not guarantee future results. This is not financial advice.
@@ -769,6 +839,8 @@ function renderResults(alloc, capital, meta) {
         <div class="cap-val">&#8377;${a.capUsed.toLocaleString('en-IN')}</div>
         <div class="cap-sl">SL: &#8377;${(a.sl*a.lots).toLocaleString('en-IN')}/day</div>
       </td>
+      <td class="col-roi">+${((st.avg_month_roi||st.roi/12)*a.lots).toFixed(2)}%</td>
+      <td class="col-dd">${st.max_dd}%</td>
       <td>
         <span class="stat-chip">Sharpe ${st.sharpe}</span>
         <span class="stat-chip">WR ${st.win_rate}%</span>
@@ -789,11 +861,26 @@ function renderResults(alloc, capital, meta) {
     <td>TOTAL &mdash; ${alloc.length} Strategies</td>
     <td style="text-align:center;">${alloc.reduce((s,a)=>s+a.lots,0)}x</td>
     <td>&#8377;${totalCap.toLocaleString('en-IN')}</td>
+    <td class="col-roi">+${(alloc.reduce((s,a)=>s+(a.stats.avg_month_roi||a.stats.roi/12)*a.lots,0)).toFixed(2)}%</td>
+    <td class="col-dd">-${(alloc.reduce((s,a)=>s+Math.abs(a.stats.max_dd),0)/alloc.length).toFixed(1)}%</td>
     <td></td>
     <td>${((totalCap/capital)*100).toFixed(1)}%</td>
   </tr>`;
 
   document.getElementById('noResult').style.display = 'none';
+
+  // Risk warnings
+  document.getElementById('riskWarnings').innerHTML = renderWarnings(alloc, capital);
+
+  // Score breakdown
+  document.getElementById('scoreBreakdown').innerHTML = renderScoreSection(alloc, capital);
+
+  // Why this portfolio
+  document.getElementById('whySection').innerHTML = renderWhySection(alloc, capital);
+
+  // Correlation matrix
+  document.getElementById('corrMatrix').innerHTML = renderCorrMatrix(alloc);
+
   document.getElementById('resultsSection').style.display = 'block';
   document.getElementById('resultsSection').scrollIntoView({ behavior:'smooth', block:'start' });
 }
@@ -807,6 +894,152 @@ function renderNoResult() {
 
 function resetResults() {
   document.getElementById('resultsSection').style.display = 'none';
+}
+
+
+// ── PORTFOLIO SCORE ──
+function calcPortfolioScore(alloc, capital) {
+  if(!alloc.length) return { dd:0, div:0, roi:0, eff:0, con:0, total:0 };
+  const totalCap = alloc.reduce((s,a)=>s+a.capUsed,0);
+  const avgDD    = alloc.reduce((s,a)=>s+Math.abs(a.stats.max_dd),0)/alloc.length;
+  const ddScore  = Math.max(0, Math.min(100, 100 - avgDD*1.8));          // 35%
+  const nIdx     = new Set(alloc.map(a=>a.idx)).size;
+  const nHedge   = new Set(alloc.map(a=>a.hedge)).size;
+  const divScore = Math.min(100, (alloc.length * 15) + (nIdx * 20) + (nHedge * 15)); // 25%
+  const avgROI   = alloc.reduce((s,a)=>s+a.stats.roi,0)/alloc.length;
+  const roiScore = Math.min(100, avgROI * 1.5);                          // 20%
+  const effScore = Math.min(100, (totalCap/capital)*100);                // 10%
+  const avgWR    = alloc.reduce((s,a)=>s+a.stats.win_rate,0)/alloc.length;
+  const conScore = Math.min(100, avgWR);                                  // 10%
+  const total    = Math.round(ddScore*0.35 + divScore*0.25 + roiScore*0.20 + effScore*0.10 + conScore*0.10);
+  return { dd:Math.round(ddScore), div:Math.round(divScore), roi:Math.round(roiScore), eff:Math.round(effScore), con:Math.round(conScore), total };
+}
+
+function renderScoreSection(alloc, capital) {
+  const s = calcPortfolioScore(alloc, capital);
+  const grade = s.total>=80?'EXCELLENT':s.total>=65?'GOOD':s.total>=50?'AVERAGE':'WEAK';
+  const rows = [
+    { label:'DD Safety (35%)',         val:s.dd  },
+    { label:'Diversification (25%)',   val:s.div },
+    { label:'ROI Quality (20%)',       val:s.roi },
+    { label:'Capital Efficiency (10%)',val:s.eff },
+    { label:'Consistency (10%)',       val:s.con },
+  ];
+  return `<div class="score-section">
+    <div class="score-title">Portfolio Score Breakdown</div>
+    <div class="score-rows">
+      ${rows.map(r=>`<div class="score-row">
+        <div class="score-lbl">${r.label}</div>
+        <div class="score-track"><div class="score-bar" style="width:${r.val}%"></div></div>
+        <div class="score-val">${r.val}</div>
+      </div>`).join('')}
+    </div>
+    <div class="score-total">
+      <div>
+        <div class="score-total-lbl">Overall Portfolio Score</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <span class="score-total-grade">${grade}</span>
+        <span class="score-total-val">${s.total}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── RISK WARNINGS ──
+function renderWarnings(alloc, capital) {
+  const warns = [];
+  const totalCap = alloc.reduce((s,a)=>s+a.capUsed,0);
+  const maxAllocPct = alloc.length ? Math.max(...alloc.map(a=>(a.capUsed/capital)*100)) : 0;
+  if(maxAllocPct > 40) warns.push({ type:'warn', msg:`High concentration: ${maxAllocPct.toFixed(0)}% capital in one strategy. Consider spreading allocation.` });
+  const idxSet = new Set(alloc.map(a=>a.idx));
+  if(idxSet.size === 1 && alloc.length > 1) warns.push({ type:'warn', msg:`All strategies on same instrument. Diversify across NIFTY / BANKNIFTY / SENSEX.` });
+  const hedgeSet = new Set(alloc.map(a=>a.hedge));
+  if(!hedgeSet.has('hedged') && alloc.length > 2) warns.push({ type:'warn', msg:`No hedged strategies in portfolio. Consider adding a hedged strategy to reduce tail risk.` });
+  const avgDD = alloc.length ? alloc.reduce((s,a)=>s+Math.abs(a.stats.max_dd),0)/alloc.length : 0;
+  if(avgDD > 25) warns.push({ type:'danger', msg:`Average drawdown ${avgDD.toFixed(1)}% is high. Reduce multipliers or add low-DD strategies.` });
+  if((totalCap/capital) > 0.98) warns.push({ type:'warn', msg:`Capital utilisation >98%. Keep at least 5% buffer for margin calls.` });
+  if(!warns.length) return `<div class="risk-warn" style="border-left-color:#4EA86E;background:rgba(78,168,110,0.05);">
+    <span class="wi">✅</span><span>Portfolio looks well diversified. No major risk flags detected.</span></div>`;
+  return warns.map(w=>`<div class="risk-warn ${w.type==='danger'?'danger':''}"><span class="wi">${w.type==='danger'?'🔴':'⚠️'}</span><span>${w.msg}</span></div>`).join('');
+}
+
+// ── WHY THIS PORTFOLIO ──
+function renderWhySection(alloc, capital) {
+  if(!alloc.length) return '';
+  const totalCap  = alloc.reduce((s,a)=>s+a.capUsed,0);
+  const idxSet    = new Set(alloc.map(a=>a.idx));
+  const hedgeSet  = new Set(alloc.map(a=>a.hedge));
+  const avgMonROI = alloc.reduce((s,a)=>s+(a.stats.avg_month_roi||a.stats.roi/12),0)/alloc.length;
+  const annROI    = (avgMonROI*12).toFixed(1);
+  const avgDD     = (alloc.reduce((s,a)=>s+Math.abs(a.stats.max_dd),0)/alloc.length).toFixed(2);
+  const utilPct   = ((totalCap/capital)*100).toFixed(1);
+  const types     = [...new Set(alloc.map(a=>a.hedge==='hedged'?'Hedged':'Directional'))];
+  return `<div class="why-section">
+    <div class="why-label">🔍 Why This Portfolio?</div>
+    <div class="why-text">
+      This portfolio combines <strong>${alloc.length} strategies</strong> across
+      <strong>${idxSet.size} instrument(s)</strong> (${[...idxSet].map(i=>i.toUpperCase()).join(', ')}),
+      covering ${types.length} strategy type(s) including ${types.join(', ')}.
+      The weighted monthly ROI is <strong>+${avgMonROI.toFixed(2)}% (~${annROI}% annually)</strong>
+      with a simulated portfolio drawdown of <strong style="color:var(--neg)">-${avgDD}%</strong>.
+      Capital utilisation is <strong>${utilPct}%</strong> of total available capital.
+    </div>
+  </div>`;
+}
+
+// ── CORRELATION MATRIX ──
+function pearsonCorr(a, b) {
+  if(!a||!b||!a.length||!b.length) return null;
+  const n=Math.min(a.length,b.length);
+  if(n<5) return null;
+  const ax=a.slice(0,n), bx=b.slice(0,n);
+  const ma=ax.reduce((s,v)=>s+v,0)/n, mb=bx.reduce((s,v)=>s+v,0)/n;
+  let num=0,da=0,db=0;
+  for(let i=0;i<n;i++){const va=ax[i]-ma,vb=bx[i]-mb;num+=va*vb;da+=va*va;db+=vb*vb;}
+  if(!da||!db) return null;
+  return +(num/Math.sqrt(da*db)).toFixed(2);
+}
+
+function renderCorrMatrix(alloc) {
+  if(alloc.length < 2) return '';
+  const pnlMap = {};
+  alloc.forEach(a => { pnlMap[a.key] = liveData?.daily_pnl?.[a.key] || []; });
+  const labels = alloc.map(a=>a.label);
+  const keys   = alloc.map(a=>a.key);
+  const colors = alloc.map(a=>a.color);
+
+  // Build header cols
+  const thCols = labels.map((l,i)=>`<th><span class="corr-dot" style="background:${colors[i]};display:inline-block;margin-right:4px;"></span>${l.length>12?l.slice(0,12)+'…':l}</th>`).join('');
+
+  // Build rows
+  const rows = alloc.map((ra,i)=>{
+    const cells = alloc.map((rb,j)=>{
+      if(i===j) return `<td class="corr-cell corr-self">–</td>`;
+      const r = pearsonCorr(pnlMap[ra.key], pnlMap[rb.key]);
+      if(r===null) return `<td class="corr-cell corr-mid">N/A</td>`;
+      const cls = Math.abs(r)>=0.7?'corr-high':Math.abs(r)>=0.3?'corr-mid':'corr-low';
+      return `<td class="corr-cell ${cls}">${r.toFixed(2)}</td>`;
+    }).join('');
+    return `<tr>
+      <td style="display:flex;align-items:center;gap:0.5rem;">
+        <span class="corr-dot" style="background:${ra.color}"></span>
+        <span style="color:var(--mid);font-size:0.72rem;">${ra.label.length>14?ra.label.slice(0,14)+'…':ra.label}</span>
+      </td>${cells}</tr>`;
+  }).join('');
+
+  return `<div class="corr-section">
+    <div class="corr-header">🔗 Strategy Correlation Matrix <span>based on live daily PNL history</span></div>
+    <table class="corr-table">
+      <thead><tr><th>Strategy</th>${thCols}</tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="corr-legend">
+      <div class="corr-leg-item"><div class="corr-leg-box" style="background:rgba(224,85,85,0.25)"></div>High (≥0.7) — avoid combining</div>
+      <div class="corr-leg-item"><div class="corr-leg-box" style="background:rgba(212,168,64,0.25)"></div>Moderate (0.3–0.7)</div>
+      <div class="corr-leg-item"><div class="corr-leg-box" style="background:rgba(78,168,110,0.25)"></div>Low / Negative — ideal diversification</div>
+    </div>
+  </div>`;
 }
 
 // ── INIT ──
