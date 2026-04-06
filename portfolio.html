@@ -4,6 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Portfolio Builder — Apex Algos</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
   <style>
@@ -639,6 +640,7 @@
             <button class="pill active" data-val="both" onclick="setPill('idx',this)">Both</button>
             <button class="pill" data-val="nifty" onclick="setPill('idx',this)">Nifty</button>
             <button class="pill" data-val="sensex" onclick="setPill('idx',this)">Sensex</button>
+            <button class="pill" data-val="mcx" onclick="setPill('idx',this)">MCX</button>
           </div>
         </div>
         <div class="form-group">
@@ -729,7 +731,14 @@
             <th>Key Stats</th>
             <th>Allocation</th>
           </tr>
-        </thead>div>
+        </thead>
+        <tbody id="allocBody"></tbody>
+      </table>
+    </div>
+    <div id="riskWarnings" class="risk-warnings"></div>
+    <div id="scoreBreakdown"></div>
+    <div id="whySection"></div>
+    <div id="corrMatrix"></div>
     <div id="noResult" class="no-result" style="display:none;">No strategies match your criteria. Try adjusting your preferences or increasing capital.</div>
     <p style="font-size:0.68rem;color:var(--muted);margin-top:1rem;line-height:1.6;padding:0 0.2rem;">
       &#9432; Allocations are calculated using live Sharpe ratio, drawdown and ROI data from your strategies. Past performance does not guarantee future results. This is not financial advice.
@@ -743,7 +752,7 @@
     </div>
     <div class="footer-bottom">
       <p>© 2025 Apex Algos. All rights reserved.</p>
-      <p>Built for performance. Engineered with discipline.</p>
+      <p id="footerUpdated">Built for performance. Engineered with discipline.</p>
     </div>
   </footer>
 
@@ -787,6 +796,8 @@ const STRAT_META = [
   { key:'sapv3', label:'SAPv3', subtitle:'Sensex Intraday Selling v3',        color:'#6F9FE0', minCap:250000, lotCap:250000, hedge:'unhedged', idx:'sensex', sl:3500,  tradetron:'8680369' },
   { key:'naph',  label:'NAP-H', subtitle:'Nifty Intraday — Hedged',           color:'#A0E06F', minCap:150000, lotCap:150000, hedge:'hedged',   idx:'nifty',  sl:3500,  tradetron:'7286441' },
   { key:'saph',  label:'SAP-H', subtitle:'Sensex Intraday — Hedged',          color:'#E06FB0', minCap:150000, lotCap:150000, hedge:'hedged',   idx:'sensex', sl:3500,  tradetron:'7324673' },
+  { key:'ngap',  label:'NAGAP',  subtitle:'NG Apex Predator',                  color:'#6F9FE2', minCap:220000, lotCap:220000, hedge:'unhedged', idx:'mcx',    sl:1800,  tradetron:'7927425' },
+  { key:'ngapm', label:'NAGAPM', subtitle:'NG Apex Predator MINI',             color:'#6F9FE9', minCap:50000,  lotCap:50000,  hedge:'unhedged', idx:'mcx',    sl:500,   tradetron:'9444470' },
 ];
 
 // ── LOAD data.json ──
@@ -852,7 +863,7 @@ function renderStratCards() {
       <span class="strat-dot" style="background:${s.color}"></span>
       <div class="strat-info">
         <div class="sname">${s.label}${isHedged?'<span class="badge-h">Hedged</span>':''}</div>
-        <div class="smeta">${s.idx==='nifty'?'NIFTY':'SENSEX'} &middot; 1x=&#8377;${(s.lotCap/100000).toFixed(1)}L &middot; DD:${st.max_dd}%</div>
+        <div class="smeta">${s.idx==='nifty'?'NIFTY':s.idx==='mcx'?'MCX':'SENSEX'} &middot; 1x=&#8377;${(s.lotCap/100000).toFixed(1)}L &middot; DD:${st.max_dd}%</div>
         <div class="sstats">Sharpe ${st.sharpe} &middot; WR ${st.win_rate}% &middot; ROI ${st.roi}%</div>
       </div>
       <div class="strat-multiplier" onclick="event.stopPropagation()">
