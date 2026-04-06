@@ -1023,27 +1023,35 @@ function generateAuto() {
     return { ...s, score };
   }).sort((a,b) => b.score - a.score);
 
-  // Greedy allocation
+  // Greedy allocation — equal budget per strategy first, then scale surplus
   let remaining = capital;
   const alloc = [];
-  for(const s of pool) {
-    if(alloc.length >= maxS) break;
-    if(remaining < s.lotCap) continue;
-    const maxLots = Math.floor(remaining / s.lotCap);
-    const lots = maxLots;
-    if(lots < 1) continue;
+
+  // Step 1: how many strategies will we actually fill?
+  const eligible = pool.filter(s => capital >= s.lotCap);
+  const numStrats = Math.min(eligible.length, maxS);
+  if (numStrats === 0) { renderNoResult(); return; }
+
+  // Give each strategy an equal slice of capital for the initial pass
+  const budgetPerStrat = Math.floor(capital / numStrats);
+
+  for (const s of pool) {
+    if (alloc.length >= maxS) break;
+    if (remaining < s.lotCap) continue;
+    // Lots = how many fit in this strategy's equal-share budget (min 1)
+    const lots = Math.max(1, Math.floor(Math.min(budgetPerStrat, remaining) / s.lotCap));
     const capUsed = lots * s.lotCap;
+    if (capUsed > remaining) continue;
     alloc.push({ ...s, lots, capUsed });
     remaining -= capUsed;
   }
 
-  // ── Scale-up pass: boost lots on existing strategies to minimise buffer ──
-  // Sort by Sharpe descending so best strategies get extra lots first
+  // Step 2: scale-up — distribute remaining capital to highest-Sharpe strategies
   let scalePass = 0;
-  while (remaining >= Math.min(...alloc.map(a=>a.lotCap)) && scalePass < 20) {
+  while (alloc.length > 0 && remaining >= Math.min(...alloc.map(a => a.lotCap)) && scalePass < 50) {
     scalePass++;
     let boosted = false;
-    for (const a of [...alloc].sort((x,y) => y.stats.sharpe - x.stats.sharpe)) {
+    for (const a of [...alloc].sort((x, y) => y.stats.sharpe - x.stats.sharpe)) {
       if (remaining < a.lotCap) continue;
       const add = Math.floor(remaining / a.lotCap);
       if (add < 1) continue;
@@ -1051,6 +1059,7 @@ function generateAuto() {
       a.capUsed += add * a.lotCap;
       remaining -= add * a.lotCap;
       boosted = true;
+      break; // one strategy per pass so distribution stays fair
     }
     if (!boosted) break;
   }
