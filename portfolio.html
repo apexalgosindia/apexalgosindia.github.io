@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     :root{
@@ -798,7 +800,10 @@
         <div class="rlabel">Recommended Allocation</div>
         <div class="rsub" id="resultsMeta"></div>
       </div>
-      <button class="reset-btn" onclick="resetResults()">&#8592; Rebuild</button>
+      <div style="display:flex;align-items:center;gap:0.6rem;">
+        <button id="pfPdfBtn" onclick="exportPortfolioPDF()" style="font-family:'Inter',sans-serif;font-size:0.6rem;letter-spacing:0.08em;background:transparent;border:1px solid rgba(212,168,64,0.45);color:var(--accent);padding:0.45rem 1rem;cursor:pointer;transition:all 0.18s;display:flex;align-items:center;gap:5px;" onmouseover="this.style.background='rgba(212,168,64,0.08)'" onmouseout="this.style.background='transparent'">&#128438; Export PDF</button>
+        <button class="reset-btn" onclick="resetResults()">&#8592; Rebuild</button>
+      </div>
     </div>
     <div class="summary-strip" id="summaryStrip"></div>
     <div class="alloc-wrap">
@@ -1205,15 +1210,17 @@ function renderResults(alloc, capital, meta) {
       <td class="col-roi">+${((st.avg_month_roi||st.roi/12)).toFixed(2)}%</td>
       <td class="col-dd">${st.max_dd}%</td>
       <td>
-        <span class="stat-chip">Sharpe ${st.sharpe}</span>
-        <span class="stat-chip">WR ${st.win_rate}%</span>
-        <span class="stat-chip">DD ${st.max_dd}%</span>
-        <span class="stat-chip">ROI ${st.roi}%</span>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.28rem;min-width:160px;">
+          <span class="stat-chip" style="background:rgba(212,168,64,0.08);color:var(--accent);border-color:rgba(212,168,64,0.2);">S: ${st.sharpe}</span>
+          <span class="stat-chip" style="background:rgba(78,168,110,0.08);color:var(--pos);border-color:rgba(78,168,110,0.2);">WR ${st.win_rate}%</span>
+          <span class="stat-chip" style="background:rgba(224,85,85,0.08);color:var(--neg);border-color:rgba(224,85,85,0.2);">DD ${st.max_dd}%</span>
+          <span class="stat-chip" style="background:rgba(78,168,110,0.08);color:var(--pos);border-color:rgba(78,168,110,0.2);">ROI ${st.roi}%</span>
+        </div>
       </td>
       <td>
         <div style="display:flex;align-items:center;gap:0.5rem;">
-          <div class="pct-bar-wrap"><div class="pct-bar" style="width:${Math.min(pct,100)}%"></div></div>
-          <span style="font-size:0.78rem;color:var(--muted);">${pct}%</span>
+          <div class="pct-bar-wrap" style="width:80px;"><div class="pct-bar" style="width:${Math.max(Math.min(pct,100),3)}%;min-width:3px;"></div></div>
+          <span style="font-size:0.78rem;color:var(--cream);font-weight:600;min-width:38px;">${pct}%</span>
         </div>
       </td>
     </tr>`;
@@ -1593,6 +1600,85 @@ function renderPortfolioAnalytics(alloc) {
   disc.style.cssText = 'font-size:0.68rem;color:var(--muted);margin-top:1rem;line-height:1.7;padding:0.6rem 0.8rem;background:var(--surface2);border-left:3px solid var(--rule);';
   disc.innerHTML = '⚠ Past performance does not guarantee future returns. These are our account returns with simulated lot-scaling. Kindly consult your financial adviser before deploying capital.';
   el.appendChild(disc);
+}
+
+// ── PORTFOLIO PDF EXPORT ──
+async function exportPortfolioPDF() {
+  const btn = document.getElementById('pfPdfBtn');
+  const origText = btn.innerHTML;
+  btn.innerHTML = '⏳ Generating…';
+  btn.disabled = true;
+
+  const wasLight = document.documentElement.classList.contains('light');
+  if (!wasLight) document.documentElement.classList.add('light');
+  await new Promise(r => setTimeout(r, 120));
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const PAGE_W = 210, PAGE_H = 297, MARGIN = 10;
+    const CONTENT_W = PAGE_W - MARGIN * 2;
+    let cursorY = MARGIN;
+
+    const metaText = document.getElementById('resultsMeta')?.textContent || 'Portfolio';
+    const dateStr  = new Date().toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+
+    async function addSection(el, opts = {}) {
+      if (!el || !el.offsetParent) return;
+      const canvas = await html2canvas(el, {
+        scale: 2, useCORS: true, logging: false,
+        backgroundColor: '#F1EDE3',
+        onclone: doc => { doc.documentElement.classList.add('light'); doc.documentElement.classList.remove('dark'); }
+      });
+      const imgData = canvas.toDataURL('image/jpeg', 0.88);
+      const imgH    = (canvas.height / canvas.width) * CONTENT_W;
+      if (opts.label) {
+        if (cursorY + 7 + imgH > PAGE_H - MARGIN) { pdf.addPage(); cursorY = MARGIN; }
+        pdf.setFontSize(7); pdf.setTextColor(100,80,30); pdf.setFont('helvetica','bold');
+        pdf.text(opts.label.toUpperCase(), MARGIN, cursorY + 3); cursorY += 7;
+      } else {
+        if (cursorY + imgH > PAGE_H - MARGIN) { pdf.addPage(); cursorY = MARGIN; }
+      }
+      pdf.addImage(imgData, 'JPEG', MARGIN, cursorY, CONTENT_W, imgH);
+      cursorY += imgH + (opts.gap ?? 5);
+    }
+
+    // Header
+    pdf.setFillColor(245,240,228); pdf.rect(0,0,PAGE_W,22,'F');
+    pdf.setFontSize(14); pdf.setTextColor(120,80,10); pdf.setFont('helvetica','bold');
+    pdf.text('APEX ALGOS — PORTFOLIO BUILDER', MARGIN, 10);
+    pdf.setFontSize(8); pdf.setTextColor(80,65,40); pdf.setFont('helvetica','normal');
+    pdf.text(metaText, MARGIN, 16);
+    pdf.setFontSize(7); pdf.setTextColor(130,110,80);
+    pdf.text('Generated: ' + dateStr, PAGE_W - MARGIN, 16, { align:'right' });
+    pdf.setDrawColor(200,185,155); pdf.line(MARGIN,21,PAGE_W-MARGIN,21);
+    cursorY = 26;
+
+    await addSection(document.getElementById('summaryStrip'),   { label: 'Portfolio Summary', gap: 4 });
+    await addSection(document.querySelector('.alloc-wrap'),     { label: 'Strategy Allocation', gap: 4 });
+    await addSection(document.getElementById('riskWarnings'),   { label: 'Risk Assessment', gap: 4 });
+    await addSection(document.getElementById('scoreBreakdown'), { label: 'Portfolio Score', gap: 4 });
+    await addSection(document.getElementById('pfAnalytics'),    { label: 'Historical Performance', gap: 4 });
+
+    const totalPages = pdf.internal.getNumberOfPages();
+    for (let p = 1; p <= totalPages; p++) {
+      pdf.setPage(p);
+      pdf.setFontSize(6); pdf.setTextColor(130,110,80); pdf.setFont('helvetica','normal');
+      pdf.text('⚠ Past performance does not guarantee future returns. These are our account returns. Kindly consult your financial adviser.', MARGIN, PAGE_H - 5);
+      pdf.text('Page ' + p + ' of ' + totalPages, PAGE_W - MARGIN, PAGE_H - 5, { align:'right' });
+    }
+
+    const safeName = metaText.replace(/[^a-zA-Z0-9]/g,'_').slice(0,40);
+    pdf.save('ApexAlgos_Portfolio_' + safeName + '_' + dateStr.replace(/ /g,'') + '.pdf');
+
+  } catch(err) {
+    console.error('Portfolio PDF error:', err);
+    alert('PDF export failed: ' + err.message);
+  } finally {
+    if (!wasLight) document.documentElement.classList.remove('light');
+    btn.innerHTML = origText;
+    btn.disabled  = false;
+  }
 }
 
 // ── INIT ──
