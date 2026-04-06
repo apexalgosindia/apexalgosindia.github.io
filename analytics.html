@@ -494,7 +494,28 @@
             <th onclick="sortBd('monthly')" id="th-monthly">Monthly PNL (ROI%)</th>
             <th id="th-yearly" style="white-space:nowrap;">
               <span onclick="sortBd('yearly')" style="cursor:pointer;" id="th-yearly-label">Yearly PNL (YTD%)</span>
-              <button id="yearlyToggleBtn" onclick="event.stopPropagation();toggleYearlyMode()" title="Switch between Calendar Year and Financial Year" style="margin-left:6px;font-family:'Inter',sans-serif;font-size:0.48rem;letter-spacing:0.08em;background:var(--accent-glow);border:1px solid var(--accent-dim);color:var(--accent);padding:0.18rem 0.5rem;cursor:pointer;vertical-align:middle;transition:all 0.18s;">FY</button>
+              <button 
+  id="yearlyToggleBtn"
+  onclick="toggleYearlyMode(event)"
+  title="Switch between Calendar Year and Financial Year"
+  style="
+    margin-left:6px;
+    font-family:'Inter',sans-serif;
+    font-size:0.48rem;
+    letter-spacing:0.08em;
+    background:var(--accent-glow);
+    border:1px solid var(--accent-dim);
+    color:var(--accent);
+    padding:0.18rem 0.5rem;
+    cursor:pointer;
+    vertical-align:middle;
+    transition:all 0.18s;
+    position:relative;
+    z-index:10;
+    pointer-events:auto;
+  ">
+  FY
+</button>
             </th>
             <th onclick="sortBd('drawdown')" id="th-drawdown">Current DD/Total DD</th>
           </tr>
