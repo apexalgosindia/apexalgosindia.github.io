@@ -978,7 +978,7 @@ function toggleCard(key) {
 
 function changeMult(key, delta) {
   const cur = customMults[key] ?? 1;
-  const nv = Math.max(0, Math.min(5, cur + delta));
+  const nv = Math.max(0, cur + delta);
   customMults[key] = nv;
   document.getElementById('mv-'+key).textContent = nv+'x';
   const card = document.getElementById('sc-'+key);
@@ -1030,7 +1030,7 @@ function generateAuto() {
     if(alloc.length >= maxS) break;
     if(remaining < s.lotCap) continue;
     const maxLots = Math.floor(remaining / s.lotCap);
-    const lots = Math.min(maxLots, 3);
+    const lots = maxLots;
     if(lots < 1) continue;
     const capUsed = lots * s.lotCap;
     alloc.push({ ...s, lots, capUsed });
@@ -1039,15 +1039,13 @@ function generateAuto() {
 
   // ── Scale-up pass: boost lots on existing strategies to minimise buffer ──
   // Sort by Sharpe descending so best strategies get extra lots first
-  const MAX_LOTS = 5;
   let scalePass = 0;
-  while (remaining >= Math.min(...alloc.map(a=>a.lotCap)) && scalePass < 10) {
+  while (remaining >= Math.min(...alloc.map(a=>a.lotCap)) && scalePass < 20) {
     scalePass++;
     let boosted = false;
     for (const a of [...alloc].sort((x,y) => y.stats.sharpe - x.stats.sharpe)) {
-      if (a.lots >= MAX_LOTS) continue;
       if (remaining < a.lotCap) continue;
-      const add = Math.min(Math.floor(remaining / a.lotCap), MAX_LOTS - a.lots);
+      const add = Math.floor(remaining / a.lotCap);
       if (add < 1) continue;
       a.lots    += add;
       a.capUsed += add * a.lotCap;
@@ -1093,7 +1091,7 @@ function generateAuto() {
 
     for (const s of mcxPool) {
       if (mcxBudget < s.lotCap) continue;
-      const lots   = Math.min(Math.floor(mcxBudget / s.lotCap), 3);
+      const lots   = Math.floor(mcxBudget / s.lotCap);
       if (lots < 1) continue;
       const capUsed = lots * s.lotCap;
       // Mark as reused capital so renderResults can display it differently
