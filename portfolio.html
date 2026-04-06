@@ -637,7 +637,7 @@
         <div class="form-group">
           <label class="form-label">Underlying</label>
           <div class="pill-group" id="pg-idx">
-            <button class="pill active" data-val="both" onclick="setPill('idx',this)">Both</button>
+            <button class="pill active" data-val="all" onclick="setPill('idx',this)">All</button>
             <button class="pill" data-val="nifty" onclick="setPill('idx',this)">Nifty</button>
             <button class="pill" data-val="sensex" onclick="setPill('idx',this)">Sensex</button>
             <button class="pill" data-val="mcx" onclick="setPill('idx',this)">MCX</button>
@@ -664,6 +664,54 @@
               <input class="form-input" type="number" id="maxStrats" value="6" min="1" max="8" step="1"/>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Capital Reuse (MCX Evening Session) -->
+    <div class="section-card" id="mcxReuseCard">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title-block">
+          <div class="stitle">Capital Reuse — MCX Evening Session
+            <span style="font-size:0.65rem;font-weight:400;color:var(--muted);margin-left:0.5rem;">(Optional)</span>
+          </div>
+          <div class="ssub">NFO/BFO intraday strategies exit by 3:30 PM. Reuse that freed capital for MCX evening strategies (trade till 11:30 PM).</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.4rem;padding:0.85rem 1rem;background:rgba(111,159,226,0.06);border:1px solid rgba(111,159,226,0.18);border-left:3px solid #6F9FE2;">
+        <div style="flex:1;">
+          <div style="font-size:0.72rem;color:var(--cream);font-weight:500;margin-bottom:0.2rem;">♻ Re-use NFO capital after 3:30 PM for MCX</div>
+          <div style="font-size:0.65rem;color:var(--muted);line-height:1.6;">When enabled, capital freed by exited NFO strategies will be allocated to MCX strategies. Both sessions run on the same rupees — no extra capital needed.</div>
+        </div>
+        <div style="flex-shrink:0;">
+          <div class="pill-group" id="pg-mcxreuse">
+            <button class="pill" data-val="off" onclick="setPill('mcxreuse',this)">Off</button>
+            <button class="pill active" data-val="on" onclick="setPill('mcxreuse',this)">On</button>
+          </div>
+        </div>
+      </div>
+      <div id="mcxReuseDetails" style="display:block;">
+        <div class="form-grid two-col" style="margin-bottom:1rem;">
+          <div class="form-group">
+            <label class="form-label">Capital to Reuse for MCX <span class="hint-icon" title="How much of the freed NFO capital to redirect to MCX. Defaults to 100% of what NFO strategies freed up.">?</span></label>
+            <div class="pill-group" id="pg-mcxpct">
+              <button class="pill" data-val="50" onclick="setPill('mcxpct',this)">50%</button>
+              <button class="pill" data-val="75" onclick="setPill('mcxpct',this)">75%</button>
+              <button class="pill active" data-val="100" onclick="setPill('mcxpct',this)">100%</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">MCX Strategies to Include</label>
+            <div class="pill-group" id="pg-mcxstrats">
+              <button class="pill active" data-val="all" onclick="setPill('mcxstrats',this)">All</button>
+              <button class="pill" data-val="ngap" onclick="setPill('mcxstrats',this)">NAGAP only</button>
+              <button class="pill" data-val="ngapm" onclick="setPill('mcxstrats',this)">NAGAPM only</button>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:0.62rem;color:var(--muted);line-height:1.7;padding:0.6rem 0.8rem;background:var(--surface2);border:1px solid var(--rule);">
+          ⚠ MCX Natural Gas strategies trade <strong style="color:var(--cream);">5:00 PM – 11:30 PM IST</strong>. Ensure your broker supports overnight MCX margins and that you have sufficient funds for MCX margin requirements separately from NFO margins.
         </div>
       </div>
     </div>
@@ -706,6 +754,18 @@
       </div>
     </div>
 
+    <div class="section-card" style="border-left:3px solid #6F9FE2;background:rgba(111,159,226,0.03);">
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <div style="flex:1;">
+          <div style="font-size:0.75rem;font-weight:600;color:var(--cream);margin-bottom:0.2rem;">♻ Capital Reuse for MCX Evening Session</div>
+          <div style="font-size:0.65rem;color:var(--muted);line-height:1.6;">If your custom selection includes both NFO and MCX strategies, MCX capital will be treated as reused from NFO exits at 3:30 PM.</div>
+        </div>
+        <div class="pill-group" id="pg-mcxreuse-custom">
+          <button class="pill" data-val="off" onclick="setPillCustomMcx(this,'off')">Off</button>
+          <button class="pill active" data-val="on" onclick="setPillCustomMcx(this,'on')">On</button>
+        </div>
+      </div>
+    </div>
     <button class="gen-btn" onclick="generateCustom()"><span class="bolt">&#9889;</span> Build My Portfolio</button>
   </div>
 
@@ -777,7 +837,7 @@ function toggleTheme(){
 
 // ── STATE ──
 let activeMode = 'auto';
-const prefs = { hedge:'both', idx:'both', rank:'sharpe' };
+const prefs = { hedge:'both', idx:'all', rank:'sharpe', mcxreuse:'on', mcxpct:'100', mcxstrats:'all' };
 let liveData = null;   // data.json payload
 let customMults = {};  // key → lots — initialized in initCustomMults()
 function initCustomMults() {
@@ -825,6 +885,11 @@ function setPill(group, btn) {
   document.querySelectorAll(`#pg-${group} .pill`).forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   prefs[group] = btn.dataset.val;
+  // Show/hide MCX reuse details
+  if (group === 'mcxreuse') {
+    const det = document.getElementById('mcxReuseDetails');
+    if (det) det.style.display = btn.dataset.val === 'on' ? 'block' : 'none';
+  }
 }
 
 // ── CAPITAL HINT ──
@@ -908,7 +973,7 @@ function generateAuto() {
   // Filter pool
   let pool = STRAT_META.filter(s => {
     if(prefs.hedge !== 'both' && s.hedge !== prefs.hedge) return false;
-    if(prefs.idx   !== 'both' && s.idx   !== prefs.idx)   return false;
+    if(prefs.idx   !== 'all'  && s.idx   !== prefs.idx)   return false;
     if(capital < s.minCap) return false;
     return true;
   });
@@ -948,31 +1013,96 @@ function generateAuto() {
     renderNoResult(); return;
   }
 
-  renderResults(alloc, capital, `Auto Portfolio · ${prefs.rank} ranked · Max DD ${maxDD}%`);
+  // ── MCX Capital Reuse pass ────────────────────────────────────────
+  if (prefs.mcxreuse === 'on') {
+    // Capital freed = sum of NFO/BFO strategies that exit by 3:30 PM
+    const nfoFreed = alloc
+      .filter(a => a.idx !== 'mcx')
+      .reduce((s, a) => s + a.capUsed, 0);
+    const reusePct  = parseFloat(prefs.mcxpct) / 100;
+    let mcxBudget   = Math.floor(nfoFreed * reusePct);
+
+    // Build MCX candidate pool
+    let mcxPool = STRAT_META
+      .filter(s => s.idx === 'mcx')
+      .filter(s => {
+        if (prefs.mcxstrats === 'ngap')  return s.key === 'ngap';
+        if (prefs.mcxstrats === 'ngapm') return s.key === 'ngapm';
+        return true; // 'all'
+      })
+      .map(s => ({ ...s, stats: getStats(s.key) }))
+      .filter(s => Math.abs(s.stats.max_dd) <= maxDD)
+      .map(s => {
+        let score = 0;
+        const st = s.stats;
+        if (prefs.rank === 'sharpe')  score = st.sharpe;
+        if (prefs.rank === 'roi')     score = st.roi;
+        if (prefs.rank === 'winrate') score = st.win_rate;
+        if (prefs.rank === 'dd')      score = -Math.abs(st.max_dd);
+        return { ...s, score };
+      })
+      .sort((a, b) => b.score - a.score);
+
+    for (const s of mcxPool) {
+      if (mcxBudget < s.lotCap) continue;
+      const lots   = Math.min(Math.floor(mcxBudget / s.lotCap), 3);
+      if (lots < 1) continue;
+      const capUsed = lots * s.lotCap;
+      // Mark as reused capital so renderResults can display it differently
+      alloc.push({ ...s, lots, capUsed, reuseCapital: true });
+      mcxBudget -= capUsed;
+    }
+  }
+
+  const hasMcxReuse = alloc.some(a => a.reuseCapital);
+  renderResults(alloc, capital, `Auto Portfolio · ${prefs.rank} ranked · Max DD ${maxDD}%${hasMcxReuse ? ' · MCX reuse ♻' : ''}`);
   } catch(e) { console.error('generateAuto error:', e); alert('Error generating portfolio: ' + e.message); }
 }
 
 // ── CUSTOM GENERATE ──
+let customMcxReuse = 'on';
+function setPillCustomMcx(btn, val) {
+  document.querySelectorAll('#pg-mcxreuse-custom .pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  customMcxReuse = val;
+}
+
 function generateCustom() {
   const capital = parseInt(document.getElementById('customCapital').value)||0;
   if(capital < 50000) { alert('Please enter a valid capital (min ₹50,000)'); return; }
 
-  const alloc = [];
+  const nfoAlloc = [], mcxAlloc = [];
   for(const s of STRAT_META) {
     const lots = customMults[s.key] !== undefined ? customMults[s.key] : 1;
     if(lots < 1) continue;
     const capUsed = lots * s.lotCap;
-    alloc.push({ ...s, stats: getStats(s.key), lots, capUsed });
+    const entry = { ...s, stats: getStats(s.key), lots, capUsed };
+    if (s.idx === 'mcx') mcxAlloc.push(entry);
+    else nfoAlloc.push(entry);
   }
-  if(!alloc.length) { alert('Please select at least one strategy'); return; }
-  renderResults(alloc, capital, `Custom Portfolio &middot; ${alloc.length} strategies selected`);
+  const allAlloc = [...nfoAlloc];
+
+  // If MCX reuse is on, mark MCX rows as reuseCapital
+  if (customMcxReuse === 'on' && mcxAlloc.length > 0 && nfoAlloc.length > 0) {
+    mcxAlloc.forEach(a => allAlloc.push({ ...a, reuseCapital: true }));
+  } else {
+    mcxAlloc.forEach(a => allAlloc.push(a));
+  }
+
+  if(!allAlloc.length) { alert('Please select at least one strategy'); return; }
+  const hasMcxReuse = allAlloc.some(a => a.reuseCapital);
+  renderResults(allAlloc, capital, `Custom Portfolio &middot; ${allAlloc.length} strategies${hasMcxReuse?' · MCX reuse ♻':''}`);
 }
 
 // ── RENDER RESULTS ──
 function renderResults(alloc, capital, meta) {
-  const totalCap  = alloc.reduce((s,a)=>s+a.capUsed, 0);
-  const totalSL   = alloc.reduce((s,a)=>s+(a.sl*a.lots), 0);
-  const unused    = capital - totalCap;
+  // MCX reuse rows don't consume extra capital — they reuse NFO freed capital
+  const nfoAlloc   = alloc.filter(a => !a.reuseCapital);
+  const mcxReAlloc = alloc.filter(a =>  a.reuseCapital);
+  const totalCap   = nfoAlloc.reduce((s,a)=>s+a.capUsed, 0);   // actual capital used
+  const mcxReused  = mcxReAlloc.reduce((s,a)=>s+a.capUsed, 0); // recycled capital
+  const totalSL    = alloc.reduce((s,a)=>s+(a.sl*a.lots), 0);
+  const unused     = Math.max(0, capital - totalCap);  // guard negative when MCX not marked as reused
   const avgSharpe = alloc.length ? (alloc.reduce((s,a)=>s+a.stats.sharpe,0)/alloc.length).toFixed(2) : 0;
   const avgDD     = alloc.length ? (alloc.reduce((s,a)=>s+Math.abs(a.stats.max_dd),0)/alloc.length).toFixed(1) : 0;
 
@@ -982,13 +1112,13 @@ function renderResults(alloc, capital, meta) {
   document.getElementById('summaryStrip').innerHTML = `
     <div class="sum-cell">
       <div class="sum-lbl">Capital Deployed</div>
-      <div class="sum-val pos">${fmtIN(totalCap)}</div>
-      <div class="sum-sub">${((totalCap/capital)*100).toFixed(1)}% utilised</div>
+      <div class="sum-val pos">${fmtIN(totalCap)}${mcxReused>0?' <span style="font-size:0.6rem;color:#6F9FE2;">+♻'+fmtIN(mcxReused)+'</span>':''}</div>
+      <div class="sum-sub">${Math.min(((totalCap/capital)*100),999).toFixed(1)}% of capital${mcxReused>0?' · MCX runs on recycled NFO capital':''}</div>
     </div>
     <div class="sum-cell">
       <div class="sum-lbl">Buffer (Undeployed)</div>
-      <div class="sum-val">${fmtIN(unused)}</div>
-      <div class="sum-sub">Keep as margin buffer</div>
+      <div class="sum-val ${totalCap > capital && mcxReused === 0 ? 'neg' : ''}">${totalCap > capital && mcxReused === 0 ? '⚠ Over-allocated' : fmtIN(unused)}</div>
+      <div class="sum-sub">${mcxReused > 0 ? '♻ ' + fmtIN(mcxReused) + ' reused for MCX' : totalCap > capital ? 'Enable MCX reuse or reduce lots' : 'Keep as margin buffer'}</div>
     </div>
     <div class="sum-cell">
       <div class="sum-lbl">Max Daily SL</div>
@@ -1026,8 +1156,8 @@ function renderResults(alloc, capital, meta) {
       </td>
       <td style="text-align:center;"><span class="lot-num">${a.lots}</span><span class="lot-x"> x</span></td>
       <td>
-        <div class="cap-val">&#8377;${a.capUsed.toLocaleString('en-IN')}</div>
-        <div class="cap-sl">SL: &#8377;${(a.sl*a.lots).toLocaleString('en-IN')}/day</div>
+        <div class="cap-val">&#8377;${a.capUsed.toLocaleString('en-IN')}${a.reuseCapital?' <span style="font-size:0.55rem;color:#6F9FE2;background:rgba(111,159,226,0.12);border:1px solid rgba(111,159,226,0.25);padding:0.1rem 0.35rem;vertical-align:middle;">♻ reused</span>':''}</div>
+        <div class="cap-sl">${a.reuseCapital?'Evening session · 5–11:30 PM':''}SL: &#8377;${(a.sl*a.lots).toLocaleString('en-IN')}/day</div>
       </td>
       <td class="col-roi">+${((st.avg_month_roi||st.roi/12)*a.lots).toFixed(2)}%</td>
       <td class="col-dd">${st.max_dd}%</td>
@@ -1048,9 +1178,9 @@ function renderResults(alloc, capital, meta) {
 
   // Total row
   tbody.innerHTML += `<tr class="total-row">
-    <td>TOTAL &mdash; ${alloc.length} Strategies</td>
+    <td>TOTAL &mdash; ${nfoAlloc.length} NFO${mcxReAlloc.length?' + '+mcxReAlloc.length+' MCX ♻':''} Strategies</td>
     <td style="text-align:center;">${alloc.reduce((s,a)=>s+a.lots,0)}x</td>
-    <td>&#8377;${totalCap.toLocaleString('en-IN')}</td>
+    <td>&#8377;${totalCap.toLocaleString('en-IN')}${mcxReused>0?' <span style="font-size:0.6rem;color:#6F9FE2;">+♻&#8377;'+mcxReused.toLocaleString('en-IN')+'</span>':''}</td>
     <td class="col-roi">+${(alloc.reduce((s,a)=>s+(a.stats.avg_month_roi||a.stats.roi/12)*a.lots,0)).toFixed(2)}%</td>
     <td class="col-dd">-${(alloc.reduce((s,a)=>s+Math.abs(a.stats.max_dd),0)/alloc.length).toFixed(1)}%</td>
     <td></td>
