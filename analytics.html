@@ -943,7 +943,8 @@ function getFinancialYearPnl(k) {
 
 let yearlyMode = 'cy'; // 'cy' = Calendar Year, 'fy' = Financial Year
 
-function toggleYearlyMode() {
+function toggleYearlyMode(event) {
+  if (event) event.stopPropagation();
   yearlyMode = yearlyMode === 'cy' ? 'fy' : 'cy';
   const btn = document.getElementById('yearlyToggleBtn');
   const lbl = document.getElementById('th-yearly-label');
@@ -1134,10 +1135,18 @@ function renderBreakdownTable(filter='') {
   tbody.innerHTML = rowsHtml + subTotalRow('TOTAL / AVERAGE', allRows, true);
 
   // Update sort indicators
-  ['name','capital','today','monthly','yearly','drawdown'].forEach(k => {
+  ['name','capital','today','monthly','drawdown'].forEach(k => {
     const el = document.getElementById('th-'+k);
     if (el) { el.classList.toggle('sorted', bdSortKey === k); el.textContent = el.textContent.replace(' ↑','').replace(' ↓',''); if (bdSortKey === k) el.textContent += bdSortAsc ? ' ↑' : ' ↓'; }
   });
+  // th-yearly contains a nested button — update only the label span, never overwrite innerHTML
+  const thYearly = document.getElementById('th-yearly');
+  const lblYearly = document.getElementById('th-yearly-label');
+  if (thYearly) thYearly.classList.toggle('sorted', bdSortKey === 'yearly');
+  if (lblYearly) {
+    lblYearly.textContent = lblYearly.textContent.replace(' ↑','').replace(' ↓','');
+    if (bdSortKey === 'yearly') lblYearly.textContent += bdSortAsc ? ' ↑' : ' ↓';
+  }
 }
 
 function sortBd(key) {
