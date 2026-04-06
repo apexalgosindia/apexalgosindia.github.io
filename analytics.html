@@ -1214,17 +1214,17 @@ async function snapshotTable() {
     node.querySelectorAll('th').forEach(el => { el.style.fontSize = '1.5rem'; el.style.padding = '1.1rem 1.3rem'; });
     node.querySelectorAll('td').forEach(el => { el.style.fontSize = '1.5rem'; el.style.padding = '1.1rem 1.3rem'; });
     node.querySelectorAll('.strat-name-text').forEach(el => { el.style.fontSize = '1.5rem'; el.style.fontWeight = '700'; });
-    node.querySelectorAll('.pnl-amount').forEach(el => el.style.fontSize = '1.5rem');
-    node.querySelectorAll('.pnl-pct').forEach(el => el.style.fontSize = '1.5rem');
+    node.querySelectorAll('.pnl-amount').forEach(el => { el.style.fontSize = '1.5rem'; el.style.fontWeight = '700'; });
+    node.querySelectorAll('.pnl-pct').forEach(el => { el.style.fontSize = '1.5rem'; el.style.fontWeight = '700'; el.style.opacity = '1'; });
     node.querySelectorAll('.pnl-pill').forEach(el => { el.style.minWidth = '0'; el.style.width = '100%'; });
-    node.querySelectorAll('.dd-cur, .dd-pct').forEach(el => el.style.fontSize = '1.5rem');
-    node.querySelectorAll('.dd-max-val, .dd-sep').forEach(el => el.style.fontSize = '1.5rem');
+    node.querySelectorAll('.dd-cur, .dd-pct').forEach(el => { el.style.fontSize = '1.5rem'; el.style.fontWeight = '700'; });
+    node.querySelectorAll('.dd-max-val, .dd-sep').forEach(el => { el.style.fontSize = '1.5rem'; el.style.fontWeight = '700'; el.style.opacity = '1'; });
     node.querySelectorAll('.dd-cell').forEach(el => el.style.minWidth = '0');
-    node.querySelectorAll('.cap-cell').forEach(el => el.style.fontSize = '1.5rem');
-    node.querySelectorAll('.total-row td').forEach(el => el.style.fontSize = '1.55rem');
-    node.querySelectorAll('.subtotal-row td').forEach(el => el.style.fontSize = '1.35rem');
+    node.querySelectorAll('.cap-cell').forEach(el => { el.style.fontSize = '1.5rem'; el.style.fontWeight = '700'; });
+    node.querySelectorAll('.total-row td').forEach(el => { el.style.fontSize = '1.55rem'; el.style.fontWeight = '700'; });
+    node.querySelectorAll('.subtotal-row td').forEach(el => { el.style.fontSize = '1.35rem'; el.style.fontWeight = '600'; });
     node.querySelectorAll('.subgroup-label').forEach(el => el.style.fontSize = '1.1rem');
-    node.querySelectorAll('.strip-item-val').forEach(el => el.style.fontSize = '1.6rem');
+    node.querySelectorAll('.strip-item-val').forEach(el => { el.style.fontSize = '1.6rem'; el.style.fontWeight = '700'; });
     node.querySelectorAll('.strip-item-val.combined').forEach(el => el.style.fontSize = '1.8rem');
     node.querySelectorAll('.strip-item-label').forEach(el => el.style.fontSize = '0.95rem');
     node.querySelectorAll('.strip-date-main').forEach(el => el.style.fontSize = '1.3rem');
@@ -1232,7 +1232,7 @@ async function snapshotTable() {
     node.querySelectorAll('.bd-title').forEach(el => el.style.fontSize = '1.6rem');
     node.querySelectorAll('.bd-sub').forEach(el => el.style.fontSize = '1.1rem');
     node.querySelectorAll('.bd-date-pill').forEach(el => el.style.fontSize = '1.05rem');
-    node.querySelectorAll('.today-total-val').forEach(el => el.style.fontSize = '1.4rem');
+    node.querySelectorAll('.today-total-val').forEach(el => { el.style.fontSize = '1.4rem'; el.style.fontWeight = '700'; });
     node.querySelectorAll('.today-total-lbl').forEach(el => el.style.fontSize = '0.9rem');
   });
   // ─────────────────────────────────────────────────────────────────────────────
