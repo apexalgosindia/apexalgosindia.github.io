@@ -998,8 +998,9 @@ function generateAuto() {
 
   if(capital < 50000) { alert('Please enter a valid capital (min ₹50,000)'); return; }
 
-  // Filter pool
+  // Filter pool — always exclude MCX from NFO capital pool (they get allocated via reuse pass)
   let pool = STRAT_META.filter(s => {
+    if(s.idx === 'mcx') return false;          // MCX always handled separately via reuse pass
     if(prefs.hedge !== 'both' && s.hedge !== prefs.hedge) return false;
     if(prefs.idx   !== 'all'  && s.idx   !== prefs.idx)   return false;
     if(capital < s.minCap) return false;
@@ -1019,26 +1020,24 @@ function generateAuto() {
     if(prefs.rank === 'sharpe')  score = st.sharpe;
     if(prefs.rank === 'roi')     score = st.roi;
     if(prefs.rank === 'winrate') score = st.win_rate;
-    if(prefs.rank === 'dd')      score = -Math.abs(st.max_dd); // lower DD = higher score
+    if(prefs.rank === 'dd')      score = -Math.abs(st.max_dd);
     return { ...s, score };
   }).sort((a,b) => b.score - a.score);
 
-  // Greedy allocation — equal budget per strategy first, then scale surplus
+  // ── NFO Allocation: equal budget per strategy, then distribute surplus ──
   let remaining = capital;
   const alloc = [];
 
-  // Step 1: how many strategies will we actually fill?
-  const eligible = pool.filter(s => capital >= s.lotCap);
+  const eligible  = pool.filter(s => capital >= s.lotCap);
   const numStrats = Math.min(eligible.length, maxS);
   if (numStrats === 0) { renderNoResult(); return; }
 
-  // Give each strategy an equal slice of capital for the initial pass
+  // Each strategy gets an equal share of capital as its starting budget
   const budgetPerStrat = Math.floor(capital / numStrats);
 
   for (const s of pool) {
     if (alloc.length >= maxS) break;
     if (remaining < s.lotCap) continue;
-    // Lots = how many fit in this strategy's equal-share budget (min 1)
     const lots = Math.max(1, Math.floor(Math.min(budgetPerStrat, remaining) / s.lotCap));
     const capUsed = lots * s.lotCap;
     if (capUsed > remaining) continue;
@@ -1046,20 +1045,18 @@ function generateAuto() {
     remaining -= capUsed;
   }
 
-  // Step 2: scale-up — distribute remaining capital to highest-Sharpe strategies
+  // Surplus pass: give leftover lots one-at-a-time to highest-Sharpe strategies
   let scalePass = 0;
-  while (alloc.length > 0 && remaining >= Math.min(...alloc.map(a => a.lotCap)) && scalePass < 50) {
+  while (alloc.length > 0 && remaining >= Math.min(...alloc.map(a => a.lotCap)) && scalePass < 100) {
     scalePass++;
     let boosted = false;
     for (const a of [...alloc].sort((x, y) => y.stats.sharpe - x.stats.sharpe)) {
       if (remaining < a.lotCap) continue;
-      const add = Math.floor(remaining / a.lotCap);
-      if (add < 1) continue;
-      a.lots    += add;
-      a.capUsed += add * a.lotCap;
-      remaining -= add * a.lotCap;
+      a.lots    += 1;
+      a.capUsed += a.lotCap;
+      remaining -= a.lotCap;
       boosted = true;
-      break; // one strategy per pass so distribution stays fair
+      break; // one lot per pass keeps distribution fair
     }
     if (!boosted) break;
   }
