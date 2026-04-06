@@ -99,50 +99,51 @@
 
     /* Table */
     .bd-table-wrap { overflow-x: auto; border: 1px solid var(--rule); }
-    .bd-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 900px; }
-    .bd-table thead tr { background: var(--surface2); border-bottom: 1px solid var(--rule); }
-    .bd-table thead th { font-family: 'Inter', sans-serif; font-size: 0.54rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); padding: 0.7rem 1rem; text-align: right; white-space: nowrap; border-right: 1px solid var(--rule); cursor: pointer; user-select: none; transition: color 0.15s; }
-    .bd-table thead th:hover { color: var(--cream); }
+    .bd-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; min-width: 960px; }
+    .bd-table thead tr { background: var(--surface2); border-bottom: 2px solid var(--rule); }
+    .bd-table thead th { font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cream); padding: 0.95rem 1.1rem; text-align: right; white-space: nowrap; border-right: 1px solid var(--rule); cursor: pointer; user-select: none; transition: color 0.15s, background 0.15s; }
+    .bd-table thead th:hover { color: var(--accent); background: rgba(212,168,64,0.04); }
     .bd-table thead th:first-child { text-align: left; width: 240px; }
     .bd-table thead th:nth-child(2) { text-align: right; }
-    .bd-table thead th.sorted { color: var(--accent); }
+    .bd-table thead th.sorted { color: var(--accent); background: rgba(212,168,64,0.06); }
 
     .bd-table tbody tr { border-bottom: 1px solid var(--rule); transition: background 0.12s; }
-    .bd-table tbody tr:hover { background: var(--surface2); }
-    .bd-table tbody tr.total-row { background: var(--surface2); border-top: 2px solid var(--rule); }
-    .bd-table tbody tr.total-row td { font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; }
+    .bd-table tbody tr:nth-child(even):not(.total-row):not(.subgroup-row):not(.subtotal-row) { background: rgba(255,255,255,0.018); }
+    .bd-table tbody tr:hover:not(.subgroup-row) { background: rgba(212,168,64,0.05); }
+    .bd-table tbody tr.total-row { background: var(--surface2); border-top: 2px solid rgba(212,168,64,0.35); }
+    .bd-table tbody tr.total-row td { font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em; color: var(--cream); }
 
-    .bd-table td { padding: 0.85rem 1rem; text-align: right; border-right: 1px solid var(--rule); vertical-align: middle; }
+    .bd-table td { padding: 1rem 1.1rem; text-align: right; border-right: 1px solid var(--rule); vertical-align: middle; }
     .bd-table td:first-child { text-align: left; }
     .bd-table td:last-child { border-right: none; }
     .bd-table thead th:last-child { border-right: none; }
 
     /* Strategy name cell */
     .strat-name-cell { display: flex; align-items: center; gap: 0.65rem; }
-    .strat-name-text { font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500; color: var(--cream); }
+    .strat-name-text { font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--cream); }
 
     /* Capital cell */
-    .cap-cell { font-family: 'Inter', sans-serif; font-size: 0.72rem; color: var(--mid); }
+    .cap-cell { font-family: 'Inter', sans-serif; font-size: 0.8rem; color: var(--mid); font-weight: 500; }
 
     /* PNL pill */
-    .pnl-pill { display: inline-flex; align-items: center; justify-content: space-between; gap: 0.4rem; padding: 0.28rem 0.75rem; font-family: 'Inter', sans-serif; font-size: 0.68rem; font-weight: 500; min-width: 170px; }
-    .pnl-pill.pos { background: var(--pos-bg); color: var(--pos); border: 1px solid rgba(63,224,136,0.2); }
-    .pnl-pill.neg { background: var(--neg-bg); color: var(--neg); border: 1px solid rgba(240,112,112,0.2); }
+    .pnl-pill { display: inline-flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.32rem 0.85rem; font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600; min-width: 175px; border-radius: 2px; }
+    .pnl-pill.pos { background: var(--pos-bg); color: var(--pos); border: 1px solid rgba(63,224,136,0.25); }
+    .pnl-pill.neg { background: var(--neg-bg); color: var(--neg); border: 1px solid rgba(240,112,112,0.25); }
     .pnl-pill.zero { background: rgba(200,184,154,0.07); color: var(--muted); border: 1px solid transparent; }
-    .pnl-amount { font-weight: 600; white-space: nowrap; }
-    .pnl-pct { opacity: 0.8; white-space: nowrap; font-size: 0.62rem; }
+    .pnl-amount { font-weight: 700; white-space: nowrap; }
+    .pnl-pct { opacity: 0.75; white-space: nowrap; font-size: 0.7rem; font-weight: 500; }
 
     /* Drawdown cell */
-    .dd-cell { min-width: 170px; }
-    .dd-pct { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 700; color: var(--neg); }
+    .dd-cell { min-width: 175px; }
+    .dd-pct { font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--neg); }
     .dd-label-row { display: flex; align-items: baseline; gap: 0.3rem; }
-    .dd-cur { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 700; color: var(--neg); }
-    .dd-sep { font-family: 'Inter', sans-serif; font-size: 0.7rem; color: var(--muted); }
-    .dd-max-val { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 500; color: var(--muted); }
-    .dd-bar-track { position: relative; background: var(--neg-bg); height: 5px; width: 100%; margin-top: 0.4rem; border-radius: 2px; overflow: hidden; }
+    .dd-cur { font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--neg); }
+    .dd-sep { font-family: 'Inter', sans-serif; font-size: 0.78rem; color: var(--muted); }
+    .dd-max-val { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 500; color: var(--muted); }
+    .dd-bar-track { position: relative; background: var(--neg-bg); height: 5px; width: 100%; margin-top: 0.45rem; border-radius: 2px; overflow: hidden; }
     .dd-bar-max { position: absolute; left: 0; top: 0; height: 100%; border-radius: 2px; background: rgba(220,60,60,0.28); transition: width 0.5s ease; }
     .dd-bar-cur { position: absolute; left: 0; top: 0; height: 100%; border-radius: 2px; background: var(--neg); transition: width 0.5s ease; }
-    .dd-zero { color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.72rem; }
+    .dd-zero { color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.78rem; }
 
     /* ── TODAY BANNER ── */
     .bd-today-strip { background: linear-gradient(100deg, rgba(212,168,64,0.07) 0%, rgba(30,28,22,0.0) 45%, rgba(63,224,136,0.05) 100%), var(--surface); border: 1px solid var(--rule); border-left: 3px solid var(--accent); padding: 0.8rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem; }
@@ -316,9 +317,9 @@
 
       /* table: horizontal scroll */
       .bd-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-      .bd-table { min-width: 680px; }
-      .pnl-pill { min-width: 130px; font-size: 0.62rem; }
-      .dd-cell { min-width: 130px; }
+      .bd-table { min-width: 720px; }
+      .pnl-pill { min-width: 140px; font-size: 0.7rem; }
+      .dd-cell { min-width: 140px; }
 
       /* bd-header */
       .bd-header { padding: 0.75rem 1rem; }
@@ -355,12 +356,12 @@
   
 /* ── SUBGROUP SEPARATOR ROW ── */
 .bd-table tbody tr.subgroup-row td {
-  padding: 0.45rem 1rem; background: var(--surface2);
-  border-top: 2px solid var(--rule); border-bottom: 1px solid var(--rule);
+  padding: 0.55rem 1.1rem; background: rgba(212,168,64,0.04);
+  border-top: 2px solid rgba(212,168,64,0.2); border-bottom: 1px solid var(--rule);
   text-align: left !important;
 }
 .subgroup-label {
-  font-family: 'Inter', sans-serif; font-size: 0.52rem;
+  font-family: 'Inter', sans-serif; font-size: 0.6rem;
   letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent);
   display: flex; align-items: center; gap: 0.5rem;
 }
@@ -368,7 +369,7 @@
 
 /* ── SUBTOTAL ROW ── */
 .bd-table tbody tr.subtotal-row td {
-  background: rgba(212,168,64,0.05);
+  background: rgba(212,168,64,0.04);
   border-top: 1px solid rgba(212,168,64,0.2);
   border-bottom: 1px solid rgba(212,168,64,0.2);
   font-weight: 600;
@@ -376,7 +377,7 @@
 .bd-table tbody tr.subtotal-row .cap-cell,
 .bd-table tbody tr.subtotal-row .strat-name-text {
   color: var(--muted);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
 }
 
     .nav-cta {
@@ -491,7 +492,10 @@
             <th onclick="sortBd('capital')" id="th-capital">Capital</th>
             <th onclick="sortBd('today')" id="th-today">Today PNL (ROI%)</th>
             <th onclick="sortBd('monthly')" id="th-monthly">Monthly PNL (ROI%)</th>
-            <th onclick="sortBd('yearly')" id="th-yearly">Yearly PNL (YTD%)</th>
+            <th id="th-yearly" style="white-space:nowrap;">
+              <span onclick="sortBd('yearly')" style="cursor:pointer;" id="th-yearly-label">Yearly PNL (YTD%)</span>
+              <button id="yearlyToggleBtn" onclick="event.stopPropagation();toggleYearlyMode()" title="Switch between Calendar Year and Financial Year" style="margin-left:6px;font-family:'Inter',sans-serif;font-size:0.48rem;letter-spacing:0.08em;background:var(--accent-glow);border:1px solid var(--accent-dim);color:var(--accent);padding:0.18rem 0.5rem;cursor:pointer;vertical-align:middle;transition:all 0.18s;">FY</button>
+            </th>
             <th onclick="sortBd('drawdown')" id="th-drawdown">Current DD/Total DD</th>
           </tr>
         </thead>
@@ -885,7 +889,7 @@ function getMonthlyPnl(k) {
   return DATA[k + '_monthly']?.[lastMonthIdx] || 0;
 }
 function getYearlyPnl(k) {
-  // Sum all months of current year
+  // Sum all months of current calendar year
   const now = new Date();
   let sum = 0;
   DATA.months.forEach((m, i) => {
@@ -894,6 +898,45 @@ function getYearlyPnl(k) {
     if (yr === now.getFullYear()) sum += DATA[k+'_monthly']?.[i] || 0;
   });
   return sum;
+}
+
+// Financial Year = Apr of previous year to Mar of current year
+// e.g. FY2025-26 = Apr 25 → Mar 26
+function getFinancialYearPnl(k) {
+  const now = new Date();
+  const curMonth = now.getMonth(); // 0=Jan
+  // FY starts April (month index 3). If current month < April, FY start year is last year.
+  const fyStartYear = curMonth >= 3 ? now.getFullYear() : now.getFullYear() - 1;
+  let sum = 0;
+  DATA.months.forEach((m, i) => {
+    const parts = m.split(' ');
+    const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const mIdx = monthNames.indexOf(parts[0]);
+    const yr = 2000 + parseInt(parts[1]);
+    // FY spans Apr(fyStartYear) → Mar(fyStartYear+1)
+    const inFY = (yr === fyStartYear && mIdx >= 3) || (yr === fyStartYear + 1 && mIdx <= 2);
+    if (inFY) sum += DATA[k+'_monthly']?.[i] || 0;
+  });
+  return sum;
+}
+
+let yearlyMode = 'cy'; // 'cy' = Calendar Year, 'fy' = Financial Year
+
+function toggleYearlyMode() {
+  yearlyMode = yearlyMode === 'cy' ? 'fy' : 'cy';
+  const btn = document.getElementById('yearlyToggleBtn');
+  const lbl = document.getElementById('th-yearly-label');
+  if (yearlyMode === 'fy') {
+    const now = new Date();
+    const fyStartYear = now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1;
+    const fyLabel = 'FY ' + fyStartYear + '-' + String(fyStartYear + 1).slice(2);
+    if (lbl) lbl.textContent = fyLabel + ' PNL (ROI%)';
+    if (btn) { btn.textContent = 'CY'; btn.title = 'Switch to Calendar Year'; btn.style.background = 'rgba(63,224,136,0.08)'; btn.style.borderColor = '#3FE088'; btn.style.color = '#3FE088'; }
+  } else {
+    if (lbl) lbl.textContent = 'Yearly PNL (YTD%)';
+    if (btn) { btn.textContent = 'FY'; btn.title = 'Switch to Financial Year'; btn.style.background = 'var(--accent-glow)'; btn.style.borderColor = 'var(--accent-dim)'; btn.style.color = 'var(--accent)'; }
+  }
+  renderBreakdownTable(document.getElementById('searchInput').value);
 }
 function getTodayPnl(k) {
   return DATA[k+'_daily']?.[currentDateIdx] || 0;
@@ -970,7 +1013,7 @@ function buildBdRows() {
     const cap = CAPITALS[k];
     const today = getTodayPnl(k);
     const monthly = getMonthlyPnl(k);
-    const yearly = getYearlyPnl(k);
+    const yearly = yearlyMode === 'fy' ? getFinancialYearPnl(k) : getYearlyPnl(k);
     const maxDdFromStats = DATA.stats[k]?.max_dd || 0;
     const series = DATA[dailyKey[k]] || [];
     const { cur: curDd, max: computedMax } = computeCurrentDrawdown(series, cap);
