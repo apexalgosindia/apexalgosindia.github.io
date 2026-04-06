@@ -7,6 +7,7 @@
   <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     :root{
@@ -525,7 +526,28 @@
     :root.light .footer-disclaimer-text { color: var(--muted); }
     :root.light .footer-bottom p { color: var(--muted); }
 
-    </style>
+      /* ── PORTFOLIO ANALYTICS ── */
+    #pfAnalytics { margin-top: 2rem; }
+    .pfa-section-title { font-size: 0.58rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .pfa-section-title::after { content:''; flex:1; height:1px; background:var(--rule); }
+    .pfa-summary { display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--rule); border:1px solid var(--rule); margin-bottom:1.4rem; }
+    .pfa-sum-cell { background:var(--surface); padding:0.9rem 1rem; }
+    .pfa-sum-lbl { font-size:0.5rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-bottom:0.25rem; }
+    .pfa-sum-val { font-size:1.05rem; font-weight:600; }
+    .pfa-chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:1.4rem; }
+    .pfa-chart-panel { background:var(--surface); border:1px solid var(--rule); padding:1.2rem; }
+    .pfa-chart-panel.full { grid-column:1/-1; }
+    .pfa-chart-title { font-size:0.58rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:0.9rem; }
+    .pfa-chart-wrap { position:relative; }
+    .pfa-heat-bar { display:flex; gap:2px; flex-wrap:wrap; margin-bottom:0.5rem; }
+    .pfa-heat-day { width:16px; height:16px; border-radius:2px; cursor:pointer; position:relative; transition:transform 0.12s; }
+    .pfa-heat-day:hover { transform:scale(1.35); z-index:10; }
+    .pfa-heat-day[data-tip]:hover::after { content:attr(data-tip); position:absolute; bottom:20px; left:50%; transform:translateX(-50%); background:var(--surface2); border:1px solid var(--rule); color:var(--cream); font-size:0.52rem; white-space:nowrap; padding:0.25rem 0.5rem; z-index:99; pointer-events:none; }
+    .pfa-heat-legend { display:flex; gap:1.2rem; margin-top:0.5rem; align-items:center; flex-wrap:wrap; }
+    .pfa-heat-legend span { font-size:0.52rem; color:var(--muted); display:flex; align-items:center; gap:0.3rem; }
+    .pfa-heat-legend .dot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
+    @media(max-width:700px){.pfa-summary{grid-template-columns:repeat(2,1fr);}.pfa-chart-grid{grid-template-columns:1fr;}}
+  </style>
 </head>
 <body>
 
@@ -799,6 +821,7 @@
     <div id="scoreBreakdown"></div>
     <div id="whySection"></div>
     <div id="corrMatrix"></div>
+    <div id="pfAnalytics" style="display:none;"></div>
     <div id="noResult" class="no-result" style="display:none;">No strategies match your criteria. Try adjusting your preferences or increasing capital.</div>
     <p style="font-size:0.68rem;color:var(--muted);margin-top:1rem;line-height:1.6;padding:0 0.2rem;">
       &#9432; Allocations are calculated using live Sharpe ratio, drawdown and ROI data from your strategies. Past performance does not guarantee future results. This is not financial advice.
@@ -1009,6 +1032,26 @@ function generateAuto() {
     remaining -= capUsed;
   }
 
+  // ── Scale-up pass: boost lots on existing strategies to minimise buffer ──
+  // Sort by Sharpe descending so best strategies get extra lots first
+  const MAX_LOTS = 5;
+  let scalePass = 0;
+  while (remaining >= Math.min(...alloc.map(a=>a.lotCap)) && scalePass < 10) {
+    scalePass++;
+    let boosted = false;
+    for (const a of [...alloc].sort((x,y) => y.stats.sharpe - x.stats.sharpe)) {
+      if (a.lots >= MAX_LOTS) continue;
+      if (remaining < a.lotCap) continue;
+      const add = Math.min(Math.floor(remaining / a.lotCap), MAX_LOTS - a.lots);
+      if (add < 1) continue;
+      a.lots    += add;
+      a.capUsed += add * a.lotCap;
+      remaining -= add * a.lotCap;
+      boosted = true;
+    }
+    if (!boosted) break;
+  }
+
   if(alloc.length === 0) {
     renderNoResult(); return;
   }
@@ -1157,9 +1200,9 @@ function renderResults(alloc, capital, meta) {
       <td style="text-align:center;"><span class="lot-num">${a.lots}</span><span class="lot-x"> x</span></td>
       <td>
         <div class="cap-val">&#8377;${a.capUsed.toLocaleString('en-IN')}${a.reuseCapital?' <span style="font-size:0.55rem;color:#6F9FE2;background:rgba(111,159,226,0.12);border:1px solid rgba(111,159,226,0.25);padding:0.1rem 0.35rem;vertical-align:middle;">♻ reused</span>':''}</div>
-        <div class="cap-sl">${a.reuseCapital?'Evening session · 5–11:30 PM':''}SL: &#8377;${(a.sl*a.lots).toLocaleString('en-IN')}/day</div>
+        <div class="cap-sl">${a.reuseCapital ? 'Evening session · 5–11:30 PM · ' : ''}SL: &#8377;${(a.sl*a.lots).toLocaleString('en-IN')}/day</div>
       </td>
-      <td class="col-roi">+${((st.avg_month_roi||st.roi/12)*a.lots).toFixed(2)}%</td>
+      <td class="col-roi">+${((st.avg_month_roi||st.roi/12)).toFixed(2)}%</td>
       <td class="col-dd">${st.max_dd}%</td>
       <td>
         <span class="stat-chip">Sharpe ${st.sharpe}</span>
@@ -1181,7 +1224,7 @@ function renderResults(alloc, capital, meta) {
     <td>TOTAL &mdash; ${nfoAlloc.length} NFO${mcxReAlloc.length?' + '+mcxReAlloc.length+' MCX ♻':''} Strategies</td>
     <td style="text-align:center;">${alloc.reduce((s,a)=>s+a.lots,0)}x</td>
     <td>&#8377;${totalCap.toLocaleString('en-IN')}${mcxReused>0?' <span style="font-size:0.6rem;color:#6F9FE2;">+♻&#8377;'+mcxReused.toLocaleString('en-IN')+'</span>':''}</td>
-    <td class="col-roi">+${(alloc.reduce((s,a)=>s+(a.stats.avg_month_roi||a.stats.roi/12)*a.lots,0)).toFixed(2)}%</td>
+    <td class="col-roi">+${(alloc.reduce((s,a)=>s+(a.stats.avg_month_roi||a.stats.roi/12),0)/alloc.length).toFixed(2)}% avg</td>
     <td class="col-dd">-${(alloc.reduce((s,a)=>s+Math.abs(a.stats.max_dd),0)/alloc.length).toFixed(1)}%</td>
     <td></td>
     <td>${((totalCap/capital)*100).toFixed(1)}%</td>
@@ -1200,6 +1243,9 @@ function renderResults(alloc, capital, meta) {
 
   // Correlation matrix
   try { document.getElementById('corrMatrix').innerHTML = renderCorrMatrix(alloc); } catch(e) { console.warn('corrMatrix error',e); }
+
+  // Portfolio historical analytics charts
+  try { renderPortfolioAnalytics(alloc); } catch(e) { console.warn('pfAnalytics error',e); }
 
   document.getElementById('resultsSection').style.display = 'block';
   document.getElementById('resultsSection').scrollIntoView({ behavior:'smooth', block:'start' });
@@ -1360,6 +1406,181 @@ function renderCorrMatrix(alloc) {
       <div class="corr-leg-item"><div class="corr-leg-box" style="background:rgba(78,168,110,0.25)"></div>Low / Negative — ideal diversification</div>
     </div>
   </div>`;
+}
+
+// ── PORTFOLIO HISTORICAL ANALYTICS ──
+let _pfCharts = {};
+function renderPortfolioAnalytics(alloc) {
+  const el = document.getElementById('pfAnalytics');
+  if (!liveData) { el.style.display='none'; return; }
+
+  const dates    = liveData.daily_dates || [];
+  const keys     = alloc.map(a => a.key);
+  const colors   = Object.fromEntries(alloc.map(a => [a.key, a.color]));
+  const labels   = Object.fromEntries(alloc.map(a => [a.key, a.label]));
+
+  // Build combined daily P&L array (weighted by lots)
+  const combined = dates.map((_, i) =>
+    alloc.reduce((s, a) => s + (liveData[a.key+'_daily']?.[i] || 0) * a.lots, 0)
+  );
+
+  // Only keep dates where at least one strategy has data
+  const validIdx = dates.map((d,i) => combined[i] !== 0 ? i : null).filter(i=>i!==null);
+  if (validIdx.length === 0) { el.style.display='none'; return; }
+
+  const vDates    = validIdx.map(i => dates[i]);
+  const vCombined = validIdx.map(i => combined[i]);
+
+  // Cumulative P&L
+  let cum = 0;
+  const cumulative = vCombined.map(v => { cum += v; return cum; });
+
+  // Stats
+  const totalPnl  = vCombined.reduce((s,v)=>s+v,0);
+  const wins      = vCombined.filter(v=>v>0).length;
+  const winRate   = vDates.length ? (wins/vDates.length*100).toFixed(1) : 0;
+  const best      = Math.max(...vCombined);
+  const worst     = Math.min(...vCombined);
+  const avgDay    = vCombined.length ? totalPnl/vCombined.length : 0;
+
+  function fmtV(v) {
+    const s = v>=0?'+':'-'; const a=Math.abs(v);
+    return s+'₹'+(a>=100000?(a/100000).toFixed(2)+'L':a>=1000?(a/1000).toFixed(1)+'k':a.toFixed(0));
+  }
+  const posClass = v => v>=0?'color:var(--pos)':'color:var(--neg)';
+
+  // Chart.js theme helpers
+  const isLight = () => document.documentElement.classList.contains('light');
+  const gridColor   = () => isLight() ? 'rgba(0,0,0,0.06)'  : 'rgba(255,255,255,0.05)';
+  const labelColor  = () => isLight() ? 'rgba(0,0,0,0.45)'  : 'rgba(255,255,255,0.4)';
+  const surfaceBg   = () => isLight() ? '#EAE5DC' : '#1C1A17';
+
+  // Destroy old charts
+  Object.values(_pfCharts).forEach(c => { try{c.destroy();}catch(e){} });
+  _pfCharts = {};
+
+  // Pie data (contribution per strategy by total absolute P&L)
+  const pieTotals = alloc.map(a => {
+    const total = validIdx.reduce((s,i) => s + Math.abs((liveData[a.key+'_daily']?.[i]||0)*a.lots), 0);
+    return { label: labels[a.key], color: colors[a.key], total };
+  }).filter(p=>p.total>0);
+
+  el.innerHTML = `
+    <div class="pfa-section-title">📈 Historical Portfolio Performance</div>
+    <div class="pfa-summary">
+      <div class="pfa-sum-cell"><div class="pfa-sum-lbl">Total P&L</div><div class="pfa-sum-val" style="${posClass(totalPnl)}">${fmtV(totalPnl)}</div></div>
+      <div class="pfa-sum-cell"><div class="pfa-sum-lbl">Trading Days</div><div class="pfa-sum-val">${vDates.length}</div></div>
+      <div class="pfa-sum-cell"><div class="pfa-sum-lbl">Win Rate</div><div class="pfa-sum-val" style="${posClass(parseFloat(winRate)-50)}">${winRate}%</div></div>
+      <div class="pfa-sum-cell"><div class="pfa-sum-lbl">Best Day</div><div class="pfa-sum-val" style="color:var(--pos)">${fmtV(best)}</div></div>
+      <div class="pfa-sum-cell"><div class="pfa-sum-lbl">Worst Day</div><div class="pfa-sum-val" style="color:var(--neg)">${fmtV(worst)}</div></div>
+    </div>
+
+    <div class="pfa-chart-grid">
+      <div class="pfa-chart-panel full">
+        <div class="pfa-chart-title">Cumulative P&L — Combined Portfolio (weighted by lots)</div>
+        <div class="pfa-chart-wrap" style="height:240px"><canvas id="pfCumChart"></canvas></div>
+      </div>
+      <div class="pfa-chart-panel">
+        <div class="pfa-chart-title">Daily P&L — Bar View</div>
+        <div class="pfa-chart-wrap" style="height:200px"><canvas id="pfBarChart"></canvas></div>
+      </div>
+      <div class="pfa-chart-panel">
+        <div class="pfa-chart-title">Strategy Contribution — By Activity</div>
+        <div class="pfa-chart-wrap" style="height:200px"><canvas id="pfPieChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="pfa-chart-panel full" style="background:var(--surface);border:1px solid var(--rule);padding:1.2rem;margin-bottom:1.4rem;">
+      <div class="pfa-chart-title">Win / Loss Heatmap — Each square = 1 trading day</div>
+      <div class="pfa-heat-bar" id="pfHeatBar"></div>
+      <div class="pfa-heat-legend">
+        <span><div class="dot" style="background:rgba(78,168,110,0.85)"></div>Profit</span>
+        <span><div class="dot" style="background:rgba(224,85,85,0.85)"></div>Loss</span>
+        <span><div class="dot" style="background:var(--surface2);border:1px solid var(--rule)"></div>Flat</span>
+      </div>
+    </div>`;
+
+  el.style.display = 'block';
+
+  // ── Cumulative chart ──
+  const cCtx = document.getElementById('pfCumChart').getContext('2d');
+  const gradC = cCtx.createLinearGradient(0,0,0,240);
+  gradC.addColorStop(0, totalPnl>=0?'rgba(78,168,110,0.25)':'rgba(224,85,85,0.25)');
+  gradC.addColorStop(1, 'transparent');
+  _pfCharts.cum = new Chart(cCtx, {
+    type:'line',
+    data:{
+      labels: vDates,
+      datasets:[{
+        label:'Portfolio P&L', data:cumulative,
+        borderColor: totalPnl>=0?'#4EA86E':'#E05555', borderWidth:2,
+        fill:true, backgroundColor:gradC, pointRadius:0, tension:0.3
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{
+        callbacks:{ label: ctx => fmtV(ctx.raw) }
+      }},
+      scales:{
+        x:{ ticks:{color:labelColor(), font:{size:9}, maxTicksLimit:10}, grid:{color:gridColor()}, border:{display:false} },
+        y:{ ticks:{color:labelColor(), font:{size:9}, callback:v=>fmtV(v)}, grid:{color:gridColor()}, border:{display:false} }
+      }
+    }
+  });
+
+  // ── Daily bar chart ──
+  const bCtx = document.getElementById('pfBarChart').getContext('2d');
+  _pfCharts.bar = new Chart(bCtx, {
+    type:'bar',
+    data:{
+      labels: vDates,
+      datasets:[{
+        label:'Daily P&L', data:vCombined,
+        backgroundColor: vCombined.map(v=>v>=0?'rgba(78,168,110,0.7)':'rgba(224,85,85,0.7)'),
+        borderWidth:0, borderRadius:1
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>fmtV(ctx.raw)}} },
+      scales:{
+        x:{ ticks:{display:false}, grid:{display:false} },
+        y:{ ticks:{color:labelColor(), font:{size:9}, callback:v=>fmtV(v)}, grid:{color:gridColor()}, border:{display:false} }
+      }
+    }
+  });
+
+  // ── Pie chart ──
+  const pCtx = document.getElementById('pfPieChart').getContext('2d');
+  _pfCharts.pie = new Chart(pCtx, {
+    type:'doughnut',
+    data:{
+      labels: pieTotals.map(p=>p.label),
+      datasets:[{ data:pieTotals.map(p=>p.total), backgroundColor:pieTotals.map(p=>p.color), borderWidth:1, borderColor:surfaceBg() }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'55%',
+      plugins:{
+        legend:{ position:'right', labels:{color:labelColor(), font:{size:10}, boxWidth:10, padding:10} },
+        tooltip:{ callbacks:{ label:ctx => ctx.label+': '+ctx.parsed.toFixed(1)+'%' } }
+      }
+    }
+  });
+
+  // ── Heatmap ──
+  const heatBar = document.getElementById('pfHeatBar');
+  heatBar.innerHTML = '';
+  vDates.forEach((d,i) => {
+    const v = vCombined[i];
+    const bg = v>10000?'rgba(78,168,110,0.9)':v>5000?'rgba(78,168,110,0.65)':v>0?'rgba(78,168,110,0.35)':v<-10000?'rgba(224,85,85,0.9)':v<-5000?'rgba(224,85,85,0.65)':v<0?'rgba(224,85,85,0.35)':'var(--surface2)';
+    const div = document.createElement('div');
+    div.className='pfa-heat-day';
+    div.style.background=bg;
+    div.setAttribute('data-tip', d+': '+fmtV(v));
+    if (v===0) div.style.border='1px solid var(--rule)';
+    heatBar.appendChild(div);
+  });
 }
 
 // ── INIT ──
