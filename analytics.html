@@ -585,11 +585,9 @@
       font-weight: 500 !important;
       letter-spacing: 0.12em !important;
       text-transform: uppercase !important;
-      color: var(--muted) !important;
     }
     td {
       font-size: 0.78rem !important;
-      color: var(--mid) !important;
     }
 
     /* ── Form inputs ── */
@@ -1049,7 +1047,7 @@ function getYearlyPnl(k) {
   return sum;
 }
 function getTodayPnl(k) {
-  return DATA[k+'_daily']?.[DATA.daily_dates.length-1] || 0;
+  return DATA[k+'_daily']?.[currentDateIdx] || 0;
 }
 
 function pnlPill(v, cap) {
@@ -1253,30 +1251,42 @@ function exportExcel() { exportCSV(); } // simplified — same CSV for now
 // ── DATE NAV ──
 // ── LAST VALID DATE (data cutoff: 3:30 PM IST) ──
 function getLastValidIdx() {
-  const now = new Date();
-  // IST = UTC+5:30
-  const istOffset = 5.5 * 60 * 60 * 1000;
-  const ist = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + istOffset);
-  const cutoffHour = 15, cutoffMin = 30;
-  const pastCutoff = (ist.getHours() > cutoffHour) || (ist.getHours() === cutoffHour && ist.getMinutes() >= cutoffMin);
+  try {
+    const now = new Date();
+    // Convert to IST (UTC+5:30)
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const ist = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + istOffset);
+    const pastCutoff = (ist.getHours() > 15) || (ist.getHours() === 15 && ist.getMinutes() >= 30);
 
-  // Build today's date string in DATA format (DD Mon YY or similar)
-  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const todayStr = ist.getDate().toString().padStart(2,'0') + ' ' + MONTHS[ist.getMonth()] + ' ' + String(ist.getFullYear()).slice(2);
+    // Build today in DATA format: DD/MM/YY
+    const dd = String(ist.getDate()).padStart(2,'0');
+    const mm = String(ist.getMonth() + 1).padStart(2,'0');
+    const yy = String(ist.getFullYear()).slice(2);
+    const todayStr = dd + '/' + mm + '/' + yy;
 
-  // Find last index where at least one strategy has non-zero PNL data
-  const keys = Object.keys(DATA).filter(k => k.endsWith('_daily'));
-  let lastValid = 0;
-  for (let i = 0; i < DATA.daily_dates.length; i++) {
-    const hasData = keys.some(k => DATA[k]?.[i] !== 0 && DATA[k]?.[i] !== undefined);
-    if (hasData) lastValid = i;
-    // Also respect cutoff: if today's date is in the array but cutoff not passed, stop before it
-    if (!pastCutoff && DATA.daily_dates[i] === todayStr) {
-      lastValid = Math.max(0, i - 1);
-      break;
+    const keys = Object.keys(DATA).filter(k => k.endsWith('_daily'));
+    let lastValid = DATA.daily_dates.length - 1; // default: raw last
+
+    // Walk backwards to find last index with actual non-zero data
+    for (let i = DATA.daily_dates.length - 1; i >= 0; i--) {
+      const hasData = keys.some(k => {
+        const v = DATA[k]?.[i];
+        return v !== undefined && v !== null && v !== 0;
+      });
+      if (hasData) { lastValid = i; break; }
     }
+
+    // If before 3:30 PM IST and today is already in the array, step back one
+    if (!pastCutoff) {
+      const todayIdx = DATA.daily_dates.indexOf(todayStr);
+      if (todayIdx > -1) lastValid = Math.max(0, todayIdx - 1);
+    }
+
+    return lastValid;
+  } catch(e) {
+    // Fallback: just return last index safely
+    return Math.max(0, DATA.daily_dates.length - 1);
   }
-  return lastValid;
 }
 
 function updateDateNav() {
