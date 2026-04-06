@@ -172,7 +172,117 @@
       .alloc-table th:nth-child(4),.alloc-table td:nth-child(4){display:none;}
       .mode-tab .tab-text .tab-sub{display:none;}
     }
-  </style>
+  
+    /* Get Started — hide on mobile */
+    @media (max-width: 900px) {
+      
+    }
+    /* Shared footer styles */
+    footer { border-top: 1px solid rgba(237,230,214,0.07); padding: 2rem 3rem 1.5rem; }
+    .footer-disclaimer { margin-bottom: 1rem; }
+    .footer-disclaimer-text { font-size: 0.62rem; color: #4A4440; line-height: 1.6; letter-spacing: 0.02em; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+    .footer-bottom p { font-size: 0.62rem; color: #3A3530; letter-spacing: 0.05em; }
+
+        .nav-cta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-decoration: none;
+      border: 1px solid rgba(212,168,64,0.45);
+      padding: 0.5rem 1.2rem;
+      transition: background 0.2s, color 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent); color: var(--ink); }
+    @media (max-width: 900px) { .nav-cta { display: none !important; } }
+    
+    /* ── CARD GRADIENTS ── */
+
+    /* Strategy selector cards */
+    .strat-card {
+      background: linear-gradient(135deg, var(--surface2) 0%, rgba(212,168,64,0.04) 100%) !important;
+      border: 1px solid rgba(212,168,64,0.12) !important;
+      position: relative; overflow: hidden;
+    }
+    .strat-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212,168,64,0.3), transparent);
+    }
+    .strat-card:hover {
+      background: linear-gradient(135deg, var(--surface2) 0%, rgba(212,168,64,0.09) 100%) !important;
+      border-color: rgba(212,168,64,0.28) !important;
+      box-shadow: 0 4px 24px rgba(212,168,64,0.07);
+    }
+    .strat-card.selected {
+      background: linear-gradient(135deg, rgba(212,168,64,0.1) 0%, rgba(212,168,64,0.03) 100%) !important;
+      border-color: rgba(212,168,64,0.45) !important;
+      box-shadow: 0 0 0 1px rgba(212,168,64,0.2), 0 4px 20px rgba(212,168,64,0.1);
+    }
+
+    /* Summary strip cells */
+    .summary-strip {
+      background: linear-gradient(180deg, rgba(212,168,64,0.04) 0%, transparent 100%);
+      border: 1px solid rgba(212,168,64,0.1) !important;
+    }
+    .sum-cell {
+      background: transparent;
+      transition: background 0.2s;
+    }
+    .sum-cell:hover {
+      background: rgba(212,168,64,0.04);
+    }
+
+    /* Results top bar */
+    .results-topbar {
+      background: linear-gradient(135deg, var(--surface2) 0%, rgba(78,168,110,0.05) 100%) !important;
+      border: 1px solid rgba(78,168,110,0.12) !important;
+      position: relative; overflow: hidden;
+    }
+    .results-topbar::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(78,168,110,0.35), transparent);
+    }
+
+    /* Allocation rows */
+    .alloc-row {
+      background: linear-gradient(135deg, var(--surface) 0%, rgba(212,168,64,0.03) 100%) !important;
+      border: 1px solid rgba(237,230,214,0.07) !important;
+      transition: all 0.18s;
+    }
+    .alloc-row:hover {
+      background: linear-gradient(135deg, var(--surface2) 0%, rgba(212,168,64,0.07) 100%) !important;
+      border-color: rgba(212,168,64,0.2) !important;
+    }
+
+    /* Input / config panel */
+    .config-panel, .input-panel, .settings-panel {
+      background: linear-gradient(160deg, var(--surface) 0%, rgba(212,168,64,0.03) 100%) !important;
+      border: 1px solid rgba(212,168,64,0.1) !important;
+    }
+
+    /* Results section wrapper */
+    .results-section, .results-panel, #resultsPanel {
+      background: linear-gradient(180deg, rgba(78,168,110,0.03) 0%, transparent 40%) !important;
+    }
+
+    /* Light mode gradient overrides */
+    :root.light .strat-card {
+      background: linear-gradient(135deg, var(--surface2) 0%, rgba(160,120,32,0.06) 100%) !important;
+    }
+    :root.light .strat-card.selected {
+      background: linear-gradient(135deg, rgba(160,120,32,0.12) 0%, rgba(160,120,32,0.04) 100%) !important;
+    }
+    :root.light .results-topbar {
+      background: linear-gradient(135deg, var(--surface2) 0%, rgba(42,107,62,0.06) 100%) !important;
+    }
+    :root.light .alloc-row {
+      background: linear-gradient(135deg, var(--surface) 0%, rgba(160,120,32,0.04) 100%) !important;
+    }
+
+    </style>
 </head>
 <body>
 
@@ -189,6 +299,7 @@
       <li><a href="./index.html#contact">Contact</a></li>
     </ul>
   <div style="display:flex;align-items:center;gap:0.8rem;">
+    <a class="nav-cta" href="./index.html#contact">Get Started</a>
     <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
       <span class="icon" id="themeIcon">&#9728;</span><span id="themeLabel">Light</span>
     </button>
@@ -385,7 +496,15 @@
   </div>
 </main>
 
-<footer>&copy; 2026 Apex Algos &mdash; Portfolio Builder &mdash; Past performance is not indicative of future results.</footer>
+<footer>
+    <div class="footer-disclaimer">
+      <p class="footer-disclaimer-text">⚠ Disclaimer: Past performance is not a guarantee of future results. As per SEBI, 93% of traders lose money in F&O. Apex Algos is not a SEBI-registered advisor. You are responsible for your trading decisions &amp; losses.</p>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Apex Algos. All rights reserved.</p>
+      <p>Built for performance. Engineered with discipline.</p>
+    </div>
+  </footer>
 
 <script>
 // ── THEME ──
