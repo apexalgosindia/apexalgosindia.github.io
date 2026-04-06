@@ -770,7 +770,12 @@ function toggleTheme(){
 let activeMode = 'auto';
 const prefs = { hedge:'both', idx:'both', rank:'sharpe' };
 let liveData = null;   // data.json payload
-let customMults = {};  // key → lots
+let customMults = {};  // key → lots — initialized in initCustomMults()
+function initCustomMults() {
+  STRAT_META.forEach(s => {
+    if (customMults[s.key] === undefined) customMults[s.key] = 1;
+  });
+}
 
 // ── STRATEGY CATALOGUE (static metadata, stats augmented from data.json) ──
 const STRAT_META = [
@@ -801,7 +806,7 @@ function setMode(m) {
   document.getElementById('tab-auto').classList.toggle('active',   m==='auto');
   document.getElementById('tab-custom').classList.toggle('active', m==='custom');
   resetResults();
-  if(m==='custom') renderStratCards();
+  if(m==='custom') { initCustomMults(); renderStratCards(); }
 }
 
 // ── PILL TOGGLE ──
@@ -836,12 +841,13 @@ function getStats(key) {
 }
 
 function renderStratCards() {
+  initCustomMults(); // ensure all keys have a default
   const grid = document.getElementById('stratCardsGrid');
   grid.innerHTML = STRAT_META.map(s => {
     const st = getStats(s.key);
     const isHedged = s.hedge === 'hedged';
-    const lots = customMults[s.key] ?? 1;
-    const isSelected = lots > 0 && customMults[s.key] !== 0;
+    const lots = customMults[s.key] !== undefined ? customMults[s.key] : 1;
+    const isSelected = lots > 0;
     return `<div class="strat-card ${isSelected?'selected':''}" id="sc-${s.key}" onclick="toggleCard('${s.key}')">
       <span class="strat-dot" style="background:${s.color}"></span>
       <div class="strat-info">
@@ -942,7 +948,7 @@ function generateCustom() {
 
   const alloc = [];
   for(const s of STRAT_META) {
-    const lots = customMults[s.key] ?? 0;
+    const lots = customMults[s.key] !== undefined ? customMults[s.key] : 1;
     if(lots < 1) continue;
     const capUsed = lots * s.lotCap;
     alloc.push({ ...s, stats: getStats(s.key), lots, capUsed });
