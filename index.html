@@ -175,8 +175,8 @@
     /* HERO */
     #hero {
       min-height: 100vh;
-      display: flex; flex-direction: column; justify-content: center;
-      padding: 8rem 4rem 5rem;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 0 4rem 5rem;
       position: relative;
       overflow: hidden;
       background:
@@ -975,11 +975,11 @@
       <span style="color:var(--accent);">Apex <span style="color:var(--cream);">Algos</span></span>
     </a>
     <ul class="nav-links">
-      <li><a href="#features">Strategies</a></li>
-      <li><a href="#performance">Performance</a></li>
-      <li><a href="analytics.html">Analytics</a></li>
-      <li><a href="strategies.html">Share Codes</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="strategies.html">Strategies</a></li>
+      <li><a href="analytics.html">Performance</a></li>
+      <li><a href="portfolio.html">Portfolio Builder</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
     </ul>
     <div style="display:flex;align-items:center;gap:0.8rem;">
       <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
@@ -1005,12 +1005,12 @@
     </div>
   </nav>
   <div class="mobile-nav" id="mobileNav">
-    <a href="#features" onclick="document.getElementById('mobileNav').classList.remove('open'); document.getElementById('hamburger').classList.remove('open');">Strategies</a>
-    <a href="#performance" onclick="document.getElementById('mobileNav').classList.remove('open'); document.getElementById('hamburger').classList.remove('open');">Performance</a>
-    <a href="analytics.html" onclick="document.getElementById('mobileNav').classList.remove('open'); document.getElementById('hamburger').classList.remove('open');">Analytics</a>
-    <a href="strategies.html" onclick="document.getElementById('mobileNav').classList.remove('open'); document.getElementById('hamburger').classList.remove('open');">Share Codes</a>
-    <a href="#contact" onclick="document.getElementById('mobileNav').classList.remove('open'); document.getElementById('hamburger').classList.remove('open');">Contact</a>
-  </div>
+      <a href="index.html" class="active">Home</a>
+      <a href="strategies.html">Strategies</a>
+      <a href="analytics.html">Performance</a>
+      <a href="portfolio.html">Portfolio Builder</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
 
   <!-- HERO -->
   <section id="hero">
