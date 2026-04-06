@@ -462,7 +462,7 @@
       <button class="export-btn" onclick="exportCSV()">&#8595; Export CSV</button>
       <button class="export-btn" onclick="exportExcel()">&#8595; Export Excel</button>
       <button class="export-btn" id="pdfExportBtn" onclick="exportPDF()" style="border-color:rgba(212,168,64,0.45);color:var(--accent);">&#128438; Export PDF</button>
-      <button class="export-btn" id="snapshotBtn" onclick="snapshotTable()" style="border-color:rgba(63,224,136,0.45);color:#3FE088;">&#128247; Snapshot</button>
+      <button class="export-btn" id="snapshotBtn" onclick="snapshotTable()">&#128247; Snapshot</button>
       <div style="margin-left:auto;display:flex;align-items:center;gap:0;">
         <button class="nav-btn" onclick="navDate(-1)">&#8592;</button>
       <div class="date-label" id="dateLabel">&mdash;</div>
@@ -651,12 +651,18 @@ function loadStratConfig() {
 function saveStratConfig(cfg) {
   localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg));
 }
+const STRAT_CAT_DEFAULT = {
+  nap:'nfo', napv2:'nfo', napv3:'nfo',
+  sap:'nfo', sapv2:'nfo', sapv3:'nfo',
+  naph:'nfo', saph:'nfo',
+  nagap:'mcx', nagapm:'mcx'
+};
 function getStratCat(k) {
   const cfg = loadStratConfig();
   if (cfg[k]?.category) return cfg[k].category;
-  // Fall back to baked value from fetch_data.py
   const def_ = DATA.strategies?.find(s => s.key === k);
-  return def_?.category || 'nfo';
+  if (def_?.category) return def_.category;
+  return STRAT_CAT_DEFAULT[k] || 'nfo';
 }
 function getStratVisible(k) {
   const cfg = loadStratConfig();
@@ -677,7 +683,7 @@ function renderStratToggles() {
   let html = `<div style="font-family:'Inter',sans-serif;font-size:0.55rem;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--rule);">Strategy Manager — Category &amp; Visibility</div>`;
 
   STRATS.forEach(k => {
-    const cat = cfg[k]?.category || 'nfo';
+    const cat = getStratCat(k);
     const vis = cfg[k]?.visible !== false;
     html += `<div style="display:flex;align-items:center;gap:1rem;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);">
       <span style="display:flex;align-items:center;gap:0.5rem;min-width:90px;">
@@ -720,7 +726,7 @@ function copyStratConfig() {
   const cfg = loadStratConfig();
   const lines = STRATS.map(k => {
     const s = DATA.strategies?.find(s => s.key === k) || {};
-    const cat = cfg[k]?.category || s.category || 'nfo';
+    const cat = getStratCat(k);
     const vis = cfg[k]?.visible !== undefined ? cfg[k].visible : (s.visible !== false);
     return `    # key='${k}' → category='${cat}', visible=${vis}`;
   });
@@ -839,7 +845,7 @@ function getFilteredStrats() {
   return STRATS.filter(k => {
     if (!getStratVisible(k)) return false;
     const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
-    const cat = cfg[k]?.category || 'nfo';
+    const cat = getStratCat(k);
     if (activeCatFilter === 'hedged')   return isHedged;
     if (activeCatFilter === 'unhedged') return !isHedged;
     if (activeCatFilter !== 'all')      return cat === activeCatFilter;
@@ -1021,7 +1027,7 @@ function buildBdRows() {
   const dailyKey = Object.fromEntries(STRATS.map(k => [k, k + '_daily']));
   const cfg = loadStratConfig();
   bdRows = STRATS.filter(k => {
-    const cat      = cfg[k]?.category || 'nfo';
+    const cat      = getStratCat(k);
     const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
     if (activeCatFilter === 'hedged') {
       if (!isHedged) return false;
@@ -1178,7 +1184,7 @@ async function snapshotTable() {
   wrap.style.cssText = `
     position:fixed; left:-9999px; top:0;
     background:${getComputedStyle(document.documentElement).getPropertyValue('--ink').trim()};
-    width:${tableWrap.offsetWidth + 2}px;
+    width:${Math.round(tableWrap.offsetWidth * 1.6)}px;
     font-family:'Inter',sans-serif;
   `;
 
@@ -1201,6 +1207,36 @@ async function snapshotTable() {
     node.querySelectorAll('#yearlyToggleBtn, button').forEach(el => el.style.display = 'none');
   });
 
+  // ── SNAPSHOT-ONLY: bigger fonts, wider container fills naturally ─────────────
+  [todayClone, headerClone, tableClone].forEach(node => {
+    node.querySelectorAll('.bd-table-wrap').forEach(el => el.style.overflowX = 'visible');
+    node.querySelectorAll('.bd-table').forEach(el => { el.style.width = '100%'; el.style.minWidth = '0'; });
+    node.querySelectorAll('th').forEach(el => { el.style.fontSize = '1.5rem'; el.style.padding = '1.1rem 1.3rem'; });
+    node.querySelectorAll('td').forEach(el => { el.style.fontSize = '1.5rem'; el.style.padding = '1.1rem 1.3rem'; });
+    node.querySelectorAll('.strat-name-text').forEach(el => { el.style.fontSize = '1.5rem'; el.style.fontWeight = '700'; });
+    node.querySelectorAll('.pnl-amount').forEach(el => el.style.fontSize = '1.5rem');
+    node.querySelectorAll('.pnl-pct').forEach(el => el.style.fontSize = '1.5rem');
+    node.querySelectorAll('.pnl-pill').forEach(el => { el.style.minWidth = '0'; el.style.width = '100%'; });
+    node.querySelectorAll('.dd-cur, .dd-pct').forEach(el => el.style.fontSize = '1.5rem');
+    node.querySelectorAll('.dd-max-val, .dd-sep').forEach(el => el.style.fontSize = '1.5rem');
+    node.querySelectorAll('.dd-cell').forEach(el => el.style.minWidth = '0');
+    node.querySelectorAll('.cap-cell').forEach(el => el.style.fontSize = '1.5rem');
+    node.querySelectorAll('.total-row td').forEach(el => el.style.fontSize = '1.55rem');
+    node.querySelectorAll('.subtotal-row td').forEach(el => el.style.fontSize = '1.35rem');
+    node.querySelectorAll('.subgroup-label').forEach(el => el.style.fontSize = '1.1rem');
+    node.querySelectorAll('.strip-item-val').forEach(el => el.style.fontSize = '1.6rem');
+    node.querySelectorAll('.strip-item-val.combined').forEach(el => el.style.fontSize = '1.8rem');
+    node.querySelectorAll('.strip-item-label').forEach(el => el.style.fontSize = '0.95rem');
+    node.querySelectorAll('.strip-date-main').forEach(el => el.style.fontSize = '1.3rem');
+    node.querySelectorAll('.strip-date-sub').forEach(el => el.style.fontSize = '0.9rem');
+    node.querySelectorAll('.bd-title').forEach(el => el.style.fontSize = '1.6rem');
+    node.querySelectorAll('.bd-sub').forEach(el => el.style.fontSize = '1.1rem');
+    node.querySelectorAll('.bd-date-pill').forEach(el => el.style.fontSize = '1.05rem');
+    node.querySelectorAll('.today-total-val').forEach(el => el.style.fontSize = '1.4rem');
+    node.querySelectorAll('.today-total-lbl').forEach(el => el.style.fontSize = '0.9rem');
+  });
+  // ─────────────────────────────────────────────────────────────────────────────
+
   // Also strip search/export toolbar if cloned (not needed)
   wrap.appendChild(todayClone);
   wrap.appendChild(headerClone);
@@ -1210,7 +1246,7 @@ async function snapshotTable() {
 
   try {
     const canvas = await html2canvas(wrap, {
-      scale: 2,
+      scale: 3,
       useCORS: true,
       backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#121008',
       logging: false,
@@ -1282,7 +1318,7 @@ function renderTodayBanner() {
   const _bannerCfg = loadStratConfig();
   STRATS.forEach(k => {
     if (!getStratVisible(k)) return;
-    const cat      = _bannerCfg[k]?.category || 'nfo';
+    const cat      = getStratCat(k);
     const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
     if (activeCatFilter === 'hedged' && !isHedged) return;
     if (activeCatFilter === 'unhedged' && isHedged) return;
@@ -1309,7 +1345,7 @@ function renderTodayBanner() {
     const stripCfg = loadStratConfig();
     STRATS.filter(k => {
       if (!getStratVisible(k)) return false;
-      const cat      = stripCfg[k]?.category || 'nfo';
+      const cat      = getStratCat(k);
       const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
       if (activeCatFilter === 'hedged')   return isHedged;
       if (activeCatFilter === 'unhedged') return !isHedged;
@@ -1528,7 +1564,7 @@ async function exportPDF() {
       if (!el) return;
 
       const canvas = await html2canvas(el, {
-        scale: 2,                    // full 2× for sharp text and chart lines
+        scale: 3,                    // full 2× for sharp text and chart lines
         useCORS: true,
         logging: false,
         backgroundColor: '#F1EDE3', // light-mode bg always
