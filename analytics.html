@@ -493,7 +493,7 @@
 <body>
 
 <nav>
-  <a class="nav-logo" href="./index.html" style="display:flex;align-items:center;gap:0.6rem;" title="Home"><img src="logo.jpg" alt="Apex Algos" style="width:32px;height:32px;object-fit:contain;border-radius:4px;" /><span style="color:var(--accent);">Apex <span style="color:var(--cream);">Algos</span></span></a>
+  <a class="nav-logo" id="navLogo" href="./index.html" style="display:flex;align-items:center;gap:0.6rem;" title="Home"><img src="logo.jpg" alt="Apex Algos" style="width:32px;height:32px;object-fit:contain;border-radius:4px;" /><span style="color:var(--accent);">Apex <span style="color:var(--cream);">Algos</span></span></a>
   <ul class="nav-links">
     <li><a href="./index.html">Home</a></li>
     <li><a href="./strategies.html">Strategies</a></li>
@@ -2007,7 +2007,36 @@ async function triggerGithubSync() {
   });
 })();
 
-function openAdminPanel() {
+// ── MOBILE: 7 rapid taps on logo opens admin panel ──
+(function() {
+  const REQUIRED_TAPS  = 7;
+  const MAX_GAP_MS     = 400;   // max ms between taps
+  const WINDOW_MS      = 3000;  // full sequence must complete within 3s
+  let taps = [];
+
+  const logo = document.getElementById('navLogo');
+  if (!logo) return;
+
+  logo.addEventListener('click', function(e) {
+    const now = Date.now();
+
+    // Drop taps older than the window
+    taps = taps.filter(t => now - t < WINDOW_MS);
+
+    // Drop sequence if gap from last tap is too large
+    if (taps.length > 0 && (now - taps[taps.length - 1]) > MAX_GAP_MS) {
+      taps = [];
+    }
+
+    taps.push(now);
+
+    if (taps.length === REQUIRED_TAPS) {
+      taps = [];
+      e.preventDefault();   // prevent nav on the triggering tap
+      openAdminPanel();
+    }
+  });
+})();
   const panel = document.getElementById('adminPanel');
   if (!panel) return;
   panel.style.display = 'block';
