@@ -488,6 +488,44 @@
     #adminPanel .admin-input:focus { border-color: var(--accent); }
     #adminPanel .admin-input::placeholder { color: var(--muted); font-size: 0.6rem; }
 
+    @media (max-width: 480px) {
+      #adminPanel {
+        bottom: 0; right: 0; left: 0;
+        max-width: 100%;
+        min-width: unset;
+        width: 100%;
+        padding: 1.1rem 1.1rem 1.4rem;
+        border-left: none; border-right: none; border-bottom: none;
+        border-top: 1px solid rgba(212,168,64,0.45);
+        border-radius: 0;
+        box-shadow: 0 -6px 32px rgba(0,0,0,0.5);
+        /* Pull up above mobile browser chrome */
+        padding-bottom: max(1.4rem, env(safe-area-inset-bottom));
+      }
+      #adminPanel .admin-btn,
+      #adminPanel .admin-btn-ghost {
+        padding: 0.75rem 1rem;
+        font-size: 0.7rem;
+        /* Bigger tap targets on mobile */
+        min-height: 44px;
+      }
+      #adminPanel .admin-input {
+        padding: 0.6rem 0.75rem;
+        font-size: 0.75rem;
+        min-height: 44px;
+      }
+      #adminPanel .admin-title {
+        font-size: 0.62rem;
+      }
+      #adminPanel .admin-close {
+        font-size: 1.3rem;
+        padding: 0.2rem 0.3rem;
+        /* Bigger close tap area */
+        min-width: 44px; min-height: 44px;
+        display: flex; align-items: center; justify-content: flex-end;
+      }
+    }
+
   </style>
 </head>
 <body>
