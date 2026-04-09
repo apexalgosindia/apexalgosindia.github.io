@@ -2065,7 +2065,8 @@ async function triggerGithubSync() {
     const target = document.getElementById('adminTapTarget');
     if (!target) return;
 
-    target.addEventListener('click', function(e) {
+    target.addEventListener('touchend', function(e) {
+      if (e.changedTouches.length === 0) return;
       const now = Date.now();
       taps = taps.filter(t => now - t < WINDOW_MS);
       if (taps.length > 0 && (now - taps[taps.length - 1]) > MAX_GAP_MS) taps = [];
