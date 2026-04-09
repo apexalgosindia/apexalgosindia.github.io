@@ -665,9 +665,15 @@
           <label class="form-label">Total Capital (&#8377;) <span class="hint-icon" title="Total capital you want to deploy across strategies">?</span></label>
           <div class="input-prefix">
             <span class="prefix">&#8377;</span>
-            <input class="form-input" type="number" id="capitalInput" placeholder="e.g. 500000" min="50000" step="50000" oninput="updateCapitalHint()"/>
+            <input class="form-input" type="number" id="capitalInput" value="5000000" min="50000" step="50000" oninput="updateCapitalHint()"/>
           </div>
-          <div class="input-sub" id="capitalHint">&nbsp;</div>
+          <div class="input-sub" id="capitalHint">₹50L</div>
+          <div class="pill-group" id="pg-capital" style="margin-top:0.5rem;">
+            <button class="pill" data-val="1000000" onclick="setCapitalPill(this,'capitalInput','capitalHint')">10L</button>
+            <button class="pill" data-val="2500000" onclick="setCapitalPill(this,'capitalInput','capitalHint')">25L</button>
+            <button class="pill active" data-val="5000000" onclick="setCapitalPill(this,'capitalInput','capitalHint')">50L</button>
+            <button class="pill" data-val="10000000" onclick="setCapitalPill(this,'capitalInput','capitalHint')">1Cr</button>
+          </div>
         </div>
         <div class="form-group">
           <label class="form-label">Max Acceptable Drawdown (%) <span class="hint-icon" title="Maximum % of capital you can tolerate losing from peak">?</span></label>
@@ -760,9 +766,9 @@
           <div class="form-group">
             <label class="form-label">Capital to Reuse for MCX <span class="hint-icon" title="How much of the freed NFO capital to redirect to MCX. Defaults to 100% of what NFO strategies freed up.">?</span></label>
             <div class="pill-group" id="pg-mcxpct">
-              <button class="pill" data-val="50" onclick="setPill('mcxpct',this)">50%</button>
+              <button class="pill active" data-val="50" onclick="setPill('mcxpct',this)">50%</button>
               <button class="pill" data-val="75" onclick="setPill('mcxpct',this)">75%</button>
-              <button class="pill active" data-val="100" onclick="setPill('mcxpct',this)">100%</button>
+              <button class="pill" data-val="100" onclick="setPill('mcxpct',this)">100%</button>
             </div>
           </div>
           <div class="form-group">
@@ -780,7 +786,9 @@
       </div>
     </div>
 
-    <button class="gen-btn" onclick="generateAuto()"><span class="bolt">&#9889;</span> Generate Optimal Portfolio</button>
+    <div style="display:flex;gap:0.8rem;align-items:stretch;">
+      <button class="gen-btn" style="flex:1;" onclick="generateAuto()"><span class="bolt">&#9889;</span> Generate Optimal Portfolio</button>
+    </div>
   </div>
 
   <!-- ══ CUSTOM MODE ══ -->
@@ -811,9 +819,15 @@
           <label class="form-label">Total Capital (&#8377;)</label>
           <div class="input-prefix">
             <span class="prefix">&#8377;</span>
-            <input class="form-input" type="number" id="customCapital" placeholder="e.g. 500000" min="50000" step="50000" oninput="updateCustomHint()"/>
+            <input class="form-input" type="number" id="customCapital" value="5000000" min="50000" step="50000" oninput="updateCustomHint()"/>
           </div>
-          <div class="input-sub" id="customHint">&nbsp;</div>
+          <div class="input-sub" id="customHint">₹50L</div>
+          <div class="pill-group" id="pg-customcapital" style="margin-top:0.5rem;">
+            <button class="pill" data-val="1000000" onclick="setCapitalPill(this,'customCapital','customHint')">10L</button>
+            <button class="pill" data-val="2500000" onclick="setCapitalPill(this,'customCapital','customHint')">25L</button>
+            <button class="pill active" data-val="5000000" onclick="setCapitalPill(this,'customCapital','customHint')">50L</button>
+            <button class="pill" data-val="10000000" onclick="setCapitalPill(this,'customCapital','customHint')">1Cr</button>
+          </div>
         </div>
       </div>
     </div>
@@ -905,7 +919,7 @@ function toggleTheme(){
 
 // ── STATE ──
 let activeMode = 'auto';
-const prefs = { hedge:'both', idx:'all', rank:'sharpe', mcxreuse:'on', mcxpct:'100', mcxstrats:'all' };
+const prefs = { hedge:'both', idx:'all', rank:'sharpe', mcxreuse:'on', mcxpct:'50', mcxstrats:'all' };
 let liveData = null;   // data.json payload
 let customMults = {};  // key → lots — initialized in initCustomMults()
 function initCustomMults() {
@@ -970,13 +984,27 @@ function updateCapitalHint() {
   const v=parseInt(document.getElementById('capitalInput').value)||0;
   const el=document.getElementById('capitalHint');
   if(!v){el.textContent='';return;}
-  el.textContent = v>=10000000?'₹'+v/10000000+'Cr':v>=100000?'₹'+v/100000+'L':'₹'+v.toLocaleString('en-IN');
+  el.textContent = v>=10000000?'₹'+(v/10000000)+'Cr':v>=100000?'₹'+(v/100000)+'L':'₹'+v.toLocaleString('en-IN');
+  // sync pill active state
+  document.querySelectorAll('#pg-capital .pill').forEach(b=>b.classList.toggle('active', parseInt(b.dataset.val)===v));
 }
 function updateCustomHint() {
   const v=parseInt(document.getElementById('customCapital').value)||0;
   const el=document.getElementById('customHint');
   if(!v){el.textContent='';return;}
-  el.textContent = v>=10000000?'₹'+v/10000000+'Cr':v>=100000?'₹'+v/100000+'L':'₹'+v.toLocaleString('en-IN');
+  el.textContent = v>=10000000?'₹'+(v/10000000)+'Cr':v>=100000?'₹'+(v/100000)+'L':'₹'+v.toLocaleString('en-IN');
+  // sync pill active state
+  document.querySelectorAll('#pg-customcapital .pill').forEach(b=>b.classList.toggle('active', parseInt(b.dataset.val)===v));
+}
+function setCapitalPill(btn, inputId, hintId) {
+  const val = parseInt(btn.dataset.val);
+  const input = document.getElementById(inputId);
+  input.value = val;
+  const hint = document.getElementById(hintId);
+  hint.textContent = val>=10000000?'₹'+(val/10000000)+'Cr':val>=100000?'₹'+(val/100000)+'L':'₹'+val.toLocaleString('en-IN');
+  // sync active pill in same pill-group as btn
+  btn.closest('.pill-group').querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
 }
 
 // ── STRATEGY CARDS (custom mode) ──
@@ -1722,6 +1750,8 @@ async function exportPortfolioPDF() {
     await addSection(document.querySelector('.alloc-wrap'),     { label: 'Strategy Allocation', gap: 4 });
     await addSection(document.getElementById('riskWarnings'),   { label: 'Risk Assessment', gap: 4 });
     await addSection(document.getElementById('scoreBreakdown'), { label: 'Portfolio Score', gap: 4 });
+    await addSection(document.getElementById('whySection'),     { label: 'Why These Strategies', gap: 4 });
+    await addSection(document.getElementById('corrMatrix'),     { label: 'Correlation Matrix', gap: 4 });
     await addSection(document.getElementById('pfAnalytics'),    { label: 'Historical Performance', gap: 4 });
 
     const totalPages = pdf.internal.getNumberOfPages();
