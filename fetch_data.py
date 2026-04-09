@@ -40,8 +40,8 @@ STRATEGIES = [
     {'key':'saph',  'label':'SAP-H', 'capital':150_000, 'col':4,  'sheet':'DAILY P&L HEDGED', 'category':'nfo', 'color':'#E06FB0', 'visible':True, 'tradetron_id':'7324673', 'share_code':'YOUR-SAPH-SHARE-CODE',                 'subtitle':'Sensex Apex Predator — Hedged', 'sl':5000},
     
     # MCX strategies
-    {'key':'ngap', 'label':'NAGAP', 'capital':220_000, 'col':8, 'sheet':'DAILY P&L', 'category':'mcx', 'color':'#6B8BFA', 'visible':True,  'tradetron_id':'7927425', 'share_code':'7914905e-fdcb-4039-80ed-e5e71d3a5336', 'subtitle':'NG Apex Predator',           'sl':1800},
-    {'key':'ngapm', 'label':'NAGAPM', 'capital':50_000, 'col':11, 'sheet':'DAILY P&L', 'category':'mcx', 'color':'#4FFF8A', 'visible':True,  'tradetron_id':'9444470', 'share_code':'6c5191a4-aa36-42da-badb-ae16622165d6', 'subtitle':'NG Apex Predator MINI',           'sl':500},
+    {'key':'ngap', 'label':'NGAP', 'capital':220_000, 'col':8, 'sheet':'DAILY P&L', 'category':'mcx', 'color':'#6B8BFA', 'visible':True,  'tradetron_id':'7927425', 'share_code':'7914905e-fdcb-4039-80ed-e5e71d3a5336', 'subtitle':'NG Apex Predator',           'sl':1800},
+    {'key':'ngapm', 'label':'NGAPM', 'capital':50_000, 'col':11, 'sheet':'DAILY P&L', 'category':'mcx', 'color':'#4FFF8A', 'visible':True,  'tradetron_id':'9444470', 'share_code':'6c5191a4-aa36-42da-badb-ae16622165d6', 'subtitle':'NG Apex Predator MINI',           'sl':500},
 
 ]
 
