@@ -1041,12 +1041,50 @@ function toggleCard(key) {
   if(customMults[key] === undefined) customMults[key] = 1;
   else if(customMults[key] === 0) customMults[key] = 1;
   else customMults[key] = 0;
+
+  // If NAGAP is toggled off, NAGAPM must also go to 0
+  if (key === 'ngap' && customMults['ngap'] === 0) {
+    customMults['ngapm'] = 0;
+  }
+  // NAGAPM cannot be enabled if NAGAP is off
+  if (key === 'ngapm' && customMults['ngapm'] > 0 && (customMults['ngap'] ?? 0) === 0) {
+    customMults['ngapm'] = 0;
+  }
+
   renderStratCards();
 }
 
 function changeMult(key, delta) {
   const cur = customMults[key] ?? 1;
-  const nv = Math.max(0, cur + delta);
+  let nv = Math.max(0, cur + delta);
+
+  // NAGAPM must always be strictly less than NAGAP
+  if (key === 'ngapm') {
+    const ngapLots = customMults['ngap'] ?? 1;
+    const maxAllowed = Math.max(0, ngapLots - 1);
+    if (nv > maxAllowed) {
+      nv = maxAllowed;
+      if (delta > 0) {
+        const el = document.getElementById('mv-ngapm');
+        if (el) { el.style.color='var(--neg)'; setTimeout(()=>el.style.color='',800); }
+        return; // don't allow increase beyond limit
+      }
+    }
+  }
+  // If NAGAP is being decreased, also cap NAGAPM
+  if (key === 'ngap') {
+    const ngapmLots = customMults['ngapm'] ?? 0;
+    if (ngapmLots >= nv) {
+      customMults['ngapm'] = Math.max(0, nv - 1);
+      const mvNgapm = document.getElementById('mv-ngapm');
+      if (mvNgapm) mvNgapm.textContent = customMults['ngapm'] + 'x';
+      const cardNgapm = document.getElementById('sc-ngapm');
+      if (cardNgapm) cardNgapm.classList.toggle('selected', customMults['ngapm'] > 0);
+      const chkNgapm = document.getElementById('chk-ngapm');
+      if (chkNgapm) { const v=customMults['ngapm']; chkNgapm.style.background=v>0?'var(--accent)':''; chkNgapm.style.borderColor=v>0?'var(--accent)':''; chkNgapm.textContent=v>0?'✓':''; }
+    }
+  }
+
   customMults[key] = nv;
   document.getElementById('mv-'+key).textContent = nv+'x';
   const card = document.getElementById('sc-'+key);
