@@ -879,6 +879,107 @@
       border-radius: 0 !important;
     }
 
+
+    /* ── ANALYTICS BUTTON ── */
+    .analytics-btn {
+      width: 100%;
+      margin-top: 0.75rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-glow);
+      border: 1px solid rgba(212,168,64,0.35);
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      transition: background 0.18s, border-color 0.18s, color 0.18s;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .analytics-btn:hover { background: var(--accent); color: var(--ink); border-color: var(--accent); }
+
+    /* ── ANALYTICS MODAL ── */
+    #analyticsModal {
+      display: none;
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,0.82);
+      backdrop-filter: blur(6px);
+      overflow-y: auto;
+      padding: 2rem 1rem;
+    }
+    #analyticsModal.open { display: flex; align-items: flex-start; justify-content: center; }
+    .am-panel {
+      background: var(--surface);
+      border: 1px solid rgba(212,168,64,0.3);
+      width: 100%;
+      max-width: 900px;
+      padding: 0;
+      box-shadow: 0 16px 64px rgba(0,0,0,0.6);
+      margin: auto;
+    }
+    .am-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid var(--rule);
+      background: var(--surface2);
+    }
+    .am-title { font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 500; color: var(--cream); }
+    .am-sub { font-family: 'Inter', sans-serif; font-size: 0.55rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-top: 0.15rem; }
+    .am-close {
+      background: transparent; border: none; color: var(--muted);
+      font-size: 1.3rem; cursor: pointer; line-height: 1;
+      padding: 0.2rem 0.4rem; transition: color 0.15s;
+      min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center;
+    }
+    .am-close:hover { color: var(--cream); }
+    .am-body { padding: 1.5rem; }
+
+    /* Range selector */
+    .am-range-bar {
+      display: flex; gap: 0; margin-bottom: 1.5rem;
+      border: 1px solid var(--rule);
+      width: fit-content;
+    }
+    .am-range-btn {
+      font-family: 'Inter', sans-serif; font-size: 0.6rem; letter-spacing: 0.08em;
+      background: var(--surface2); border: none; border-right: 1px solid var(--rule);
+      color: var(--muted); padding: 0.45rem 1rem; cursor: pointer; transition: all 0.15s;
+    }
+    .am-range-btn:last-child { border-right: none; }
+    .am-range-btn:hover { color: var(--cream); }
+    .am-range-btn.active { background: var(--accent-glow); color: var(--accent); }
+
+    /* Stat grid */
+    .am-stats {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+      background: var(--rule); border: 1px solid var(--rule);
+      margin-bottom: 1.5rem;
+    }
+    .am-stat { background: var(--surface2); padding: 0.9rem 1rem; }
+    .am-stat-label { font-family: 'Inter', sans-serif; font-size: 0.5rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.2rem; }
+    .am-stat-val { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; color: var(--cream); }
+    .am-stat-val.pos { color: var(--pos); }
+    .am-stat-val.neg { color: var(--neg); }
+    .am-stat-val.acc { color: var(--accent); }
+
+    /* Charts */
+    .am-chart-wrap { position: relative; height: 220px; margin-bottom: 1.5rem; }
+    .am-chart-label { font-family: 'Inter', sans-serif; font-size: 0.55rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.65rem; }
+
+    /* Monthly bar chart */
+    .am-chart-wrap-sm { position: relative; height: 160px; }
+
+    /* Loading / empty state */
+    .am-loading { text-align: center; padding: 3rem; color: var(--muted); font-size: 0.8rem; letter-spacing: 0.08em; }
+
+    @media (max-width: 600px) {
+      .am-stats { grid-template-columns: repeat(2, 1fr); }
+      .am-range-bar { flex-wrap: wrap; width: 100%; }
+      .am-range-btn { flex: 1; }
+      #analyticsModal { padding: 0; align-items: flex-end; }
+      .am-panel { max-width: 100%; border-left: none; border-right: none; border-bottom: none; }
+    }
     </style>
 </head>
 <body>
@@ -1175,6 +1276,240 @@
       <p>Built for performance. Engineered with discipline.</p>
     </div>
   </footer>
+
+
+<!-- ── STRATEGY ANALYTICS MODAL ── -->
+<div id="analyticsModal" aria-modal="true" role="dialog">
+  <div class="am-panel">
+    <div class="am-header">
+      <div>
+        <div class="am-title" id="amTitle">Strategy Analytics</div>
+        <div class="am-sub" id="amSub">PERFORMANCE OVERVIEW</div>
+      </div>
+      <button class="am-close" onclick="closeAnalytics()" title="Close">&times;</button>
+    </div>
+    <div class="am-body">
+      <div id="amContent"><div class="am-loading">Loading data…</div></div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ── STRATEGY ANALYTICS MODAL ──
+let _amData = null;       // cached data.json
+let _amCharts = [];       // chart instances to destroy on re-render
+let _amKey = null;
+let _amLabel = null;
+let _amRange = 'all';     // current range: 3m | 6m | 1y | all
+
+const RANGES = [
+  { key: '1m',  label: '1M'  },
+  { key: '3m',  label: '3M'  },
+  { key: '6m',  label: '6M'  },
+  { key: '1y',  label: '1Y'  },
+  { key: 'all', label: 'All' },
+];
+
+async function openAnalytics(key, label, e) {
+  if (e) e.stopPropagation();
+  _amKey   = key;
+  _amLabel = label;
+  _amRange = 'all';
+
+  document.getElementById('amTitle').textContent = label;
+  document.getElementById('amContent').innerHTML = '<div class="am-loading">Loading data…</div>';
+  document.getElementById('analyticsModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  try {
+    if (!_amData) {
+      const res = await fetch('./data.json?t=' + Date.now());
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      _amData = await res.json();
+    }
+    renderAmContent();
+  } catch(err) {
+    document.getElementById('amContent').innerHTML =
+      '<div class="am-loading">Could not load data.json — ' + err.message + '</div>';
+  }
+}
+
+function closeAnalytics() {
+  document.getElementById('analyticsModal').classList.remove('open');
+  document.body.style.overflow = '';
+  _amCharts.forEach(c => c.destroy());
+  _amCharts = [];
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAnalytics(); });
+document.getElementById('analyticsModal').addEventListener('click', function(e) {
+  if (e.target === this) closeAnalytics();
+});
+
+function setAmRange(r) {
+  _amRange = r;
+  _amCharts.forEach(c => c.destroy());
+  _amCharts = [];
+  renderAmContent();
+}
+
+// Slice daily arrays to the chosen range
+function sliceDailyByRange(dates, values, range) {
+  if (range === 'all') return { dates, values };
+  const months = { '1m': 1, '3m': 3, '6m': 6, '1y': 12 }[range] || 999;
+  const cutoff = new Date();
+  cutoff.setMonth(cutoff.getMonth() - months);
+  const filtered = dates.reduce((acc, d, i) => {
+    const [dd, mm, yy] = d.split('/');
+    const dt = new Date(2000 + parseInt(yy), parseInt(mm) - 1, parseInt(dd));
+    if (dt >= cutoff) { acc.dates.push(d); acc.values.push(values[i]); }
+    return acc;
+  }, { dates: [], values: [] });
+  return filtered;
+}
+
+function sliceMonthlyByRange(months, values, range) {
+  if (range === 'all') return { months, values };
+  const n = { '1m': 1, '3m': 3, '6m': 6, '1y': 12 }[range] || 999;
+  return { months: months.slice(-n), values: values.slice(-n) };
+}
+
+function renderAmContent() {
+  const d    = _amData;
+  const key  = _amKey;
+  const stat = d.stats?.[key];
+  const dailyArr   = d[key + '_daily']   || [];
+  const monthlyArr = d[key + '_monthly'] || [];
+  const dates      = d.daily_dates || [];
+  const months     = d.months || [];
+  const cap        = (d.strategies?.find(s => s.key === key)?.capital) || 250000;
+
+  // Slice by range
+  const { dates: rDates, values: rDaily }     = sliceDailyByRange(dates, dailyArr, _amRange);
+  const { months: rMonths, values: rMonthly } = sliceMonthlyByRange(months, monthlyArr, _amRange);
+
+  // Cumulative P&L
+  let cum = 0;
+  const cumValues = rDaily.map(v => { cum += v; return cum; });
+
+  // Stats for range
+  const totalPnl  = rDaily.reduce((s, v) => s + v, 0);
+  const roi       = ((totalPnl / cap) * 100).toFixed(1);
+  const wins      = rDaily.filter(v => v > 0).length;
+  const total     = rDaily.filter(v => v !== 0).length;
+  const winRate   = total ? ((wins / total) * 100).toFixed(1) : '—';
+  const bestDay   = rDaily.length ? Math.max(...rDaily) : 0;
+  const worstDay  = rDaily.length ? Math.min(...rDaily) : 0;
+  const avgDay    = total ? (rDaily.filter(v=>v!==0).reduce((s,v)=>s+v,0)/total) : 0;
+
+  // Max drawdown
+  let peak = 0, maxDd = 0, cumDd = 0;
+  rDaily.forEach(v => {
+    cumDd += v;
+    if (cumDd > peak) peak = cumDd;
+    const dd = peak > 0 ? ((cumDd - peak) / cap * 100) : 0;
+    if (dd < maxDd) maxDd = dd;
+  });
+
+  const fmt = n => (n >= 0 ? '+' : '') + '₹' + Math.abs(Math.round(n)).toLocaleString('en-IN');
+  const fmtPct = n => (n >= 0 ? '+' : '') + n.toFixed(1) + '%';
+  const posNeg = n => n >= 0 ? 'pos' : 'neg';
+
+  // Color palette matching analytics page
+  const isLight = document.documentElement.classList.contains('light');
+  const gridColor  = isLight ? 'rgba(24,20,12,0.07)' : 'rgba(237,230,214,0.07)';
+  const textColor  = isLight ? 'rgba(24,20,12,0.65)' : 'rgba(237,230,214,0.65)';
+  const accentHex  = isLight ? '#96680A' : '#D4A840';
+  const posHex     = isLight ? '#1F7A38' : '#3FE088';
+  const negHex     = isLight ? '#B03030' : '#F07070';
+
+  const chartDefaults = {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: {
+      backgroundColor: isLight ? '#F1EDE3' : '#1A1710',
+      titleColor: isLight ? '#18140C' : '#EDE6D6',
+      bodyColor: isLight ? '#5A4E3C' : '#C8B89A',
+      borderColor: isLight ? '#D6CEBC' : '#252118', borderWidth: 1,
+      padding: 10, cornerRadius: 0,
+    }},
+    scales: {
+      x: { grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'Inter', size: 10 }, maxTicksLimit: 8, maxRotation: 0 } },
+      y: { grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'Inter', size: 10 },
+        callback: v => '₹' + (Math.abs(v) >= 1000 ? (v/1000).toFixed(0)+'k' : v)
+      }}
+    }
+  };
+
+  document.getElementById('amContent').innerHTML = `
+    <div class="am-range-bar" id="amRangeBar">
+      ${RANGES.map(r => `<button class="am-range-btn${r.key===_amRange?' active':''}" onclick="setAmRange('${r.key}')">${r.label}</button>`).join('')}
+    </div>
+
+    <div class="am-stats">
+      <div class="am-stat"><div class="am-stat-label">Total P&L</div><div class="am-stat-val ${posNeg(totalPnl)}">${fmt(totalPnl)}</div></div>
+      <div class="am-stat"><div class="am-stat-label">ROI</div><div class="am-stat-val ${posNeg(parseFloat(roi))}">${fmtPct(parseFloat(roi))}</div></div>
+      <div class="am-stat"><div class="am-stat-label">Win Rate</div><div class="am-stat-val acc">${winRate}%</div></div>
+      <div class="am-stat"><div class="am-stat-label">Max Drawdown</div><div class="am-stat-val neg">${maxDd.toFixed(1)}%</div></div>
+      <div class="am-stat"><div class="am-stat-label">Best Day</div><div class="am-stat-val pos">${fmt(bestDay)}</div></div>
+      <div class="am-stat"><div class="am-stat-label">Worst Day</div><div class="am-stat-val neg">${fmt(worstDay)}</div></div>
+      <div class="am-stat"><div class="am-stat-label">Avg Day</div><div class="am-stat-val ${posNeg(avgDay)}">${fmt(avgDay)}</div></div>
+      <div class="am-stat"><div class="am-stat-label">Trading Days</div><div class="am-stat-val acc">${total}</div></div>
+    </div>
+
+    <div class="am-chart-label">Cumulative P&L</div>
+    <div class="am-chart-wrap"><canvas id="amCumChart"></canvas></div>
+
+    <div class="am-chart-label">Monthly P&L</div>
+    <div class="am-chart-wrap am-chart-wrap-sm"><canvas id="amMonthChart"></canvas></div>
+  `;
+
+  // Cumulative chart
+  const cumCtx = document.getElementById('amCumChart').getContext('2d');
+  const gradient = cumCtx.createLinearGradient(0, 0, 0, 220);
+  gradient.addColorStop(0, isLight ? 'rgba(150,104,10,0.18)' : 'rgba(212,168,64,0.18)');
+  gradient.addColorStop(1, 'transparent');
+
+  _amCharts.push(new Chart(cumCtx, {
+    type: 'line',
+    data: {
+      labels: rDates,
+      datasets: [{
+        data: cumValues,
+        borderColor: accentHex,
+        backgroundColor: gradient,
+        borderWidth: 1.5,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        fill: true,
+        tension: 0.3,
+      }]
+    },
+    options: { ...chartDefaults, scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y,
+      ticks: { ...chartDefaults.scales.y.ticks, callback: v => (v >= 0 ? '+' : '') + '₹' + (Math.abs(v)>=1000?(v/1000).toFixed(0)+'k':v) }
+    }}}
+  }));
+
+  // Monthly bar chart
+  const monCtx = document.getElementById('amMonthChart').getContext('2d');
+  _amCharts.push(new Chart(monCtx, {
+    type: 'bar',
+    data: {
+      labels: rMonths,
+      datasets: [{
+        data: rMonthly,
+        backgroundColor: rMonthly.map(v => v >= 0
+          ? (isLight ? 'rgba(31,122,56,0.55)' : 'rgba(63,224,136,0.55)')
+          : (isLight ? 'rgba(176,48,48,0.55)'  : 'rgba(240,112,112,0.55)')),
+        borderColor: rMonthly.map(v => v >= 0 ? posHex : negHex),
+        borderWidth: 1,
+        borderRadius: 0,
+      }]
+    },
+    options: chartDefaults,
+  }));
+}
+</script>
 
 </body>
 </html>
