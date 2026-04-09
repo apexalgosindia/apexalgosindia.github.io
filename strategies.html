@@ -1167,7 +1167,8 @@
         <span class="card-roi-label">Avg Monthly ROI</span>
         <span class="card-roi-val loading" id="roi-${s.key}">—</span>
       </div>
-      <div class="card-links">${linkHtml}${codeHtml}</div>`;
+      <div class="card-links">${linkHtml}${codeHtml}</div>
+      <button class="analytics-btn" onclick="openAnalytics('${s.key}', this.closest('.strat-card').querySelector('.card-name').textContent, event)">&#9650; View Analytics</button>`;
     return div;
   }
 
