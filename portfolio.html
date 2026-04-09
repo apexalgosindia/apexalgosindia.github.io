@@ -1223,7 +1223,20 @@ function generateAuto() {
 
     for (const s of mcxPool) {
       if (mcxBudget < s.lotCap) continue;
-      let lots    = Math.floor(mcxBudget / s.lotCap);
+
+      let lots;
+
+      // When both NAGAP and NAGAPM are in the pool, split budget fairly:
+      // Reserve enough for at least 1 NAGAPM lot before assigning NAGAP.
+      if (s.key === 'ngap' && mcxPool.some(x => x.key === 'ngapm')) {
+        const ngapmCap = STRAT_META.find(x => x.key === 'ngapm')?.lotCap ?? 50000;
+        const budgetForNgap = mcxBudget - ngapmCap; // reserve at least 1 NAGAPM lot
+        if (budgetForNgap < s.lotCap) continue;
+        lots = Math.floor(budgetForNgap / s.lotCap);
+      } else {
+        lots = Math.floor(mcxBudget / s.lotCap);
+      }
+
       if (lots < 1) continue;
 
       // NAGAPM must be strictly less than NAGAP lots
