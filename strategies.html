@@ -1086,7 +1086,7 @@
     Object.values(grids).forEach(g => { if (g) g.innerHTML = ''; });
 
     dataStrategies.forEach(s => {
-      const cat      = cfg[s.key]?.category || 'nfo';
+      const cat      = cfg[s.key]?.category || s.category || 'nfo';
       const isHedged = (s.sheet || '') === 'DAILY P&L HEDGED';
 
       // Visibility
