@@ -107,7 +107,7 @@
     },
     {
       "key": "ngap",
-      "label": "NAGAP",
+      "label": "NGAP",
       "capital": 220000,
       "color": "#6B8BFA",
       "visible": true,
@@ -120,7 +120,7 @@
     },
     {
       "key": "ngapm",
-      "label": "NAGAPM",
+      "label": "NGAPM",
       "capital": 50000,
       "color": "#4FFF8A",
       "visible": true,
