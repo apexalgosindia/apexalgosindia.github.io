@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1331,8 +1332,9 @@ async function openAnalytics(key, label, e) {
     }
     renderAmContent();
   } catch(err) {
+    console.error('Analytics error:', err);
     document.getElementById('amContent').innerHTML =
-      '<div class="am-loading">Could not load data.json — ' + err.message + '</div>';
+      '<div class="am-loading">Error: ' + err.message + '</div>';
   }
 }
 
