@@ -974,12 +974,29 @@
     /* Loading / empty state */
     .am-loading { text-align: center; padding: 3rem; color: var(--muted); font-size: 0.8rem; letter-spacing: 0.08em; }
 
+    /* Calendar inside modal */
+    .am-cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+    .am-cal-title { font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 500; color: var(--cream); }
+    .am-cal-nav { display: flex; align-items: center; gap: 0.5rem; }
+    .am-cal-btn { font-family: 'Inter', sans-serif; font-size: 0.6rem; letter-spacing: 0.08em; background: var(--surface2); border: 1px solid var(--rule); color: var(--muted); padding: 0.3rem 0.7rem; cursor: pointer; transition: all 0.15s; }
+    .am-cal-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .am-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .am-cal-dow { font-family: 'Inter', sans-serif; font-size: 0.48rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-align: center; padding: 0.35rem 0; }
+    .am-cal-day { background: var(--surface2); border: 1px solid var(--rule); padding: 0.4rem 0.5rem; min-height: 56px; }
+    .am-cal-day.empty { background: transparent; border-color: transparent; }
+    .am-cal-day.today-cal { border-color: var(--accent); }
+    .am-cal-day-num { font-family: 'Inter', sans-serif; font-size: 0.55rem; color: var(--muted); margin-bottom: 0.2rem; }
+    .am-cal-day.today-cal .am-cal-day-num { color: var(--accent); }
+    .am-cal-day-pnl { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; }
+
     @media (max-width: 600px) {
       .am-stats { grid-template-columns: repeat(2, 1fr); }
       .am-range-bar { flex-wrap: wrap; width: 100%; }
       .am-range-btn { flex: 1; }
       #analyticsModal { padding: 0; align-items: flex-end; }
       .am-panel { max-width: 100%; border-left: none; border-right: none; border-bottom: none; }
+      .am-cal-day { min-height: 42px; padding: 0.3rem; }
+      .am-cal-day-pnl { font-size: 0.62rem; }
     }
     </style>
 </head>
@@ -1318,6 +1335,7 @@ async function openAnalytics(key, label, e) {
   _amKey   = key;
   _amLabel = label;
   _amRange = 'all';
+  _amCalOffset = 0;
 
   document.getElementById('amTitle').textContent = label;
   document.getElementById('amContent').innerHTML = '<div class="am-loading">Loading data…</div>';
@@ -1465,6 +1483,16 @@ function renderAmContent() {
 
     <div class="am-chart-label">Monthly P&L</div>
     <div class="am-chart-wrap am-chart-wrap-sm"><canvas id="amMonthChart"></canvas></div>
+
+    <div class="am-chart-label" style="margin-top:1.5rem;">Calendar P&L</div>
+    <div class="am-cal-header">
+      <div class="am-cal-title" id="amCalTitle">—</div>
+      <div class="am-cal-nav">
+        <button class="am-cal-btn" onclick="amCalNav(-1)">&#8592; Prev</button>
+        <button class="am-cal-btn" onclick="amCalNav(1)">Next &#8594;</button>
+      </div>
+    </div>
+    <div class="am-cal-grid" id="amCalGrid"></div>
   `;
 
   // Cumulative chart
@@ -1511,6 +1539,81 @@ function renderAmContent() {
     },
     options: chartDefaults,
   }));
+
+  // Render calendar after charts
+  renderAmCalendar();
+}
+
+let _amCalOffset = 0;
+
+function amCalNav(dir) {
+  _amCalOffset += dir;
+  renderAmCalendar();
+}
+
+function renderAmCalendar() {
+  const d = _amData;
+  const key = _amKey;
+  if (!d || !key) return;
+
+  const dailyArr = d[key + '_daily'] || [];
+  const dates    = d.daily_dates || [];
+
+  const now = new Date();
+  const ref = new Date(now.getFullYear(), now.getMonth() + _amCalOffset, 1);
+  const y = ref.getFullYear(), m = ref.getMonth();
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  const titleEl = document.getElementById('amCalTitle');
+  const gridEl  = document.getElementById('amCalGrid');
+  if (!titleEl || !gridEl) return;
+
+  titleEl.textContent = MONTHS[m] + ' ' + y;
+
+  // Build date→value lookup for this month
+  const lookup = {};
+  dates.forEach((ds, i) => {
+    const [dd, mm, yy] = ds.split('/');
+    const dt = new Date(2000 + parseInt(yy), parseInt(mm) - 1, parseInt(dd));
+    if (dt.getFullYear() === y && dt.getMonth() === m) {
+      lookup[dt.getDate()] = dailyArr[i] || 0;
+    }
+  });
+
+  const isLight = document.documentElement.classList.contains('light');
+  const fmtV = v => {
+    const abs = Math.abs(v);
+    const sign = v >= 0 ? '+' : '-';
+    return sign + '₹' + (abs >= 1000 ? (abs/1000).toFixed(1) + 'k' : abs.toLocaleString('en-IN'));
+  };
+
+  let html = '';
+  ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(d => {
+    html += `<div class="am-cal-dow">${d}</div>`;
+  });
+
+  const firstDay = new Date(y, m, 1).getDay();
+  const offset = firstDay === 0 ? 6 : firstDay - 1;
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+
+  for (let e = 0; e < offset; e++) html += '<div class="am-cal-day empty"></div>';
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const isToday = now.getFullYear()===y && now.getMonth()===m && now.getDate()===day;
+    const todayCls = isToday ? ' today-cal' : '';
+    if (lookup[day] !== undefined) {
+      const v = lookup[day];
+      const color = v > 0 ? 'var(--pos)' : v < 0 ? 'var(--neg)' : 'var(--muted)';
+      html += `<div class="am-cal-day${todayCls}">
+        <div class="am-cal-day-num">${day}</div>
+        <div class="am-cal-day-pnl" style="color:${color}">${fmtV(v)}</div>
+      </div>`;
+    } else {
+      html += `<div class="am-cal-day${todayCls}" style="opacity:0.3;"><div class="am-cal-day-num">${day}</div></div>`;
+    }
+  }
+
+  gridEl.innerHTML = html;
 }
 </script>
 
