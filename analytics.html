@@ -1103,6 +1103,36 @@ function getTodayPnl(k) {
   return DATA[k+'_daily']?.[currentDateIdx] || 0;
 }
 
+// ── MCX PREV-DAY FALLBACK ──
+// MCX closes at 11:30 PM IST. Until then, today's data is 0.
+// Returns { idx, dateStr, isPrev } for MCX strategies.
+// If all MCX strategies have 0 for currentDateIdx, walks back to find last non-zero day.
+function getMcxDayCtx(mcxKeys) {
+  // Check if any MCX strategy has non-zero today
+  const todayHasData = mcxKeys.some(k => {
+    const v = DATA[k + '_daily']?.[currentDateIdx];
+    return v !== undefined && v !== null && v !== 0;
+  });
+  if (todayHasData) {
+    return { idx: currentDateIdx, dateStr: DATA.daily_dates[currentDateIdx], isPrev: false };
+  }
+  // Walk back to find last day with MCX data
+  for (let i = currentDateIdx - 1; i >= 0; i--) {
+    const hasData = mcxKeys.some(k => {
+      const v = DATA[k + '_daily']?.[i];
+      return v !== undefined && v !== null && v !== 0;
+    });
+    if (hasData) {
+      const raw = DATA.daily_dates[i]; // DD/MM/YY
+      const [dd, mm] = raw.split('/');
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const dateStr = dd + ' ' + months[parseInt(mm) - 1];
+      return { idx: i, dateStr, isPrev: true };
+    }
+  }
+  return { idx: currentDateIdx, dateStr: DATA.daily_dates[currentDateIdx], isPrev: false };
+}
+
 function pnlPill(v, cap) {
   if (v === 0) return '<span class="pnl-pill zero"><span class="pnl-amount">—</span><span class="pnl-pct">—</span></span>';
   const cls = v > 0 ? 'pos' : 'neg';
@@ -1158,6 +1188,11 @@ let bdRows = [];
 function buildBdRows() {
   const dailyKey = Object.fromEntries(STRATS.map(k => [k, k + '_daily']));
   const cfg = loadStratConfig();
+
+  // Compute MCX prev-day context once for all MCX rows
+  const mcxKeys = STRATS.filter(k => getStratCat(k) === 'mcx');
+  const mcxCtx  = getMcxDayCtx(mcxKeys);
+
   bdRows = STRATS.filter(k => {
     const cat      = getStratCat(k);
     const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
@@ -1172,17 +1207,20 @@ function buildBdRows() {
     return true;
   }).map(k => {
     const cap = CAPITALS[k];
-    const today = getTodayPnl(k);
+    const isMcx = getStratCat(k) === 'mcx';
+    const todayIdx = isMcx ? mcxCtx.idx : currentDateIdx;
+    const today = DATA[k+'_daily']?.[todayIdx] || 0;
     const monthly = getMonthlyPnl(k);
     const yearly = yearlyMode === 'fy' ? getFinancialYearPnl(k) : getYearlyPnl(k);
     const maxDdFromStats = DATA.stats[k]?.max_dd || 0;
     const series = DATA[dailyKey[k]] || [];
     const { cur: curDd, max: computedMax } = computeCurrentDrawdown(series, cap);
-    // Use stats max_dd as authoritative max (matches existing display), computed current for live state
     const maxDd = maxDdFromStats;
     const sheet = (STRAT_SHEETS && STRAT_SHEETS[k]) || 'DAILY P&L';
     const cat = getStratCat(k);
-    return { k, cap, today, monthly, yearly, curDd, maxDd, sheet, cat };
+    const isPrevDay  = isMcx && mcxCtx.isPrev;
+    const prevDateStr = isMcx ? mcxCtx.dateStr : null;
+    return { k, cap, today, monthly, yearly, curDd, maxDd, sheet, cat, isPrevDay, prevDateStr };
   });
 }
 
@@ -1243,14 +1281,30 @@ function renderBreakdownTable(filter='') {
   function renderGroupRows(grpRows, label, icon) {
     if (!grpRows.length) return;
     if (showGroups) {
-      rowsHtml += `<tr class="subgroup-row"><td colspan="6"><div class="subgroup-label">${label || ''}</div></td></tr>`;
+      // For MCX group: show date + prev badge in header if using prev day data
+      let groupLabel = label || '';
+      const isMcxGroup = label === 'MCX';
+      if (isMcxGroup && grpRows[0]?.isPrevDay && grpRows[0]?.prevDateStr) {
+        groupLabel = `MCX <span style="font-size:0.55rem;letter-spacing:0.06em;color:var(--accent);background:var(--accent-glow);border:1px solid rgba(212,168,64,0.3);padding:0.1rem 0.5rem;margin-left:0.4rem;vertical-align:middle;">${grpRows[0].prevDateStr}</span> <span style="font-size:0.5rem;letter-spacing:0.08em;color:var(--muted);margin-left:0.2rem;">prev session</span>`;
+      }
+      rowsHtml += `<tr class="subgroup-row"><td colspan="6"><div class="subgroup-label">${groupLabel}</div></td></tr>`;
     }
     grpRows.forEach(r => {
+      // For MCX rows showing prev day: wrap today pill with a subtle prev-day indicator
+      let todayCell;
+      if (r.isPrevDay) {
+        todayCell = `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.2rem;">
+          ${pnlPill(r.today, r.cap)}
+          <span style="font-family:'Inter',sans-serif;font-size:0.48rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);opacity:0.8;">&#9679; ${r.prevDateStr}</span>
+        </div>`;
+      } else {
+        todayCell = pnlPill(r.today, r.cap);
+      }
       rowsHtml += `
       <tr>
         <td><div class="strat-name-cell"><span class="dot" style="background:${STRAT_COLORS[r.k]}"></span><span class="strat-name-text">${STRAT_FULL[r.k]}</span></div></td>
         <td><span class="cap-cell">&#8377;${r.cap.toLocaleString('en-IN')}</span></td>
-        <td>${pnlPill(r.today, r.cap)}</td>
+        <td>${todayCell}</td>
         <td>${pnlPill(r.monthly, r.cap)}</td>
         <td>${pnlPill(r.yearly, r.cap)}</td>
         <td>${ddCell(r.curDd, r.maxDd)}</td>
