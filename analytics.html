@@ -1038,24 +1038,23 @@ function getLastValidIdx() {
     const istOffset = 5.5 * 60 * 60 * 1000;
     const ist = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + istOffset);
     const pastCutoff = (ist.getHours() > 15) || (ist.getHours() === 15 && ist.getMinutes() >= 30);
-    // Build today in DD/MM/YY format matching DATA.daily_dates
+
     const dd = String(ist.getDate()).padStart(2,'0');
     const mm = String(ist.getMonth() + 1).padStart(2,'0');
     const yy = String(ist.getFullYear()).slice(2);
     const todayStr = dd + '/' + mm + '/' + yy;
-    // Walk backwards to find last index with actual non-zero data
-    const keys = Object.keys(DATA).filter(k => k.endsWith('_daily'));
-    let lastValid = DATA.daily_dates.length - 1;
-    for (let i = DATA.daily_dates.length - 1; i >= 0; i--) {
-      const hasData = keys.some(k => { const v = DATA[k]?.[i]; return v !== undefined && v !== null && v !== 0; });
-      if (hasData) { lastValid = i; break; }
+
+    const todayIdx = DATA.daily_dates.indexOf(todayStr);
+
+    // If today is in the data:
+    if (todayIdx > -1) {
+      // After 3:30 PM → show today; before 3:30 PM → show yesterday
+      return pastCutoff ? todayIdx : Math.max(0, todayIdx - 1);
     }
-    // If before 3:30 PM IST and today is in array, go to previous day
-    if (!pastCutoff) {
-      const todayIdx = DATA.daily_dates.indexOf(todayStr);
-      if (todayIdx > -1) lastValid = Math.max(0, todayIdx - 1);
-    }
-    return lastValid;
+
+    // Today not in data yet — show the last available date regardless of whether values are 0
+    // (0 is a valid P&L for a holiday/flat day — don't skip it)
+    return DATA.daily_dates.length - 1;
   } catch(e) {
     return Math.max(0, DATA.daily_dates.length - 1);
   }
@@ -1891,30 +1890,25 @@ async function exportPDF() {
   }
 }
 
-// ── LIVE SYNC — re-initialise STRATS from data.json so new strategies appear immediately ──
+// ── LIVE SYNC — fetch fresh data.json and fully re-init on page load ──
 (async function liveSync() {
   try {
-    const res = await fetch('./data.json?t=' + Date.now());
+    const res = await fetch('./data.json?t=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) return;
     const d = await res.json();
-    if (!d?.strategies?.length) return;
-    // Re-init all strategy maps from live data.json
-    STRATS       = d.strategies.map(s => s.key);
-    STRAT_LABELS = Object.fromEntries(d.strategies.map(s => [s.key, s.label]));
-    STRAT_FULL   = Object.fromEntries(d.strategies.map(s => [s.key, s.label]));
-    STRAT_COLORS = Object.fromEntries(d.strategies.map((s,i) => [s.key, s.color || AUTO_PALETTE[i % AUTO_PALETTE.length]]));
-    CAPITALS     = Object.fromEntries(d.strategies.map(s => [s.key, s.capital ?? 250000]));
-    STRAT_SHEETS = Object.fromEntries(d.strategies.map(s => [s.key, s.sheet || 'DAILY P&L']));
-    // Merge new daily/monthly arrays + stats into DATA
-    d.strategies.forEach(s => {
-      if (d[s.key + '_daily'])   DATA[s.key + '_daily']   = d[s.key + '_daily'];
-      if (d[s.key + '_monthly']) DATA[s.key + '_monthly'] = d[s.key + '_monthly'];
-    });
-    if (d.stats)       Object.assign(DATA.stats = DATA.stats || {}, d.stats);
-    if (d.months)      DATA.months       = d.months;
-    if (d.daily_dates) DATA.daily_dates  = d.daily_dates;
-    DATA.strategies = d.strategies;
-    DATA.updated    = d.updated || DATA.updated;
+    if (!d) return;
+
+    // Full merge — same as hardSheetFetch, so daily_dates + all arrays always update
+    Object.keys(d).forEach(k => { DATA[k] = d[k]; });
+
+    if (d.strategies && d.strategies.length) {
+      STRATS       = d.strategies.map(s => s.key);
+      STRAT_LABELS = Object.fromEntries(d.strategies.map(s => [s.key, s.label]));
+      STRAT_FULL   = Object.fromEntries(d.strategies.map(s => [s.key, s.label]));
+      STRAT_COLORS = Object.fromEntries(d.strategies.map((s,i) => [s.key, s.color || AUTO_PALETTE[i % AUTO_PALETTE.length]]));
+      CAPITALS     = Object.fromEntries(d.strategies.map(s => [s.key, s.capital ?? 250000]));
+      STRAT_SHEETS = Object.fromEntries(d.strategies.map(s => [s.key, s.sheet || 'DAILY P&L']));
+    }
     // Re-render with fresh data
     init();
   } catch(e) { console.warn('liveSync:', e.message); }
