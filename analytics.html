@@ -1879,9 +1879,21 @@ async function exportPDF() {
 // ══════════════════════════════════════════════════════
 
 const GH_STORAGE_KEY = 'apexAdminGhConfig';
+const GH_DEFAULTS = {
+  repo: 'apexalgosindia/apexalgosindia.github.io',
+  file: 'update-data.yml',
+  token: ''
+};
 
 function loadGhConfig() {
-  try { return JSON.parse(localStorage.getItem(GH_STORAGE_KEY)) || {}; } catch { return {}; }
+  try {
+    const saved = JSON.parse(localStorage.getItem(GH_STORAGE_KEY)) || {};
+    return {
+      repo:  saved.repo  || GH_DEFAULTS.repo,
+      file:  saved.file  || GH_DEFAULTS.file,
+      token: saved.token || GH_DEFAULTS.token,
+    };
+  } catch { return { ...GH_DEFAULTS }; }
 }
 function saveGhConfig() {
   const repo  = document.getElementById('ghRepo').value.trim();
@@ -2000,9 +2012,9 @@ function openAdminPanel() {
   if (!panel) return;
   panel.style.display = 'block';
   setAdminStatus('Ready', '');
-  // Show config area automatically if GitHub not yet configured
+  // Auto-open config if token not yet saved
   const cfg = loadGhConfig();
-  if (!cfg.repo || !cfg.file || !cfg.token) toggleGhConfig(true);
+  if (!cfg.token) toggleGhConfig(true);
 }
 
 function closeAdminPanel() {
