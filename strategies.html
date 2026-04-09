@@ -709,12 +709,14 @@
     .am-stat-val.pos { color: var(--pos); }
     .am-stat-val.neg { color: var(--neg); }
     .am-stat-val.acc { color: var(--accent); }
-    /* Current drawdown bar inside stat card */
+    /* Drawdown combined card */
     .am-stat-dd { display: flex; flex-direction: column; }
+    .am-dd-val-row { display: flex; align-items: baseline; gap: 0.35rem; margin-bottom: 0; }
+    .am-dd-sep { font-family: 'Inter', sans-serif; font-size: 0.78rem; color: var(--muted); }
+    .am-dd-max-val { font-size: 0.8rem !important; font-weight: 500 !important; opacity: 0.75; }
     .am-dd-bar-track { position: relative; background: rgba(240,112,112,0.12); height: 4px; width: 100%; margin-top: 0.55rem; border-radius: 2px; overflow: hidden; }
     .am-dd-bar-max { position: absolute; left: 0; top: 0; height: 100%; width: 100%; border-radius: 2px; background: rgba(220,60,60,0.22); }
     .am-dd-bar-cur { position: absolute; left: 0; top: 0; height: 100%; border-radius: 2px; background: var(--neg); transition: width 0.5s ease; }
-    .am-dd-bar-legend { display: flex; justify-content: space-between; margin-top: 0.3rem; font-family: 'Inter', sans-serif; font-size: 0.42rem; letter-spacing: 0.08em; color: var(--muted); opacity: 0.7; }
 
     /* Charts */
     .am-chart-wrap { position: relative; height: 220px; margin-bottom: 1.5rem; }
@@ -1224,15 +1226,17 @@ function renderAmContent() {
       <div class="am-stat"><div class="am-stat-label">Total P&L</div><div class="am-stat-val ${posNeg(totalPnl)}">${fmt(totalPnl)}</div></div>
       <div class="am-stat"><div class="am-stat-label">ROI</div><div class="am-stat-val ${posNeg(parseFloat(roi))}">${fmtPct(parseFloat(roi))}</div></div>
       <div class="am-stat"><div class="am-stat-label">Win Rate</div><div class="am-stat-val acc">${winRate}%</div></div>
-      <div class="am-stat"><div class="am-stat-label">Max Drawdown</div><div class="am-stat-val neg">${maxDd.toFixed(1)}%</div></div>
       <div class="am-stat am-stat-dd">
-        <div class="am-stat-label">Current Drawdown</div>
-        <div class="am-stat-val ${curDd < 0 ? 'neg' : 'acc'}">${curDd === 0 ? '0.00%' : curDd.toFixed(2) + '%'}</div>
+        <div class="am-stat-label">Drawdown (Cur / Max)</div>
+        <div class="am-dd-val-row">
+          <span class="am-stat-val ${curDd < 0 ? 'neg' : 'acc'}">${curDd === 0 ? '0.00%' : curDd.toFixed(2) + '%'}</span>
+          <span class="am-dd-sep">/</span>
+          <span class="am-stat-val am-dd-max-val neg">${maxDd.toFixed(2)}%</span>
+        </div>
         <div class="am-dd-bar-track">
           <div class="am-dd-bar-max"></div>
           <div class="am-dd-bar-cur" style="width:${maxDd !== 0 ? Math.min(100, Math.abs(curDd) / Math.abs(maxDd) * 100).toFixed(1) : 0}%"></div>
         </div>
-        <div class="am-dd-bar-legend"><span>0</span><span>Max ${maxDd.toFixed(1)}%</span></div>
       </div>
       <div class="am-stat"><div class="am-stat-label">Best Day</div><div class="am-stat-val pos">${fmt(bestDay)}</div></div>
       <div class="am-stat"><div class="am-stat-label">Worst Day</div><div class="am-stat-val neg">${fmt(worstDay)}</div></div>
