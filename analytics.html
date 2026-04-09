@@ -1323,15 +1323,15 @@ function renderBreakdownTable(filter='') {
   let rowsHtml = '';
   function renderGroupRows(grpRows, label, icon) {
     if (!grpRows.length) return;
-    if (showGroups) {
-      // For MCX group: show date + prev badge in header if using prev day data
+    const isMcxGroup = label === 'MCX';
+    if (showGroups || isMcxGroup) {
+      // For MCX group: always show date in header
       let groupLabel = label || '';
-      const isMcxGroup = label === 'MCX';
       if (isMcxGroup && grpRows[0]?.prevDateStr) {
         const isPrev = grpRows[0].isPrevDay;
         const sessionLabel = isPrev
           ? `<span style="font-size:0.5rem;letter-spacing:0.08em;color:var(--muted);margin-left:0.2rem;">prev session</span>`
-          : `<span style="font-size:0.5rem;letter-spacing:0.08em;color:var(--pos);margin-left:0.2rem;">live</span>`;
+          : ``;
         groupLabel = `MCX <span style="font-size:0.55rem;letter-spacing:0.06em;color:var(--accent);background:var(--accent-glow);border:1px solid rgba(212,168,64,0.3);padding:0.1rem 0.5rem;margin-left:0.4rem;vertical-align:middle;">${grpRows[0].prevDateStr}</span> ${sessionLabel}`;
       }
       rowsHtml += `<tr class="subgroup-row"><td colspan="6"><div class="subgroup-label">${groupLabel}</div></td></tr>`;
