@@ -676,8 +676,9 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">Max Acceptable Drawdown (%) <span class="hint-icon" title="Maximum % of capital you can tolerate losing from peak">?</span></label>
+          <label class="form-label">DD Tolerance (%) <span class="hint-icon" title="Exclude strategies whose drawdown exceeds this. Lower = stricter filter.">?</span></label>
           <input class="form-input" type="number" id="maxDDInput" placeholder="e.g. 15" value="20" min="5" max="60" step="1"/>
+          <div class="input-sub">Exclude strategies with DD worse than this</div>
         </div>
         <div class="form-group">
           <label class="form-label">Target Annual ROI % <span class="hint-icon" title="Optional. Helps rank strategies by return preference">?</span></label>
@@ -720,6 +721,15 @@
             <button class="pill" data-val="roi" onclick="setPill('rank',this)">ROI</button>
             <button class="pill" data-val="winrate" onclick="setPill('rank',this)">Win Rate</button>
             <button class="pill" data-val="dd" onclick="setPill('rank',this)">Low Drawdown</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Analysis Period <span class="hint-icon" title="ROI, DD and ranking scores are computed over this window — not all-time figures">?</span></label>
+          <div class="pill-group" id="pg-period">
+            <button class="pill" data-val="3m" onclick="setPill('period',this)">3M</button>
+            <button class="pill" data-val="6m" onclick="setPill('period',this)">6M</button>
+            <button class="pill" data-val="1y" onclick="setPill('period',this)">1Y</button>
+            <button class="pill active" data-val="all" onclick="setPill('period',this)">All Time</button>
           </div>
         </div>
         <div class="form-group">
@@ -919,7 +929,7 @@ function toggleTheme(){
 
 // ── STATE ──
 let activeMode = 'auto';
-const prefs = { hedge:'both', idx:'all', rank:'sharpe', mcxreuse:'on', mcxpct:'50', mcxstrats:'all' };
+const prefs = { hedge:'both', idx:'all', rank:'sharpe', mcxreuse:'on', mcxpct:'50', mcxstrats:'all', period:'all' };
 let liveData = null;   // data.json payload
 let customMults = {};  // key → lots — initialized in initCustomMults()
 function initCustomMults() {
@@ -1010,6 +1020,59 @@ function setCapitalPill(btn, inputId, hintId) {
 // ── STRATEGY CARDS (custom mode) ──
 function getStats(key) {
   return liveData?.stats?.[key] || { sharpe:0, max_dd:0, win_rate:0, roi:0, avg_month_roi:0 };
+}
+
+// ── PERIOD-SLICED STATS ──
+// Computes ROI, max_dd, win_rate from daily P&L arrays for the chosen period window.
+// Falls back to all-time stats if daily data is unavailable.
+function getPeriodStats(key) {
+  const base = getStats(key);
+  if (!liveData || prefs.period === 'all') return base;
+
+  const dailyArr  = liveData[key + '_daily']  || [];
+  const datesArr  = liveData['daily_dates']   || [];
+  if (!dailyArr.length || !datesArr.length) return base;
+
+  const monthsMap = { '3m': 3, '6m': 6, '1y': 12 };
+  const nMonths   = monthsMap[prefs.period] || 999;
+  const cutoff    = new Date();
+  cutoff.setMonth(cutoff.getMonth() - nMonths);
+
+  // Slice to period
+  const sliced = [];
+  for (let i = 0; i < datesArr.length; i++) {
+    const parts = datesArr[i].split('/');
+    if (parts.length < 3) continue;
+    const dt = new Date(2000 + parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+    if (dt >= cutoff) sliced.push(dailyArr[i] ?? 0);
+  }
+  if (!sliced.length) return base;
+
+  const cap      = liveData.strategies?.find(s => s.key === key)?.capital || base.lotCap || 250000;
+  const totalPnl = sliced.reduce((s, v) => s + v, 0);
+  const roi      = parseFloat(((totalPnl / cap) * 100).toFixed(2));
+
+  // Max drawdown over period
+  let peak = 0, maxDd = 0, cum = 0;
+  sliced.forEach(v => {
+    cum += v;
+    if (cum > peak) peak = cum;
+    const dd = peak > 0 ? ((cum - peak) / cap * 100) : 0;
+    if (dd < maxDd) maxDd = dd;
+  });
+
+  // Win rate
+  const trading = sliced.filter(v => v !== 0);
+  const wins    = trading.filter(v => v > 0).length;
+  const win_rate = trading.length ? parseFloat(((wins / trading.length) * 100).toFixed(1)) : base.win_rate;
+
+  // Sharpe (annualised, simplified: mean/stdev of daily returns * sqrt(252))
+  const dailyRets = sliced.map(v => v / cap);
+  const mean = dailyRets.reduce((s, v) => s + v, 0) / dailyRets.length;
+  const variance = dailyRets.reduce((s, v) => s + (v - mean) ** 2, 0) / dailyRets.length;
+  const sharpe = variance > 0 ? parseFloat(((mean / Math.sqrt(variance)) * Math.sqrt(252)).toFixed(2)) : base.sharpe;
+
+  return { ...base, roi, max_dd: parseFloat(maxDd.toFixed(2)), win_rate, sharpe, avg_month_roi: parseFloat((roi / nMonths).toFixed(2)) };
 }
 
 function renderStratCards() {
@@ -1111,7 +1174,7 @@ function generateAuto() {
     if(prefs.idx   !== 'all'  && s.idx   !== prefs.idx)   return false;
     if(capital < s.minCap) return false;
     return true;
-  }).map(s => ({ ...s, stats: getStats(s.key) }));
+  }).map(s => ({ ...s, stats: getPeriodStats(s.key) }));
 
   // Strict pool: also apply DD filter
   const strictPool = basePool.filter(s => Math.abs(s.stats.max_dd) <= maxDD);
@@ -1151,18 +1214,29 @@ function generateAuto() {
   const eligible  = candidatePool.filter(s => capital >= s.lotCap);
   if (eligible.length === 0) { renderNoResult(); return; }
 
-  // Pre-split capital into buckets: use the ACTUAL number we intend to fill
-  // clamped between minS and maxS, never more than eligible strategies exist
-  const targetCount    = Math.min(Math.max(eligible.length, minS), maxS, eligible.length);
-  const budgetPerStrat = Math.floor(capital / Math.max(targetCount, minS));
+  // ── ROI/DD Weighted Allocation ──
+  // Weight = ROI / max(DD, 1)  — higher ROI and lower DD → more capital
+  const selected = eligible.slice(0, maxS);
+
+  // Compute raw weights
+  const weights = selected.map(s => {
+    const roi = Math.max(s.stats.roi || 0, 0.1);
+    const dd  = Math.max(Math.abs(s.stats.max_dd) || 1, 1);
+    return roi / dd;
+  });
+  const totalWeight = weights.reduce((a, b) => a + b, 0);
 
   let remaining = capital;
   const alloc   = [];
 
-  for (const s of candidatePool) {
-    if (alloc.length >= maxS) break;
+  for (let i = 0; i < selected.length; i++) {
+    const s = selected[i];
     if (remaining < s.lotCap) continue;
-    const lots    = Math.max(1, Math.floor(Math.min(budgetPerStrat, remaining) / s.lotCap));
+    // Weighted budget for this strategy
+    const weightedBudget = Math.floor((weights[i] / totalWeight) * capital);
+    // Clamp to remaining, floor to lot size
+    const budget = Math.min(weightedBudget, remaining);
+    const lots   = Math.max(1, Math.floor(budget / s.lotCap));
     const capUsed = lots * s.lotCap;
     if (capUsed > remaining) continue;
     alloc.push({ ...s, lots, capUsed });
@@ -1171,25 +1245,28 @@ function generateAuto() {
 
   if(alloc.length === 0) { renderNoResult(); return; }
 
-  // Warn if still below minS (capital genuinely too low)
   if (alloc.length < minS) {
     console.warn(`minStrats=${minS} requested but only ${alloc.length} strategy(s) fit capital of ₹${capital}`);
   }
 
-  // ── Round-robin surplus pass — no greedy top-bias ──
-  const sortedForSurplus = [...alloc].sort((x, y) => y.stats.sharpe - x.stats.sharpe);
+  // ── Surplus pass: distribute leftover capital by weight (round-robin by weight rank) ──
+  const surplusSorted = [...alloc].sort((x, y) => {
+    const wx = (Math.max(x.stats.roi||0,0.1)) / Math.max(Math.abs(x.stats.max_dd)||1,1);
+    const wy = (Math.max(y.stats.roi||0,0.1)) / Math.max(Math.abs(y.stats.max_dd)||1,1);
+    return wy - wx;
+  });
   let scalePass = 0;
-  while (remaining >= Math.min(...alloc.map(a => a.lotCap)) && scalePass < 200) {
+  while (remaining >= Math.min(...alloc.map(a => a.lotCap)) && scalePass < 300) {
     scalePass++;
     let boosted = false;
-    for (let i = 0; i < sortedForSurplus.length; i++) {
-      const a = sortedForSurplus[i];
+    for (let i = 0; i < surplusSorted.length; i++) {
+      const a = surplusSorted[i];
       if (remaining < a.lotCap) continue;
       a.lots    += 1;
       a.capUsed += a.lotCap;
       remaining -= a.lotCap;
       boosted = true;
-      sortedForSurplus.push(sortedForSurplus.splice(i, 1)[0]);
+      surplusSorted.push(surplusSorted.splice(i, 1)[0]);
       break;
     }
     if (!boosted) break;
@@ -1208,7 +1285,7 @@ function generateAuto() {
         if (prefs.mcxstrats === 'ngapm') return s.key === 'ngapm';
         return true;
       })
-      .map(s => ({ ...s, stats: getStats(s.key) }))
+      .map(s => ({ ...s, stats: getPeriodStats(s.key) }))
       // Note: DD filter intentionally removed for MCX reuse — these run on recycled capital
       .map(s => {
         let score = 0;
@@ -1261,8 +1338,9 @@ function generateAuto() {
     }
   }
 
+  const periodLabel = prefs.period === 'all' ? 'All-time' : prefs.period.toUpperCase();
   const hasMcxReuse = alloc.some(a => a.reuseCapital);
-  renderResults(alloc, capital, `Auto Portfolio · ${prefs.rank} ranked · Max DD ${maxDD}%${hasMcxReuse ? ' · MCX reuse ♻' : ''}`);
+  renderResults(alloc, capital, `Auto Portfolio · ${prefs.rank} ranked · ${periodLabel} · DD ≤${maxDD}%${hasMcxReuse ? ' · MCX reuse ♻' : ''}`);
   } catch(e) { console.error('generateAuto error:', e); alert('Error generating portfolio: ' + e.message); }
 }
 
@@ -1293,7 +1371,7 @@ function generateCustom() {
     }
 
     const capUsed = lots * s.lotCap;
-    const entry = { ...s, stats: getStats(s.key), lots, capUsed };
+    const entry = { ...s, stats: getPeriodStats(s.key), lots, capUsed };
     if (s.idx === 'mcx') mcxAlloc.push(entry);
     else nfoAlloc.push(entry);
   }
