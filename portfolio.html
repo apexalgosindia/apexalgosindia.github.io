@@ -1209,7 +1209,7 @@ function generateAuto() {
         return true;
       })
       .map(s => ({ ...s, stats: getStats(s.key) }))
-      .filter(s => Math.abs(s.stats.max_dd) <= maxDD)
+      // Note: DD filter intentionally removed for MCX reuse — these run on recycled capital
       .map(s => {
         let score = 0;
         const st = s.stats;
@@ -1219,7 +1219,14 @@ function generateAuto() {
         if (prefs.rank === 'dd')      score = -Math.abs(st.max_dd);
         return { ...s, score };
       })
-      .sort((a, b) => b.score - a.score);
+      .sort((a, b) => {
+        // Always process ngap before ngapm so the cap constraint works correctly
+        if (a.key === 'ngap' && b.key === 'ngapm') return -1;
+        if (a.key === 'ngapm' && b.key === 'ngap') return 1;
+        return b.score - a.score;
+      });
+
+    console.log('[MCX] budget:', mcxBudget, 'pool:', mcxPool.map(s => s.key));
 
     for (const s of mcxPool) {
       if (mcxBudget < s.lotCap) continue;
