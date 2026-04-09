@@ -493,7 +493,7 @@
 <body>
 
 <nav>
-  <a class="nav-logo" id="navLogo" href="./index.html" style="display:flex;align-items:center;gap:0.6rem;" title="Home"><img src="logo.jpg" alt="Apex Algos" style="width:32px;height:32px;object-fit:contain;border-radius:4px;" /><span style="color:var(--accent);">Apex <span style="color:var(--cream);">Algos</span></span></a>
+  <a class="nav-logo" href="./index.html" style="display:flex;align-items:center;gap:0.6rem;" title="Home"><img src="logo.jpg" alt="Apex Algos" style="width:32px;height:32px;object-fit:contain;border-radius:4px;" /><span style="color:var(--accent);">Apex <span style="color:var(--cream);">Algos</span></span></a>
   <ul class="nav-links">
     <li><a href="./index.html">Home</a></li>
     <li><a href="./strategies.html">Strategies</a></li>
@@ -524,7 +524,7 @@
 
 <main>
   <p class="page-eyebrow">Apex Algos &middot; Daily P&amp;L Dashboard</p>
-  <h1 class="page-title" style="font-weight:700;">Daily Performance</h1>
+  <h1 class="page-title" id="adminTapTarget" style="font-weight:700;cursor:default;user-select:none;">Daily Performance</h1>
   <p class="page-subtitle">Strategy-by-strategy breakdown with daily, monthly, and all-time P&amp;L. Updated from live trading records.</p>
   <div style="display:flex;align-items:center;gap:0.85rem;margin-bottom:1.5rem;">
     <span class="live-badge" id="liveBadge">LIVE &middot; &mdash;</span>
@@ -2007,36 +2007,31 @@ async function triggerGithubSync() {
   });
 })();
 
-// ── MOBILE: 7 rapid taps on logo opens admin panel ──
+// ── MOBILE: 7 rapid taps on "Daily Performance" title opens admin panel ──
 (function() {
   const REQUIRED_TAPS  = 7;
-  const MAX_GAP_MS     = 400;   // max ms between taps
-  const WINDOW_MS      = 3000;  // full sequence must complete within 3s
+  const MAX_GAP_MS     = 400;
+  const WINDOW_MS      = 3000;
   let taps = [];
 
-  const logo = document.getElementById('navLogo');
-  if (!logo) return;
+  document.addEventListener('DOMContentLoaded', function() {
+    const target = document.getElementById('adminTapTarget');
+    if (!target) return;
 
-  logo.addEventListener('click', function(e) {
-    const now = Date.now();
-
-    // Drop taps older than the window
-    taps = taps.filter(t => now - t < WINDOW_MS);
-
-    // Drop sequence if gap from last tap is too large
-    if (taps.length > 0 && (now - taps[taps.length - 1]) > MAX_GAP_MS) {
-      taps = [];
-    }
-
-    taps.push(now);
-
-    if (taps.length === REQUIRED_TAPS) {
-      taps = [];
-      e.preventDefault();   // prevent nav on the triggering tap
-      openAdminPanel();
-    }
+    target.addEventListener('click', function(e) {
+      const now = Date.now();
+      taps = taps.filter(t => now - t < WINDOW_MS);
+      if (taps.length > 0 && (now - taps[taps.length - 1]) > MAX_GAP_MS) taps = [];
+      taps.push(now);
+      if (taps.length === REQUIRED_TAPS) {
+        taps = [];
+        openAdminPanel();
+      }
+    });
   });
 })();
+
+function openAdminPanel() {
   const panel = document.getElementById('adminPanel');
   if (!panel) return;
   panel.style.display = 'block';
