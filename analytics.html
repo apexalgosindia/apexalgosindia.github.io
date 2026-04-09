@@ -1150,6 +1150,10 @@ function getTodayPnl(k) {
 // Returns { idx, dateStr, isPrev } for MCX strategies.
 // If all MCX strategies have 0 for currentDateIdx, walks back to find last non-zero day.
 function getMcxDayCtx(mcxKeys) {
+  // If there are no MCX strategies, return current date as-is — no walk-back
+  if (!mcxKeys.length) {
+    return { idx: currentDateIdx, dateStr: DATA.daily_dates[currentDateIdx], isPrev: false };
+  }
   // Check if any MCX strategy has non-zero today
   const todayHasData = mcxKeys.some(k => {
     const v = DATA[k + '_daily']?.[currentDateIdx];
@@ -1158,7 +1162,7 @@ function getMcxDayCtx(mcxKeys) {
   if (todayHasData) {
     return { idx: currentDateIdx, dateStr: DATA.daily_dates[currentDateIdx], isPrev: false };
   }
-  // Walk back to find last day with MCX data
+  // Walk back to find last day with MCX data (MCX only — never affects NFO/BFO rows)
   for (let i = currentDateIdx - 1; i >= 0; i--) {
     const hasData = mcxKeys.some(k => {
       const v = DATA[k + '_daily']?.[i];
@@ -1531,10 +1535,12 @@ function navDate(dir) {
   const nextBtn = document.querySelector('.nav-btn[onclick*="1"]');
   if (nextBtn) { nextBtn.disabled = currentDateIdx >= lastValid; nextBtn.style.opacity = currentDateIdx >= lastValid ? '0.3' : '1'; }
   updateDateNav(); renderTodayBanner(); renderStratPie();
+  renderBreakdownTable(document.getElementById('searchInput')?.value || '');
 }
 function navToday() {
   currentDateIdx = getLastValidIdx();
   updateDateNav(); renderTodayBanner(); renderStratPie();
+  renderBreakdownTable(document.getElementById('searchInput')?.value || '');
 }
 
 // ── TODAY BANNER ──
@@ -1548,6 +1554,9 @@ function renderTodayBanner() {
   let grand = 0;
   const parts = [];
   const _bannerCfg = loadStratConfig();
+  // Compute MCX fallback context so banner reflects same date as the table
+  const _mcxKeysBanner = STRATS.filter(k => getStratCat(k) === 'mcx');
+  const _mcxCtxBanner  = getMcxDayCtx(_mcxKeysBanner);
   STRATS.forEach(k => {
     if (!getStratVisible(k)) return;
     const cat      = getStratCat(k);
@@ -1555,7 +1564,9 @@ function renderTodayBanner() {
     if (activeCatFilter === 'hedged' && !isHedged) return;
     if (activeCatFilter === 'unhedged' && isHedged) return;
     if (activeCatFilter !== 'all' && activeCatFilter !== 'hedged' && activeCatFilter !== 'unhedged' && cat !== activeCatFilter) return;
-    const v = DATA[k+'_daily']?.[idx] || 0;
+    const isMcx = cat === 'mcx';
+    const vIdx = isMcx ? _mcxCtxBanner.idx : idx;
+    const v = DATA[k+'_daily']?.[vIdx] || 0;
     if (v !== 0) {
       grand += v;
       parts.push(`<div class="today-total-item"><div class="today-total-lbl"><span class="dot" style="background:${STRAT_COLORS[k]};margin-right:4px;"></span>${STRAT_LABELS[k]}</div><div class="today-total-val ${v>0?'td-pos':'td-neg'}">${fmtIN(v)}</div></div>`);
@@ -1584,7 +1595,9 @@ function renderTodayBanner() {
       if (activeCatFilter !== 'all') return cat === activeCatFilter;
       return true;
     }).forEach(k => {
-      const v = DATA[k+'_daily']?.[idx] || 0;
+      const isMcx = getStratCat(k) === 'mcx';
+      const vIdx = isMcx ? _mcxCtxBanner.idx : idx;
+      const v = DATA[k+'_daily']?.[vIdx] || 0;
       if (v !== 0) {
         const cls = v > 0 ? 'pos' : 'neg';
         stripParts += `<div class="strip-item"><div class="strip-item-label"><span class="dot" style="background:${STRAT_COLORS[k]};margin-right:3px;width:6px;height:6px;"></span>${STRAT_LABELS[k]}</div><div class="strip-item-val ${cls}">${fmtIN(v)}</div></div>`;
