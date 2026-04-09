@@ -1223,8 +1223,18 @@ function generateAuto() {
 
     for (const s of mcxPool) {
       if (mcxBudget < s.lotCap) continue;
-      const lots    = Math.floor(mcxBudget / s.lotCap);
+      let lots    = Math.floor(mcxBudget / s.lotCap);
       if (lots < 1) continue;
+
+      // NAGAPM must be strictly less than NAGAP lots
+      if (s.key === 'ngapm') {
+        const ngapEntry = alloc.find(a => a.key === 'ngap');
+        const ngapLots  = ngapEntry ? ngapEntry.lots : 0;
+        if (ngapLots === 0) continue; // NAGAP not allocated — skip NAGAPM entirely
+        lots = Math.min(lots, ngapLots - 1);
+        if (lots < 1) continue;
+      }
+
       const capUsed = lots * s.lotCap;
       alloc.push({ ...s, lots, capUsed, reuseCapital: true });
       mcxBudget -= capUsed;
@@ -1251,8 +1261,17 @@ function generateCustom() {
 
   const nfoAlloc = [], mcxAlloc = [];
   for(const s of STRAT_META) {
-    const lots = customMults[s.key] !== undefined ? customMults[s.key] : 1;
+    let lots = customMults[s.key] !== undefined ? customMults[s.key] : 1;
     if(lots < 1) continue;
+
+    // NAGAPM must be strictly less than NAGAP
+    if (s.key === 'ngapm') {
+      const ngapLots = customMults['ngap'] ?? 0;
+      if (ngapLots === 0) continue;
+      lots = Math.min(lots, ngapLots - 1);
+      if (lots < 1) continue;
+    }
+
     const capUsed = lots * s.lotCap;
     const entry = { ...s, stats: getStats(s.key), lots, capUsed };
     if (s.idx === 'mcx') mcxAlloc.push(entry);
