@@ -796,21 +796,10 @@
     <p class="page-subtitle">Use the share codes below to check live performance on Tradetron.</p>
 
     <!-- LIVE P&L BANNER -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:3rem;">
-      <div style="background:var(--surface);border:1px solid rgba(237,230,214,0.07);border-radius:4px;padding:1.2rem 1.5rem;">
-        <div style="font-family:'Inter',sans-serif;font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">Combined ROI</div>
-        <div id="live-comb-roi" style="font-family:'Inter',sans-serif;font-size:1.4rem;color:var(--pos);">—</div>
-        <div id="live-comb-pnl" style="font-family:'Inter',sans-serif;font-size:0.72rem;color:var(--mid);margin-top:0.2rem;">—</div>
-      </div>
       <div style="background:var(--surface);border:1px solid rgba(237,230,214,0.07);border-radius:4px;padding:1.2rem 1.5rem;">
         <div style="font-family:'Inter',sans-serif;font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">NAP ROI</div>
         <div id="live-nap-roi" style="font-family:'Inter',sans-serif;font-size:1.4rem;color:var(--pos);">—</div>
         <div id="live-nap-pnl" style="font-family:'Inter',sans-serif;font-size:0.72rem;color:var(--mid);margin-top:0.2rem;">—</div>
-      </div>
-      <div style="background:var(--surface);border:1px solid rgba(237,230,214,0.07);border-radius:4px;padding:1.2rem 1.5rem;">
-        <div style="font-family:'Inter',sans-serif;font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">SAP ROI</div>
-        <div id="live-sap-roi" style="font-family:'Inter',sans-serif;font-size:1.4rem;color:var(--pos);">—</div>
-        <div id="live-sap-pnl" style="font-family:'Inter',sans-serif;font-size:0.72rem;color:var(--mid);margin-top:0.2rem;">—</div>
       </div>
     </div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3rem;flex-wrap:wrap;gap:0.75rem;">
@@ -1001,12 +990,8 @@
       const fmt = n => '&#8377;' + Math.abs(Math.round(n)).toLocaleString('en-IN');
       const setEl = (id, v) => { const e = document.getElementById(id); if (e) e.innerHTML = v; };
 
-      setEl('live-comb-roi', '+' + s.comb.roi + '%');
-      setEl('live-comb-pnl', fmt(s.comb.pnl));
       setEl('live-nap-roi',  '+' + s.nap.roi  + '%');
       setEl('live-nap-pnl',  fmt(s.nap.pnl));
-      setEl('live-sap-roi',  '+' + s.sap.roi  + '%');
-      setEl('live-sap-pnl',  fmt(s.sap.pnl));
 
       const badge = document.getElementById('live-status');
       if (badge && d.updated) {
