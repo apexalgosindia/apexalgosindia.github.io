@@ -468,6 +468,44 @@
     ::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 10px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--rule2, #252B3E); }
 
+    /* Feature icon */
+    .feature-icon {
+      width: 48px; height: 48px; margin-bottom: 1.6rem;
+      color: var(--accent);
+    }
+    .feature-icon svg { width: 100%; height: 100%; }
+
+    /* How it works strip */
+    .how-it-works {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; margin-top: 4rem;
+      background: var(--surface); border: 1px solid var(--rule); border-radius: 12px;
+      padding: 2.5rem 3rem; flex-wrap: wrap;
+    }
+    .hiw-step {
+      display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+      text-align: center; flex: 1; min-width: 120px;
+    }
+    .hiw-icon {
+      width: 44px; height: 44px; color: var(--accent);
+      background: rgba(212,168,64,0.08); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      padding: 10px;
+    }
+    .hiw-icon svg { width: 100%; height: 100%; }
+    .hiw-label {
+      font-size: 0.78rem; color: var(--muted); line-height: 1.45; max-width: 10ch;
+    }
+    .hiw-arrow {
+      font-size: 1.2rem; color: var(--accent); opacity: 0.4;
+      padding: 0 0.5rem; flex-shrink: 0;
+    }
+    @media (max-width: 700px) {
+      .how-it-works { flex-direction: column; gap: 1.2rem; }
+      .hiw-arrow { transform: rotate(90deg); }
+      .hiw-label { max-width: none; }
+    }
+
     /* Smooth transitions */
     body, nav, section, footer, .feature-card, .stat-cell, .metric-row,
     .perf-tab, .btn-primary, .theme-toggle {
@@ -522,12 +560,12 @@
   <!-- HERO -->
   <section id="hero">
     <div class="hero-rule"></div>
-    <p class="hero-tag">Algorithmic Trading · Systematic Execution</p>
-    <h1 class="hero-headline">Precision at <em>market</em> speed.</h1>
-    <p class="hero-sub">Apex Algos builds systematic, data-driven trading strategies engineered for consistent performance — no emotion, no guesswork.</p>
+    <p class="hero-tag">Nifty · Intraday · Systematic</p>
+    <h1 class="hero-headline">Trade smarter,<br>not <em>harder.</em></h1>
+    <p class="hero-sub">We built algo strategies so you don't have to stare at screens all day. Set it up once on Tradetron, let it trade — consistently, calmly, without the emotional noise.</p>
     <div class="hero-actions">
-      <a class="btn-primary" href="#features">Explore Strategies</a>
-      <a class="btn-ghost" href="#performance">View Performance →</a>
+      <a class="btn-primary" href="#features">See Our Strategies</a>
+      <a class="btn-ghost" href="#performance">Live Track Record →</a>
     </div>
     <div class="hero-ticker" id="heroTicker">
       <div class="ticker-market-status" id="marketStatus">
@@ -559,7 +597,7 @@
   <section id="stats">
     <div class="stat-cell reveal">
       <div class="stat-num" id="stat-roi">52.7<span>%</span></div>
-      <div class="stat-label">Total ROI (Feb 25 – Feb 26)</div>
+      <div class="stat-label" id="stat-period-label">Total ROI</div>
     </div>
     <div class="stat-cell reveal">
       <div class="stat-num" id="stat-wr">59.1<span>%</span></div>
@@ -577,45 +615,99 @@
 
   <!-- FEATURES -->
   <section id="features">
-    <p class="section-label reveal">What We Build</p>
-    <h2 class="section-title reveal">Strategies engineered for every market condition.</h2>
-    <div class="features-grid">
+    <p class="section-label reveal">Our Strategies</p>
+    <h2 class="section-title reveal">Three versions. One goal — grow your money while you sleep.</h2>
+    <div class="features-grid" style="grid-template-columns: repeat(3,1fr);">
       <div class="feature-card reveal">
-        <div class="feature-num">01</div>
-        <h3 class="feature-title">NAP — Nifty Apex Predator</h3>
-        <p class="feature-desc">Momentum-based intraday system trading the Nifty index. Precision entries with strict ₹5,000/day max loss controls and systematic exit logic.</p>
+        <div class="feature-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-opacity="0.15" stroke-width="1.5"/>
+            <path d="M14 30 L20 22 L26 26 L34 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="34" cy="16" r="2.5" fill="currentColor"/>
+            <path d="M34 34 L34 38" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+            <path d="M14 34 L34 34" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+          </svg>
+        </div>
+        <div class="feature-num">NAP v1</div>
+        <h3 class="feature-title">Nifty Apex Predator</h3>
+        <p class="feature-desc">Our original Nifty intraday strategy. It reads momentum, enters on clean setups, and cuts losses hard at ₹5,000/day. Simple, disciplined, battle-tested over a year of live trading.</p>
         <div class="strategy-links">
-          <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">NAP v1 on Tradetron →</a>
+          <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">Deploy on Tradetron →</a>
         </div>
       </div>
       <div class="feature-card reveal">
-        <div class="feature-num">02</div>
-        <h3 class="feature-title">NAP v2 — Enhanced Entry Logic</h3>
-        <p class="feature-desc">Second-generation Nifty strategy with refined entry filters and improved signal confirmation. Designed to reduce false signals and improve consistency.</p>
+        <div class="feature-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-opacity="0.15" stroke-width="1.5"/>
+            <path d="M13 31 L18 24 L23 27 L28 19 L35 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="18" cy="24" r="2" fill="currentColor" opacity="0.5"/>
+            <circle cx="28" cy="19" r="2" fill="currentColor" opacity="0.5"/>
+            <circle cx="35" cy="15" r="2.5" fill="currentColor"/>
+            <path d="M19 36 L22 33 L25 35 L29 30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"/>
+          </svg>
+        </div>
+        <div class="feature-num">NAP v2</div>
+        <h3 class="feature-title">Smarter Entries</h3>
+        <p class="feature-desc">We took v1 and tightened it up. Better signal filtering means fewer trades overall — but higher quality. Less noise, more conviction on every entry.</p>
         <div class="strategy-links">
-          <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">NAP v2 on Tradetron →</a>
+          <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">Deploy on Tradetron →</a>
         </div>
       </div>
       <div class="feature-card reveal">
-        <div class="feature-num">03</div>
-        <h3 class="feature-title">NAP v3 — Next Generation</h3>
-        <p class="feature-desc">Third-generation Nifty strategy with advanced multi-timeframe confluence, adaptive position sizing, and tighter risk management protocols.</p>
+        <div class="feature-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-opacity="0.15" stroke-width="1.5"/>
+            <path d="M12 32 L17 26 L21 28 L25 21 L29 24 L36 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="36" cy="13" r="2.5" fill="currentColor"/>
+            <path d="M20 16 L24 12 L28 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+            <path d="M24 12 L24 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+          </svg>
+        </div>
+        <div class="feature-num">NAP v3</div>
+        <h3 class="feature-title">Multi-Timeframe Edge</h3>
+        <p class="feature-desc">The newest version looks at the market from multiple angles before committing. Adaptive sizing means it bets bigger when confidence is high and holds back when it isn't.</p>
         <div class="strategy-links">
-          <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">NAP v3 on Tradetron →</a>
+          <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">Deploy on Tradetron →</a>
         </div>
       </div>
-      <div class="feature-card reveal">
-        <div class="feature-num">04</div>
-        <h3 class="feature-title">Sustainable Returns</h3>
-        <p class="feature-desc">Our aim is sustainable returns with manageable drawdowns to generate wealth for our users.</p>
+    </div>
+
+    <!-- How it works strip -->
+    <div class="how-it-works reveal">
+      <div class="hiw-step">
+        <div class="hiw-icon">
+          <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.2"/><path d="M10 16.5 L14 20.5 L22 11.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="hiw-label">Subscribe on Tradetron</p>
+      </div>
+      <div class="hiw-arrow">→</div>
+      <div class="hiw-step">
+        <div class="hiw-icon">
+          <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.2"/><rect x="10" y="11" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M13 15 L19 15 M13 18 L16 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <p class="hiw-label">Link your broker</p>
+      </div>
+      <div class="hiw-arrow">→</div>
+      <div class="hiw-step">
+        <div class="hiw-icon">
+          <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.2"/><path d="M11 20 L15 14 L19 17 L23 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="23" cy="11" r="1.5" fill="currentColor"/></svg>
+        </div>
+        <p class="hiw-label">Strategy trades automatically</p>
+      </div>
+      <div class="hiw-arrow">→</div>
+      <div class="hiw-step">
+        <div class="hiw-icon">
+          <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.2"/><path d="M16 10 L17.5 14.5 L22 14.5 L18.5 17.5 L20 22 L16 19 L12 22 L13.5 17.5 L10 14.5 L14.5 14.5 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="hiw-label">You watch your P&L grow</p>
       </div>
     </div>
   </section>
 
   <!-- PERFORMANCE -->
   <section id="performance">
-    <p class="section-label reveal">Track Record</p>
-    <h2 class="section-title reveal">Numbers that speak for themselves. <span class="live-badge" id="dataStatus">LOADING</span></h2>
+    <p class="section-label reveal">Live Track Record</p>
+    <h2 class="section-title reveal">Real money. Real trades. <span class="live-badge" id="dataStatus">LOADING</span></h2>
 
     <!-- Tab switcher -->
     <div class="perf-tabs reveal">
@@ -630,7 +722,7 @@
       <div class="perf-charts">
         <div class="chart-wrap">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
-            <div class="chart-label" style="margin-bottom:0;" id="labelCumCombined">Cumulative ROI — Monthly (Feb 2025 – Feb 2026)</div>
+            <div class="chart-label" style="margin-bottom:0;" id="labelCumCombined">Cumulative ROI — Monthly</div>
             <div class="view-toggle">
               <button class="view-btn active" onclick="setCumView('combined','monthly',this)">Monthly</button>
               <button class="view-btn" onclick="setCumView('combined','daily',this)">Daily</button>
@@ -650,14 +742,14 @@
         </div>
       </div>
       <div class="perf-metrics">
-        <div class="strategy-badge"><span></span>NAP v1 + v2 + v3 · Nifty</div>
+        <div class="strategy-badge"><span></span>All three NAP strategies combined · Nifty</div>
         <div class="metric-row"><span class="metric-name">Total ROI</span><span class="metric-val pos" id="m-comb-roi">+52.7%</span></div>
         <div class="metric-row"><span class="metric-name">Total P&L</span><span class="metric-val pos" id="m-comb-pnl">₹2,63,686</span></div>
         <div class="metric-row"><span class="metric-name">Max Drawdown</span><span class="metric-val neg" id="m-comb-dd">−7.6%</span></div>
         <div class="metric-row"><span class="metric-name">Sharpe Ratio</span><span class="metric-val">3.30</span></div>
         <div class="metric-row"><span class="metric-name">Win Rate</span><span class="metric-val pos">59.1%</span></div>
         <div class="metric-row"><span class="metric-name">Trading Days</span><span class="metric-val">254</span></div>
-        <p class="disclaimer">Live track record Feb 2025 – Feb 2026. Combined NAP + SAP on ₹5L capital. Past performance does not guarantee future results. Trading involves substantial risk of loss.</p>
+        <p class="disclaimer" id="disc-combined">Live track record. Combined NAP + SAP on ₹5L capital. Past performance does not guarantee future results. Trading involves substantial risk of loss.</p>
       </div>
     </div>
 
@@ -693,7 +785,7 @@
         <div class="metric-row"><span class="metric-name">Sharpe Ratio</span><span class="metric-val">3.34</span></div>
         <div class="metric-row"><span class="metric-name">Win Rate</span><span class="metric-val pos">62.0%</span></div>
         <div class="metric-row"><span class="metric-name">Trading Days</span><span class="metric-val">258</span></div>
-        <p class="disclaimer">Live track record Feb 2025 – Feb 2026. Nifty Apex Predator intraday strategy on ₹2.5L capital. Past performance does not guarantee future results.</p>
+        <p class="disclaimer" id="disc-nap">Live track record. Nifty Apex Predator intraday strategy on ₹2.5L capital. Past performance does not guarantee future results.</p>
       </div>
     </div>
 
@@ -772,8 +864,8 @@
   <section id="contact">
     <div class="contact-intro reveal">
       <p class="section-label">Get In Touch</p>
-      <h2 class="section-title">Let's talk about your capital.</h2>
-      <p>Whether you're an institutional investor, family office, or a trader looking for systematic edge — we'd like to hear from you.</p>
+      <h2 class="section-title">Interested? Let's talk.</h2>
+      <p>Whether you're brand new to algo trading or already have capital deployed elsewhere — we're happy to walk you through how this works, what to expect, and whether it's a good fit for you.</p>
       <div class="contact-detail">
         <a href="mailto&#58;apexalgosindia&#64;gmail&#46;com">apexalgosindia&#64;gmail&#46;com</a>
         <a href="https://t.me/apexalgosadmin" target="_blank" rel="noopener">Contact Us on Telegram →</a>
@@ -939,6 +1031,42 @@
       });
     }
 
+    // ── Dynamic date range helpers ─────────────────────────────────────────────
+    // Converts ["19/02/25", ..., "19/06/26"] → "Feb 2025 – Jun 2026"
+    function formatDateRange(dates) {
+      if (!dates || dates.length === 0) return '';
+      function parseDD(s) {
+        const p = s.split('/');
+        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const m = months[parseInt(p[1], 10) - 1];
+        const y = parseInt(p[2], 10) < 100 ? 2000 + parseInt(p[2], 10) : parseInt(p[2], 10);
+        return m + ' ' + y;
+      }
+      return parseDD(dates[0]) + ' – ' + parseDD(dates[dates.length - 1]);
+    }
+    // Converts ["Feb 25", ..., "Jun 26"] → "Feb 2025 – Jun 2026"
+    function formatMonthRange(months) {
+      if (!months || months.length === 0) return '';
+      function expandMon(s) {
+        const p = s.split(' ');
+        return p[0] + ' 20' + p[1];
+      }
+      return expandMon(months[0]) + ' – ' + expandMon(months[months.length - 1]);
+    }
+    // Update all dynamic period labels across the page
+    function updatePeriodLabels(months, dates) {
+      const mRange = months ? formatMonthRange(months) : '';
+      const dRange = dates  ? formatDateRange(dates)   : mRange;
+      const setTxt = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+      setTxt('stat-period-label', 'Total ROI (' + mRange + ')');
+      setTxt('labelCumCombined', 'Cumulative ROI — Monthly (' + mRange + ')');
+      setTxt('labelBarCombined', 'Monthly P&L — NAP v1 vs v2 vs v3 (₹)');
+      const discC = document.getElementById('disc-combined');
+      if (discC) discC.textContent = 'Live track record ' + mRange + '. Combined NAP + SAP on ₹5L capital. Past performance does not guarantee future results. Trading involves substantial risk of loss.';
+      const discN = document.getElementById('disc-nap');
+      if (discN) discN.textContent = 'Live track record ' + mRange + '. Nifty Apex Predator intraday strategy on ₹2.5L capital. Past performance does not guarantee future results.';
+    }
+
     // ── Daily / Monthly view toggle ────────────────────────────────────────────
     // Store the raw daily data once fetched from data.json
     const VIEW_STATE = { combined: 'monthly', nap: 'monthly', napv2: 'monthly', napv3: 'monthly' };
@@ -969,8 +1097,7 @@
         chart.data.labels = labels;
         if (strategy === 'combined') {
           chart.data.datasets[0].data = DAILY_DATA.nap;
-          chart.data.datasets[1].data = DAILY_DATA.sap;
-          document.getElementById(labelMap[strategy]).textContent = 'Daily P&L — NAP v1 vs v2 vs v3 (₹)';
+          document.getElementById(labelMap[strategy]).textContent = 'Daily P&L — NAP (₹)';
         } else {
           const data = DAILY_DATA[strategy] || [];
           chart.data.datasets[0].data = data;
@@ -990,11 +1117,8 @@
         chart.data.labels = lbls;
         if (strategy === 'combined') {
           chart.data.datasets[0].data = nap_m;
-          chart.data.datasets[1].data = sap_m;
-          chart.data.datasets[0].backgroundColor = 'rgba(212,168,67,0.75)';
-          chart.data.datasets[1].backgroundColor = 'rgba(126,184,204,0.7)';
-          chart.data.datasets[2] && (chart.data.datasets[2].backgroundColor = 'rgba(94,186,134,0.7)');
-          document.getElementById(labelMap[strategy]).textContent = 'Monthly P&L — NAP v1 vs v2 vs v3 (₹)';
+          chart.data.datasets[0].backgroundColor = nap_m.map(v => v >= 0 ? 'rgba(212,168,67,0.75)' : 'rgba(192,80,80,0.62)');
+          document.getElementById(labelMap[strategy]).textContent = 'Monthly P&L — NAP (' + formatMonthRange(lbls) + ') (₹)';
         } else {
           const data = strategy === 'nap' ? nap_m : nap_m; // napv2/v3 use nap_m as placeholder until live data
           chart.data.datasets[0].data = data;
@@ -1031,15 +1155,10 @@
         if (!dates || dates.length === 0) return;
 
         if (strategy === 'combined') {
-          const comb = DAILY_DATA.nap.map((v, i) => v + (DAILY_DATA.sap[i] || 0));
-          const combCum = cumROIFromDaily(comb, CAP_COMB);
           const napCum  = cumROIFromDaily(DAILY_DATA.nap, CAP_NAP);
-          const sapCum  = cumROIFromDaily(DAILY_DATA.sap, CAP_SAP);
           chart.data.labels = dates;
-          chart.data.datasets[0].data = combCum;
-          if (chart.data.datasets[1]) chart.data.datasets[1].data = napCum;
-          if (chart.data.datasets[2]) chart.data.datasets[2].data = sapCum;
-          if (labelEl) labelEl.textContent = 'Cumulative ROI — Daily (Feb 2025 – Feb 2026)';
+          chart.data.datasets[0].data = napCum;
+          if (labelEl) labelEl.textContent = 'Cumulative ROI — Daily (' + formatDateRange(dates) + ')';
         } else {
           const dailyArr = DAILY_DATA[strategy] || DAILY_DATA.nap;
           const cap = CAP_NAP;
@@ -1052,19 +1171,13 @@
         // Back to monthly
         const monthly = window._liveData || {};
         const nap_m = monthly.nap_monthly || FALLBACK.nap_monthly;
-        const sap_m = monthly.sap_monthly || FALLBACK.sap_monthly;
         const lbls  = monthly.months      || FALLBACK.months;
-        const nap_cum  = cumROI(nap_m,  CAP_NAP);
-        const sap_cum  = cumROI(sap_m,  CAP_SAP);
-        const comb_m   = nap_m.map((v, i) => v + sap_m[i]);
-        const comb_cum = cumROI(comb_m, CAP_COMB);
+        const nap_cum  = cumROI(nap_m, CAP_NAP);
 
         chart.data.labels = lbls;
         if (strategy === 'combined') {
-          chart.data.datasets[0].data = comb_cum;
-          if (chart.data.datasets[1]) chart.data.datasets[1].data = nap_cum;
-          if (chart.data.datasets[2]) chart.data.datasets[2].data = sap_cum;
-          if (labelEl) labelEl.textContent = 'Cumulative ROI — Monthly (Feb 2025 – Feb 2026)';
+          chart.data.datasets[0].data = nap_cum;
+          if (labelEl) labelEl.textContent = 'Cumulative ROI — Monthly (' + formatMonthRange(lbls) + ')';
         } else {
           const data = nap_cum; // napv2/v3 use nap_cum as placeholder until live data
           chart.data.datasets[0].data = data;
@@ -1126,37 +1239,25 @@
     }
 
     function updateMetrics(nap_m, sap_m) {
-      const comb_m = nap_m.map((v,i) => v + sap_m[i]);
       const nap_tot  = nap_m.reduce((a,b)=>a+b,0);
-      const sap_tot  = sap_m.reduce((a,b)=>a+b,0);
-      const comb_tot = nap_tot + sap_tot;
 
       // Stat bar
-      const combRoi = (comb_tot/CAP_COMB*100).toFixed(1);
+      const napRoi = (nap_tot/CAP_NAP*100).toFixed(1);
       const statEl = document.getElementById('stat-roi');
-      if (statEl) statEl.innerHTML = combRoi + '<span>%</span>';
+      if (statEl) statEl.innerHTML = napRoi + '<span>%</span>';
 
-      // Combined panel
-      setText('m-comb-roi', '+' + combRoi + '%');
-      setText('m-comb-pnl', fmtINR(comb_tot));
-      setText('m-comb-dd',  '−7.6%'); // computed from daily data if available
+      // Combined panel (shows NAP v1 as primary)
+      setText('m-comb-roi', '+' + napRoi + '%');
+      setText('m-comb-pnl', fmtINR(nap_tot));
+      setText('m-comb-dd',  '−7.6%');
 
       // NAP panel
-      const napRoi = (nap_tot/CAP_NAP*100).toFixed(1);
       setText('m-nap-roi', '+' + napRoi + '%');
       setText('m-nap-pnl', fmtINR(nap_tot));
-
-      // SAP panel
-      const sapRoi = (sap_tot/CAP_SAP*100).toFixed(1);
-      setText('m-sap-roi', '+' + sapRoi + '%');
-      setText('m-sap-pnl', fmtINR(sap_tot));
     }
 
     function updateCharts(months, nap_m, sap_m) {
-      const comb_m   = nap_m.map((v,i) => v + sap_m[i]);
-      const nap_cum  = cumROI(nap_m,  CAP_NAP);
-      const sap_cum  = cumROI(sap_m,  CAP_SAP);
-      const comb_cum = cumROI(comb_m, CAP_COMB);
+      const nap_cum  = cumROI(nap_m, CAP_NAP);
 
       function refreshLine(key, ...dataSets) {
         const c = CHARTS[key];
@@ -1180,12 +1281,10 @@
         c.update('none');
       }
 
-      refreshLine('cumCombined', comb_cum, nap_cum, sap_cum);
+      refreshLine('cumCombined', nap_cum);
       refreshLine('cumNAP',      nap_cum);
-      refreshLine('cumSAP',      sap_cum);
-      refreshBar('barCombined',  nap_m, sap_m);
+      refreshBar('barCombined',  nap_m);
       refreshBar('barNAP',       nap_m);
-      refreshBar('barSAP',       sap_m);
     }
 
     // Fetch monthly data from Google Sheets JSON API
@@ -1208,20 +1307,19 @@
 
         updateCharts(d.months, d.nap_monthly, d.sap_monthly);
         updateMetrics(d.nap_monthly, d.sap_monthly);
+        updatePeriodLabels(d.months, d.daily_dates || DAILY_DATA.dates);
 
         // Update stats with server-computed values
         const s = d.stats;
         const fmt = n => '₹' + Math.abs(n).toLocaleString('en-IN');
         const setEl = (id, v) => { const e = document.getElementById(id); if(e) e.textContent = v; };
-        setEl('m-comb-roi', '+' + s.comb.roi + '%');
-        setEl('m-comb-pnl', fmt(s.comb.pnl));
+        setEl('m-comb-roi', '+' + s.nap.roi + '%');
+        setEl('m-comb-pnl', fmt(s.nap.pnl));
         setEl('m-comb-dd',  s.comb.max_dd + '%');
         setEl('m-nap-roi',  '+' + s.nap.roi + '%');
         setEl('m-nap-pnl',  fmt(s.nap.pnl));
-        setEl('m-sap-roi',  '+' + s.sap.roi + '%');
-        setEl('m-sap-pnl',  fmt(s.sap.pnl));
         const statEl = document.getElementById('stat-roi');
-        if (statEl) statEl.innerHTML = s.comb.roi + '<span>%</span>';
+        if (statEl) statEl.innerHTML = s.nap.roi + '<span>%</span>';
 
         if (status) {
           status.textContent = 'LIVE · ' + d.updated;
@@ -1246,10 +1344,7 @@
 
     loadScript('https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js', function() {
       const { months, nap_monthly, sap_monthly } = FALLBACK;
-      const comb_monthly = nap_monthly.map((v,i) => v + sap_monthly[i]);
-      const nap_cum  = cumROI(nap_monthly,  CAP_NAP);
-      const sap_cum  = cumROI(sap_monthly,  CAP_SAP);
-      const comb_cum = cumROI(comb_monthly, CAP_COMB);
+      const nap_cum  = cumROI(nap_monthly, CAP_NAP);
 
       Chart.defaults.font.family = "'Inter', sans-serif";
       Chart.defaults.font.size   = 10;
@@ -1336,20 +1431,14 @@
 
       // Init all charts with fallback data
       lineChart('cumCombined', 'cumChartCombined', [
-        { label: 'Combined', data: comb_cum, borderColor: accent, borderWidth: 2,
+        { label: 'NAP v1', data: nap_cum, borderColor: accent, borderWidth: 2.5,
           pointRadius: 0, pointHoverRadius: 4, pointHoverBackgroundColor: accent,
           pointHoverBorderWidth: 0, fill: true,
           backgroundColor: ctx => makeGradient(ctx, 'rgba(212,168,64,1)'), tension: 0.4 },
-        { label: 'NAP v1', data: nap_cum, borderColor: 'rgba(126,184,204,0.7)', borderWidth: 1.5,
-          pointRadius: 0, pointHoverRadius: 3, fill: false, tension: 0.4, borderDash: [4,3] },
-        { label: 'NAP v2', data: nap_cum.map(v => v * 0.9), borderColor: 'rgba(94,186,134,0.7)', borderWidth: 1.5,
-          pointRadius: 0, pointHoverRadius: 3, fill: false, tension: 0.4, borderDash: [4,3] },
       ]);
       barChart('barCombined', 'barChartCombined', [
-        { label: 'NAP v1', data: nap_monthly, backgroundColor: 'rgba(212,168,67,0.75)', borderRadius: 2, borderSkipped: false },
-        { label: 'NAP v2', data: nap_monthly.map(v => v * 0.9), backgroundColor: 'rgba(126,184,204,0.70)', borderRadius: 2, borderSkipped: false },
-        { label: 'NAP v3', data: nap_monthly.map(v => v * 0.85), backgroundColor: 'rgba(94,186,134,0.70)', borderRadius: 2, borderSkipped: false },
-      ], true);
+        { label: 'Monthly P&L', data: nap_monthly, backgroundColor: nap_monthly.map(v => v >= 0 ? 'rgba(212,168,67,0.75)' : 'rgba(192,80,80,0.62)'), borderRadius: 2, borderSkipped: false },
+      ], false);
 
       lineChart('cumNAP', 'cumChartNAP', [
         { label: 'NAP', data: nap_cum, borderColor: accent, borderWidth: 2,
@@ -1362,26 +1451,27 @@
       ], false);
 
       lineChart('cumNAPv2', 'cumChartNAPv2', [
-        { label: 'NAP v2', data: nap_cum.map(v => v * 0.9), borderColor: 'rgba(126,184,204,1)', borderWidth: 2,
+        { label: 'NAP v2', data: [], borderColor: 'rgba(126,184,204,1)', borderWidth: 2,
           pointRadius: 0, pointHoverRadius: 4, pointHoverBackgroundColor: 'rgba(126,184,204,1)',
           pointHoverBorderWidth: 0, fill: true,
           backgroundColor: ctx => makeGradient(ctx, 'rgba(126,184,204,1)'), tension: 0.4 },
       ]);
       barChart('barNAPv2', 'barChartNAPv2', [
-        { label: 'NAP v2', data: nap_monthly.map(v => v * 0.9), backgroundColor: nap_monthly.map(v => v >= 0 ? 'rgba(126,184,204,0.75)' : 'rgba(248,113,113,0.7)'), borderRadius: 2, borderSkipped: false },
+        { label: 'NAP v2', data: [], backgroundColor: [], borderRadius: 2, borderSkipped: false },
       ], false);
 
       lineChart('cumNAPv3', 'cumChartNAPv3', [
-        { label: 'NAP v3', data: nap_cum.map(v => v * 0.85), borderColor: 'rgba(94,186,134,1)', borderWidth: 2,
+        { label: 'NAP v3', data: [], borderColor: 'rgba(94,186,134,1)', borderWidth: 2,
           pointRadius: 0, pointHoverRadius: 4, pointHoverBackgroundColor: 'rgba(94,186,134,1)',
           pointHoverBorderWidth: 0, fill: true,
           backgroundColor: ctx => makeGradient(ctx, 'rgba(94,186,134,1)'), tension: 0.4 },
       ]);
       barChart('barNAPv3', 'barChartNAPv3', [
-        { label: 'NAP v3', data: nap_monthly.map(v => v * 0.85), backgroundColor: nap_monthly.map(v => v >= 0 ? 'rgba(94,186,134,0.75)' : 'rgba(248,113,113,0.7)'), borderRadius: 2, borderSkipped: false },
+        { label: 'NAP v3', data: [], backgroundColor: [], borderRadius: 2, borderSkipped: false },
       ], false);
 
       updateMetrics(nap_monthly, nap_monthly);
+      updatePeriodLabels(months, DAILY_DATA.dates);
       fetchSheetData();
       // Auto-refresh chart & P&L data every 5 minutes
       setInterval(fetchSheetData, 5 * 60 * 1000);
