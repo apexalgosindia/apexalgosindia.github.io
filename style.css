@@ -1458,6 +1458,7 @@ td { font-size: 0.82rem; color: var(--mid); }
 
 /* Strat toggle bar */
 .strat-toggle-bar {
+  display: none;
   padding: 0.9rem 1.2rem;
   border-bottom: 1px solid var(--rule);
 }
