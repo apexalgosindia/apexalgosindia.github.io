@@ -921,6 +921,11 @@ main {
   max-width: 1380px; margin: 0 auto;
   padding: 100px 3rem 6rem;
 }
+@media (max-width: 900px) {
+  main {
+    padding: 100px 1.5rem 4rem;
+  }
+}
 
 .page-label, .page-eyebrow {
   font-size: 0.62rem; font-weight: 600;
@@ -2383,7 +2388,7 @@ td { font-size: 0.82rem; color: var(--mid); }
 /* Page Hero Stats & Live Bar (strategies.html) */
 .page-hero {
   display: flex; align-items: flex-end; justify-content: space-between;
-  gap: 2rem; padding: 4rem 0 3rem; border-bottom: 1px solid var(--rule);
+  gap: 2rem; padding: 0 0 3rem; border-bottom: 1px solid var(--rule);
   margin-bottom: 2.5rem; flex-wrap: wrap;
 }
 .page-hero-inner { flex: 1; min-width: 280px; }
