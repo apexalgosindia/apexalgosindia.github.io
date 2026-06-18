@@ -2148,7 +2148,7 @@ td { font-size: 0.82rem; color: var(--mid); }
 .am-range-btn.active { background: var(--accent); color: var(--ink); font-weight: 700; }
 .am-range-btn:hover:not(.active) { color: var(--cream); background: var(--accent-glow); }
 .am-stats {
-  display: grid; grid-template-columns: repeat(4, 1fr);
+  display: grid; grid-template-columns: repeat(3, 1fr);
   gap: 0.75rem; margin-bottom: 1.6rem;
 }
 .am-stat { background: var(--surface2); border: 1px solid var(--rule); border-radius: 12px; padding: 1rem 1.2rem; }
