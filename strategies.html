@@ -87,6 +87,69 @@
     td{font-size:0.82rem;color:var(--mid);}
     .pos{color:var(--pos)!important;}.neg{color:var(--neg)!important;}
 
+    /* ── PAGE HERO ── */
+    .page-hero {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      gap: 2rem; padding: 4rem 0 3rem; border-bottom: 1px solid var(--rule);
+      margin-bottom: 2.5rem; flex-wrap: wrap;
+    }
+    .page-hero-inner { flex: 1; min-width: 280px; }
+    .page-hero-stats {
+      display: flex; align-items: center; gap: 0;
+      background: var(--surface); border: 1px solid var(--rule);
+      border-radius: 8px; overflow: hidden; flex-shrink: 0;
+    }
+    .hero-stat {
+      display: flex; flex-direction: column; gap: 0.3rem;
+      padding: 1.2rem 2rem; text-align: center;
+    }
+    .hero-stat-val { font-size: 1.6rem; font-weight: 300; color: var(--cream); letter-spacing: -0.02em; }
+    .hero-stat-val.pos { color: var(--pos); }
+    .hero-stat-label { font-size: 0.55rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+    .hero-stat-divider { width: 1px; height: 40px; background: var(--rule); flex-shrink: 0; }
+
+    /* ── LIVE STATS BAR ── */
+    .live-stats-bar {
+      display: flex; align-items: center; gap: 0;
+      background: var(--surface); border: 1px solid var(--rule);
+      border-radius: 8px; padding: 1rem 1.5rem; margin-bottom: 2rem;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .live-stat-item { display: flex; flex-direction: column; gap: 0.2rem; }
+    .live-stat-label { font-size: 0.52rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+    .live-stat-val { font-size: 1.3rem; font-weight: 300; color: var(--cream); line-height: 1; }
+    .live-stat-val.pos { color: var(--pos); }
+    .live-stat-sub { font-size: 0.7rem; color: var(--muted); }
+    .live-stat-sep { width: 1px; height: 36px; background: var(--rule); margin: 0 1.5rem; flex-shrink: 0; }
+    .live-status-badge {
+      font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 0.3rem 0.75rem; border: 1px solid rgba(237,230,214,0.15);
+      border-radius: 3px; color: var(--muted);
+    }
+    .sheet-link {
+      font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent); text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .sheet-link:hover { opacity: 0.7; }
+
+    /* ── SECTION DIVIDER ── */
+    .section-divider {
+      display: flex; align-items: center; gap: 1rem;
+      margin: 2.5rem 0 2rem;
+    }
+    .section-divider::before, .section-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--rule);
+    }
+    .section-divider-label {
+      font-size: 0.6rem; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* ── SHEET BANNER ── */
+    .sheet-banner svg { color: var(--accent); flex-shrink: 0; }
+
     /* ── ANALYTICS MODAL ── */
     #analyticsModal{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:1rem;}
     #analyticsModal.open{display:flex;}
@@ -171,38 +234,61 @@
       <a href="./index.html#contact">Contact</a>
     </div>
 
-  <main>
-    <p class="page-label">Tradetron Strategy Links</p>
-    <h1 class="page-title">Share Codes &amp;<br><em>Strategy Links</em></h1>
-    <p class="page-subtitle">Use the share codes below to check live performance on Tradetron.</p>
-
-    <!-- LIVE P&L BANNER -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:3rem;">
-      <div style="background:var(--surface);border:1px solid rgba(237,230,214,0.07);border-radius:4px;padding:1.2rem 1.5rem;">
-        <div style="font-family:'Inter',sans-serif;font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">Combined ROI</div>
-        <div id="live-comb-roi" style="font-family:'Inter',sans-serif;font-size:1.4rem;color:var(--pos);">—</div>
-        <div id="live-comb-pnl" style="font-family:'Inter',sans-serif;font-size:0.72rem;color:var(--mid);margin-top:0.2rem;">—</div>
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <p class="page-label">Our Strategies</p>
+      <h1 class="page-title">All three NAP strategies,<br>ready to deploy.</h1>
+      <p class="page-subtitle">Copy a share code, paste it into Tradetron, link your broker, and you're done. The strategy handles everything from entry to exit — no manual intervention needed.</p>
+    </div>
+    <div class="page-hero-stats" id="heroStats">
+      <div class="hero-stat">
+        <div class="hero-stat-val pos" id="live-nap-roi">—</div>
+        <div class="hero-stat-label">NAP v1 ROI</div>
       </div>
-      <div style="background:var(--surface);border:1px solid rgba(237,230,214,0.07);border-radius:4px;padding:1.2rem 1.5rem;">
-        <div style="font-family:'Inter',sans-serif;font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">NAP ROI</div>
-        <div id="live-nap-roi" style="font-family:'Inter',sans-serif;font-size:1.4rem;color:var(--pos);">—</div>
-        <div id="live-nap-pnl" style="font-family:'Inter',sans-serif;font-size:0.72rem;color:var(--mid);margin-top:0.2rem;">—</div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-val" id="live-updated">—</div>
+        <div class="hero-stat-label">Last Updated</div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3rem;flex-wrap:wrap;gap:0.75rem;">
-      <div id="live-status" style="font-family:'Inter',sans-serif;font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.3rem 0.8rem;border:1px solid rgba(237,230,214,0.15);border-radius:2px;color:var(--muted);">LOADING…</div>
-      <a href="https://docs.google.com/spreadsheets/d/1Rgy-HH8bcY7guN7PuH6biiK-JVV-PaFOH5aDII8oVf8/edit?usp=sharing" target="_blank" rel="noopener" style="font-family:'Inter',sans-serif;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);text-decoration:none;">Full P&amp;L Sheet &#8599;</a>
+  </div>
+
+    <!-- LIVE STATS BAR -->
+    <div class="live-stats-bar">
+      <div class="live-stat-item">
+        <span class="live-stat-label">NAP Combined ROI</span>
+        <span class="live-stat-val pos" id="live-comb-roi">—</span>
+        <span class="live-stat-sub" id="live-comb-pnl">—</span>
+      </div>
+      <div class="live-stat-sep"></div>
+      <div class="live-stat-item">
+        <span class="live-stat-label">NAP v1 ROI</span>
+        <span class="live-stat-val pos" id="live-nap-roi2">—</span>
+        <span class="live-stat-sub" id="live-nap-pnl">—</span>
+      </div>
+      <div class="live-stat-sep"></div>
+      <div class="live-stat-item" style="margin-left:auto; flex-direction:row; align-items:center; gap:1rem;">
+        <div id="live-status" class="live-status-badge">LOADING…</div>
+        <a href="https://docs.google.com/spreadsheets/d/1Rgy-HH8bcY7guN7PuH6biiK-JVV-PaFOH5aDII8oVf8/edit?usp=sharing" target="_blank" rel="noopener" class="sheet-link">Full P&amp;L Sheet ↗</a>
+      </div>
     </div>
 
     <!-- Google Sheet Banner -->
     <a class="sheet-banner" href="https://docs.google.com/spreadsheets/d/1Rgy-HH8bcY7guN7PuH6biiK-JVV-PaFOH5aDII8oVf8/edit?usp=sharing" target="_blank" rel="noopener">
-      <span class="sheet-icon">&#128202;</span>
+      <span class="sheet-icon">
+        <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M3 9h18M9 9v12" stroke="currentColor" stroke-width="1.5"/><path d="M12 13h4M12 16.5h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </span>
       <div class="sheet-banner-text">
-        <div class="sheet-banner-label">Live Performance Data</div>
-        <div class="sheet-banner-title">Apex Algos — P&amp;L Tracking Sheet &rarr;</div>
+        <div class="sheet-banner-label">Open Live Spreadsheet</div>
+        <div class="sheet-banner-title">Every trade logged — Apex Algos P&amp;L Tracker →</div>
       </div>
-      <span class="sheet-banner-arrow">&#8599;</span>
+      <span class="sheet-banner-arrow">↗</span>
     </a>
+
+    <div class="section-divider">
+      <span class="section-divider-label">Active Strategies</span>
+    </div>
 
     <!-- NFO/BFO SECTION -->
     <div class="section-header" id="section-nfo" style="display:none;">
@@ -232,12 +318,14 @@
 
         <!-- Telegram -->
     <a class="tg-card" href="https://t.me/apexalgoschat" target="_blank" rel="noopener">
-      <span class="tg-card-icon">&#9992;</span>
+      <span class="tg-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M21 5L2 12.5l7 1M21 5l-5 14-4-4.5M21 5L9 13.5m0 0V19l2.5-2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
       <div class="tg-card-body">
-        <div class="tg-card-label">Community</div>
-        <div class="tg-card-title">Join our telegram for more details, timely updates &amp; support &rarr;</div>
+        <div class="tg-card-label">Community · Free to join</div>
+        <div class="tg-card-title">Got questions? Join our Telegram for live updates, setup help, and trade discussions →</div>
       </div>
-      <span class="tg-card-arrow">&#8599;</span>
+      <span class="tg-card-arrow">↗</span>
     </a>
 
   </main>
@@ -380,7 +468,9 @@
       setEl('live-comb-roi', '+' + s.comb.roi + '%');
       setEl('live-comb-pnl', fmt(s.comb.pnl));
       setEl('live-nap-roi',  '+' + s.nap.roi  + '%');
+      setEl('live-nap-roi2', '+' + s.nap.roi  + '%');
       setEl('live-nap-pnl',  fmt(s.nap.pnl));
+      setEl('live-updated',  d.updated || '—');
 
       const badge = document.getElementById('live-status');
       if (badge && d.updated) {
@@ -419,7 +509,7 @@
       <p class="footer-disclaimer-text">⚠ Disclaimer: Past performance is not a guarantee of future results. As per SEBI, 93% of traders lose money in F&O. Apex Algos is not a SEBI-registered advisor. You are responsible for your trading decisions &amp; losses.</p>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 Apex Algos. All rights reserved.</p>
+      <p>© 2026 Apex Algos. All rights reserved.</p>
       <p>Built for performance. Engineered with discipline.</p>
     </div>
   </footer>
