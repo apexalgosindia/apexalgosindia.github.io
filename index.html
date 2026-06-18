@@ -175,50 +175,7 @@
       font-size: clamp(1.9rem, 3.8vw, 3rem); font-weight: 300; line-height: 1.14;
       max-width: 22ch; margin-bottom: 4.5rem; color: var(--cream);
     }
-    .features-grid {
-      display: grid; grid-template-columns: repeat(3,1fr); gap: 0;
-      border: 1px solid var(--rule); border-radius: 12px; overflow: hidden;
-    }
-    .feature-card {
-      padding: 3rem 2.5rem; border-right: 1px solid var(--rule);
-      border-bottom: 1px solid var(--rule); background: var(--surface);
-      position: relative; overflow: hidden; transition: background 0.25s;
-    }
-    .feature-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      opacity: 0; transition: opacity 0.35s;
-    }
-    .feature-card:hover { background: var(--surface2); }
-    .feature-card:hover::before { opacity: 1; }
-    .feature-card:nth-child(3n) { border-right: none; }
-    .feature-card:nth-child(1),
-    .feature-card:nth-child(2),
-    .feature-card:nth-child(3) { border-bottom: none; }
-    .feature-num { font-size: 0.58rem; letter-spacing: 0.16em; color: var(--accent); margin-bottom: 1.8rem; font-weight: 600; }
-    .feature-title { font-size: 1.25rem; font-weight: 600; line-height: 1.28; margin-bottom: 0.85rem; color: var(--cream); }
-    .feature-desc { font-size: 0.88rem; line-height: 1.78; color: var(--muted); }
-    .strategy-links { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.4rem; }
-    .feature-link {
-      display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1.4rem;
-      font-size: 0.65rem; font-weight: 500; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--accent); text-decoration: none;
-      transition: gap 0.22s, color 0.22s;
-    }
-    .strategy-links .feature-link { margin-top: 0; }
-    .feature-link:hover { color: var(--accent-light); gap: 0.7rem; }
-    .live-badge {
-      display: inline-block; font-size: 0.56rem; font-weight: 600;
-      letter-spacing: 0.12em; background: var(--accent-glow);
-      color: var(--accent); border: 1px solid rgba(240,180,41,0.25);
-      padding: 0.15rem 0.55rem; border-radius: 4px; margin-left: 0.6rem; vertical-align: middle;
-    }
-    @media (max-width: 900px) {
-      #features { padding: 5rem 2rem; }
-      .features-grid { grid-template-columns: 1fr; border-radius: 8px; }
-      .feature-card { border-right: none !important; }
-      .feature-card:nth-child(4), .feature-card:nth-child(5) { border-bottom: 1px solid var(--rule) !important; }
-    }
+
 
     /* Performance */
     #performance { padding: 8rem 4rem; background: var(--surface); }
@@ -617,7 +574,7 @@
   <section id="features">
     <p class="section-label reveal">Our Strategies</p>
     <h2 class="section-title reveal">Three versions. One goal — grow your money while you sleep.</h2>
-    <div class="features-grid" style="grid-template-columns: repeat(3,1fr);">
+    <div class="features-grid">
       <div class="feature-card reveal">
         <div class="feature-icon">
           <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
