@@ -156,7 +156,7 @@
         <button class="nav-btn active-today" onclick="navToday()" style="margin-left:0.4rem;">&#9679; Today</button>
       </div>
     </div>
-    <div class="strat-toggle-bar" id="stratToggleBar"></div>
+    <div class="strat-toggle-bar" id="stratToggleBar" style="display:none;"></div>
 
     <div class="bd-today-strip" id="bdTodayStrip"></div>
 
@@ -506,7 +506,10 @@ document.addEventListener('keydown', e => {
   if (secretBuffer.length > 16) secretBuffer = secretBuffer.slice(-16);
   if (secretBuffer === 'apexstrategyedit') {
     const bar = document.getElementById('stratToggleBar');
-    if (bar) bar.style.display = bar.style.display === 'flex' ? 'none' : 'flex';
+    if (bar) {
+      const isHidden = bar.style.display === 'none' || bar.style.display === '';
+      bar.style.display = isHidden ? 'block' : 'none';
+    }
     secretBuffer = '';
   }
 });
