@@ -168,7 +168,7 @@
           <div class="bd-sub">Daily &middot; Monthly &middot; Yearly Performance</div>
         </div>
       </div>
-      <div class="bd-date-pill" id="bdDatePill">&mdash;</div>
+      <div class="bd-date-pill" id="bdDatePill" style="display:none;">&mdash;</div>
     </div>
 
     <div class="bd-table-wrap">
@@ -780,7 +780,7 @@ function ddCell(curDd, maxDd) {
       <span class="dd-max-val">${maxStr}</span>
     </div>
     <div class="dd-bar-track">
-      <div class="dd-bar-max"></div>
+      <div class="dd-bar-max" style="width:100%"></div>
       <div class="dd-bar-cur" style="width:${curPct}%"></div>
     </div>
   </div>`;
