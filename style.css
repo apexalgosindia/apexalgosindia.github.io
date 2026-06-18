@@ -1554,6 +1554,7 @@ td { font-size: 0.82rem; color: var(--mid); }
   display: inline-flex;
   flex-direction: column;
   align-items: flex-end;
+  text-align: right;
 }
 .td-pos { color: var(--pos) !important; }
 .td-neg { color: var(--neg) !important; }
@@ -1594,22 +1595,24 @@ td { font-size: 0.82rem; color: var(--mid); }
 
 /* Drawdown bar */
 .dd-bar-track {
+  position: relative;
   width: 80px;
   height: 5px;
-  background: var(--surface3);
+  background: rgba(255,94,110,0.25);  /* ghost = track bg */
   border-radius: 3px;
   overflow: hidden;
   margin-top: 0.3rem;
 }
+.dd-bar-max {
+  display: none;  /* ghost is now the track background */
+}
 .dd-bar-cur {
+  position: absolute;
+  top: 0; left: 0;
   height: 100%;
   background: var(--neg);
   border-radius: 3px;
   transition: width 0.3s;
-}
-.dd-bar-max {
-  height: 100%;
-  background: rgba(255,94,110,0.35);
 }
 .dd-label-row {
   display: flex;
@@ -1827,9 +1830,16 @@ td { font-size: 0.82rem; color: var(--mid); }
 .strip-totals {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 0;
   flex: 1;
   overflow: hidden;
+}
+.strip-item {
+  align-items: flex-end;
+}
+.strip-item-val {
+  text-align: right;
 }
 
 /* Updated tag */
