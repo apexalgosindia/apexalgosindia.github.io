@@ -87,6 +87,21 @@
     th{font-size:0.6rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
     td{font-size:0.82rem;color:var(--mid);}
     .pos{color:var(--pos)!important;}.neg{color:var(--neg)!important;}
+
+    /* ── PAGE TITLE GRADIENT ── */
+    :root.light .page-title span {
+      -webkit-text-fill-color: var(--accent) !important;
+    }
+
+    /* ── SECTION TITLES ── */
+    .section-title {
+      font-size: 0.62rem; font-weight: 600; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--muted);
+      margin: 2.5rem 0 1rem; display: flex; align-items: center; gap: 0.75rem;
+    }
+    .section-title::after {
+      content: ''; flex: 1; height: 1px; background: var(--rule); display: block;
+    }
   </style>
 </head>
 <body>
@@ -120,16 +135,17 @@
 </div>
 
 <main>
-  <p class="page-eyebrow">Apex Algos &middot; Daily P&amp;L Dashboard</p>
-  <h1 class="page-title" id="adminTapTarget" style="font-weight:700;cursor:default;user-select:none;">Daily Performance</h1>
-  <p class="page-subtitle">Strategy-by-strategy breakdown with daily, monthly, and all-time P&amp;L. Updated from live trading records.</p>
-  <div style="display:flex;align-items:center;gap:0.85rem;margin-bottom:1.5rem;">
+  <p class="page-eyebrow">Live Trading Data</p>
+  <h1 class="page-title" id="adminTapTarget" style="cursor:default;user-select:none;">How we're doing<br><span style="font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">day by day.</span></h1>
+  <p class="page-subtitle">Every strategy, every trade, every rupee — logged and updated live. No cherry-picking, no summaries. Just the raw numbers.</p>
+  <div style="display:flex;align-items:center;gap:0.85rem;margin-bottom:2.5rem;flex-wrap:wrap;">
     <span class="live-badge" id="liveBadge">LIVE &middot; &mdash;</span>
     <p class="updated-tag" style="margin-bottom:0;" id="updatedTag">Last updated: &mdash;</p>
+    <a href="./strategies.html" style="margin-left:auto;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);text-decoration:none;">View Strategy Links →</a>
   </div>
 
   <!-- ════════════ STRATEGY BREAKDOWN TABLE ════════════ -->
-  <p class="section-title">Strategy Breakdown</p>
+  <p class="section-title">What each strategy made</p>
   <div class="breakdown-wrap">
     <div class="breakdown-toolbar">
       <div style="display:flex;gap:0;align-items:center;margin-right:0.5rem;">
@@ -162,10 +178,10 @@
 
     <div class="bd-header">
       <div class="bd-header-left">
-        <div class="bd-icon">&#9783;</div>
+        <div class="bd-icon">◈</div>
         <div>
-          <div class="bd-title">All Strategies &mdash; Detailed View</div>
-          <div class="bd-sub">Daily &middot; Monthly &middot; Yearly Performance</div>
+          <div class="bd-title">All Strategies — Full Detail</div>
+          <div class="bd-sub">Click a column header to sort · Navigate dates with ← →</div>
         </div>
       </div>
       <div class="bd-date-pill" id="bdDatePill" style="display:none;">&mdash;</div>
@@ -232,7 +248,7 @@
 
 
   <!-- ── ROLLING STATS ── -->
-  <p class="section-title">Rolling Performance &mdash; <span id="rollingPeriodLabel">All Time</span></p>
+  <p class="section-title">At a glance &mdash; <span id="rollingPeriodLabel">All Time</span></p>
   <div class="rolling-grid" id="rollingGrid"></div>
 
   <!-- ── CHARTS ── -->
@@ -252,7 +268,7 @@
   </div>
 
   <!-- ── ACTIVITY HEATMAP ── -->
-  <p class="section-title">Trading Activity &mdash; Win/Loss Heatmap</p>
+  <p class="section-title">Win &amp; loss pattern — every trading day</p>
   <div style="background:var(--surface);border:1px solid var(--rule);padding:1.2rem 1.4rem;margin-bottom:2rem;">
     <div class="heat-bar" id="heatBar"></div>
     <div style="display:flex;gap:1.5rem;margin-top:0.75rem;align-items:center;">
@@ -279,7 +295,7 @@
   <div style="margin-bottom:2rem;"></div>
 
   <!-- ── SUMMARY STRIP ── -->
-  <p class="section-title">Period Summary &mdash; <span id="summaryPeriodLabel">All Time</span></p>
+  <p class="section-title">Summary &mdash; <span id="summaryPeriodLabel">All Time</span></p>
   <div class="summary-strip" id="summaryStrip"></div>
 
 </main>
@@ -289,7 +305,7 @@
       <p class="footer-disclaimer-text">⚠ Disclaimer: Past performance is not a guarantee of future results. As per SEBI, 93% of traders lose money in F&O. Apex Algos is not a SEBI-registered advisor. You are responsible for your trading decisions &amp; losses.</p>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 Apex Algos. All rights reserved.</p>
+      <p>© 2026 Apex Algos. All rights reserved.</p>
       <p id="footerUpdated">Built for performance. Engineered with discipline.</p>
     </div>
   </footer>
