@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Apex Algos â€” Strategies &amp; Share Codes</title>
-  <meta name="description" content="Explore Apex Algos algorithmic trading strategies â€” NAP (Nifty Apex Predator) and SAP (Sensex Apex Predator). Get share codes for Tradetron." />
+  <title>Apex Algos — Strategies &amp; Share Codes</title>
+  <meta name="description" content="Explore Apex Algos algorithmic trading strategies — NAP (Nifty Apex Predator) and SAP (Sensex Apex Predator). Get share codes for Tradetron." />
   <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -52,16 +52,16 @@
     <div class="page-hero-inner">
       <p class="page-label">Our Strategies</p>
       <h1 class="page-title">All three NAP strategies,<br>ready to deploy.</h1>
-      <p class="page-subtitle">Copy a share code, paste it into Tradetron, link your broker, and you're done. The strategy handles everything from entry to exit â€” no manual intervention needed.</p>
+      <p class="page-subtitle">Copy a share code, paste it into Tradetron, link your broker, and you're done. The strategy handles everything from entry to exit — no manual intervention needed.</p>
     </div>
     <div class="page-hero-stats" id="heroStats">
       <div class="hero-stat">
-        <div class="hero-stat-val pos" id="live-nap-roi">â€”</div>
+        <div class="hero-stat-val pos" id="live-nap-roi">—</div>
         <div class="hero-stat-label">NAP v1 ROI</div>
       </div>
       <div class="hero-stat-divider"></div>
       <div class="hero-stat">
-        <div class="hero-stat-val" id="live-updated">â€”</div>
+        <div class="hero-stat-val" id="live-updated">—</div>
         <div class="hero-stat-label">Last Updated</div>
       </div>
     </div>
@@ -71,19 +71,19 @@
     <div class="live-stats-bar">
       <div class="live-stat-item">
         <span class="live-stat-label">NAP Combined ROI</span>
-        <span class="live-stat-val pos" id="live-comb-roi">â€”</span>
-        <span class="live-stat-sub" id="live-comb-pnl">â€”</span>
+        <span class="live-stat-val pos" id="live-comb-roi">—</span>
+        <span class="live-stat-sub" id="live-comb-pnl">—</span>
       </div>
       <div class="live-stat-sep"></div>
       <div class="live-stat-item">
         <span class="live-stat-label">NAP v1 ROI</span>
-        <span class="live-stat-val pos" id="live-nap-roi2">â€”</span>
-        <span class="live-stat-sub" id="live-nap-pnl">â€”</span>
+        <span class="live-stat-val pos" id="live-nap-roi2">—</span>
+        <span class="live-stat-sub" id="live-nap-pnl">—</span>
       </div>
       <div class="live-stat-sep"></div>
       <div class="live-stat-item" style="margin-left:auto; flex-direction:row; align-items:center; gap:1rem;">
-        <div id="live-status" class="live-status-badge">LOADINGâ€¦</div>
-        <a href="https://docs.google.com/spreadsheets/d/1Rgy-HH8bcY7guN7PuH6biiK-JVV-PaFOH5aDII8oVf8/edit?usp=sharing" target="_blank" rel="noopener" class="sheet-link">Full P&amp;L Sheet â†—</a>
+        <div id="live-status" class="live-status-badge">LOADING”¦</div>
+        <a href="https://docs.google.com/spreadsheets/d/1Rgy-HH8bcY7guN7PuH6biiK-JVV-PaFOH5aDII8oVf8/edit?usp=sharing" target="_blank" rel="noopener" class="sheet-link">Full P&amp;L Sheet ↗</a>
       </div>
     </div>
 
@@ -94,9 +94,9 @@
       </span>
       <div class="sheet-banner-text">
         <div class="sheet-banner-label">Open Live Spreadsheet</div>
-        <div class="sheet-banner-title">Every trade logged â€” Apex Algos P&amp;L Tracker â†’</div>
+        <div class="sheet-banner-title">Every trade logged — Apex Algos P&amp;L Tracker →</div>
       </div>
-      <span class="sheet-banner-arrow">â†—</span>
+      <span class="sheet-banner-arrow">↗</span>
     </a>
 
     <div class="section-divider">
@@ -135,25 +135,25 @@
         <svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M21 5L2 12.5l7 1M21 5l-5 14-4-4.5M21 5L9 13.5m0 0V19l2.5-2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </span>
       <div class="tg-card-body">
-        <div class="tg-card-label">Community Â· Free to join</div>
-        <div class="tg-card-title">Got questions? Join our Telegram for live updates, setup help, and trade discussions â†’</div>
+        <div class="tg-card-label">Community · Free to join</div>
+        <div class="tg-card-title">Got questions? Join our Telegram for live updates, setup help, and trade discussions →</div>
       </div>
-      <span class="tg-card-arrow">â†—</span>
+      <span class="tg-card-arrow">↗</span>
     </a>
 
   </main>
 
   <script>
-  // â”€â”€ THEME â”€â”€
+  // ── THEME ──
   function toggleTheme() {
     const isLight = document.documentElement.classList.toggle('light');
-    document.getElementById('themeIcon').textContent  = isLight ? 'â˜€' : 'â˜¾';
+    document.getElementById('themeIcon').textContent  = isLight ? '☀' : '☾';
     document.getElementById('themeLabel').textContent = isLight ? 'Dark' : 'Light';
     localStorage.setItem('apex-theme', isLight ? 'light' : 'dark');
   }
   (function(){ const saved = localStorage.getItem('apex-theme'); if (saved==='light') document.documentElement.classList.add('light'); })();
 
-  // â”€â”€ COPY SHARE CODE â”€â”€
+  // ── COPY SHARE CODE ──
   function copyCode(el, code) {
     navigator.clipboard.writeText(code).then(() => {
       const target = el.classList.contains('copy-btn') ? el : el.querySelector('.copy-btn');
@@ -165,7 +165,7 @@
     });
   }
 
-  // â”€â”€ ROI BADGE â”€â”€
+  // ── ROI BADGE ──
   function setRoiEl(id, roi) {
     const el = document.getElementById(id); if (!el) return;
     el.classList.remove('loading');
@@ -176,7 +176,7 @@
     el.style.color = '';
   }
 
-  // â”€â”€ BUILD CARD HTML from strategy object â”€â”€
+  // ── BUILD CARD HTML from strategy object ──
   function buildCard(s) {
     const slStr   = s.sl ? '&#8377;' + Number(s.sl).toLocaleString('en-IN') : 'Open';
     const isHedged = (s.sheet || '') === 'DAILY P&L HEDGED';
@@ -214,7 +214,7 @@
       </div>
       <div class="card-roi-row">
         <span class="card-roi-label">Avg Monthly ROI</span>
-        <span class="card-roi-val loading" id="roi-${s.key}">â€”</span>
+        <span class="card-roi-val loading" id="roi-${s.key}">—</span>
       </div>
       <div class="card-actions">
         <div class="card-links">${linkHtml}${codeHtml}</div>
@@ -223,7 +223,7 @@
     return div;
   }
 
-  // â”€â”€ GROUP & RENDER cards from data.json strategies â”€â”€
+  // ── GROUP & RENDER cards from data.json strategies ──
   const CONFIG_KEY = 'apexStratConfig_v1';
   function loadCfg() { try { return JSON.parse(localStorage.getItem(CONFIG_KEY)) || {}; } catch { return {}; } }
 
@@ -269,7 +269,7 @@
     document.getElementById('sub-section-mcx-hedged').style.display = grids.mcxHedged.children.length > 0 ? '' : 'none';
   }
 
-  // â”€â”€ FETCH data.json & REFRESH â”€â”€
+  // ── FETCH data.json & REFRESH ──
   async function refreshPnL() {
     try {
       const res = await fetch('./data.json?t=' + Date.now());
@@ -285,11 +285,11 @@
       setEl('live-nap-roi',  '+' + s.nap.roi  + '%');
       setEl('live-nap-roi2', '+' + s.nap.roi  + '%');
       setEl('live-nap-pnl',  fmt(s.nap.pnl));
-      setEl('live-updated',  d.updated || 'â€”');
+      setEl('live-updated',  d.updated || '—');
 
       const badge = document.getElementById('live-status');
       if (badge && d.updated) {
-        badge.textContent = 'LIVE Â· ' + d.updated;
+        badge.textContent = 'LIVE · ' + d.updated;
         badge.style.background  = 'rgba(78,160,110,0.12)';
         badge.style.borderColor = 'rgba(78,160,110,0.35)';
         badge.style.color       = '#7EC8A0';
@@ -314,14 +314,14 @@
     const isLight = document.documentElement.classList.contains('light');
     const icon = document.getElementById('themeIcon');
     const label = document.getElementById('themeLabel');
-    if (icon)  icon.textContent  = isLight ? 'â˜€' : 'â˜¾';
+    if (icon)  icon.textContent  = isLight ? '☀' : '☾';
     if (label) label.textContent = isLight ? 'Dark' : 'Light';
   });
 </script>
 
   <footer>
     <div class="footer-disclaimer">
-      <p class="footer-disclaimer-text">âš  Disclaimer: Past performance is not a guarantee of future results. As per SEBI, 93% of traders lose money in F&O. Apex Algos is not a SEBI-registered advisor. You are responsible for your trading decisions &amp; losses.</p>
+      <p class="footer-disclaimer-text">⚠️ Disclaimer: Past performance is not a guarantee of future results. As per SEBI, 93% of traders lose money in F&O. Apex Algos is not a SEBI-registered advisor. You are responsible for your trading decisions &amp; losses.</p>
     </div>
     <div class="footer-bottom">
       <p>Â© 2026 Apex Algos. All rights reserved.</p>
@@ -330,7 +330,7 @@
   </footer>
 
 
-<!-- â”€â”€ STRATEGY ANALYTICS MODAL â”€â”€ -->
+<!-- ── STRATEGY ANALYTICS MODAL ── -->
 <div id="analyticsModal" aria-modal="true" role="dialog">
   <div class="am-panel">
     <div class="am-header">
@@ -341,14 +341,14 @@
       <button class="am-close" onclick="closeAnalytics()" title="Close">&times;</button>
     </div>
     <div class="am-body">
-      <div id="amContent"><div class="am-loading">Loading dataâ€¦</div></div>
+      <div id="amContent"><div class="am-loading">Loading data”¦</div></div>
     </div>
   </div>
 </div>
 
 
 <script>
-// â”€â”€ STRATEGY ANALYTICS MODAL â”€â”€
+// ── STRATEGY ANALYTICS MODAL ──
 let _amData = null;       // cached data.json
 let _amCharts = [];       // chart instances to destroy on re-render
 let _amKey = null;
@@ -371,7 +371,7 @@ async function openAnalytics(key, label, e) {
   _amCalOffset = 0;
 
   document.getElementById('amTitle').textContent = label;
-  document.getElementById('amContent').innerHTML = '<div class="am-loading">Loading dataâ€¦</div>';
+  document.getElementById('amContent').innerHTML = '<div class="am-loading">Loading data”¦</div>';
   document.getElementById('analyticsModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 
@@ -452,7 +452,7 @@ function renderAmContent() {
   const roi       = ((totalPnl / cap) * 100).toFixed(1);
   const wins      = rDaily.filter(v => v > 0).length;
   const total     = rDaily.filter(v => v !== 0).length;
-  const winRate   = total ? ((wins / total) * 100).toFixed(1) : 'â€”';
+  const winRate   = total ? ((wins / total) * 100).toFixed(1) : '—';
   const bestDay   = rDaily.length ? Math.max(...rDaily) : 0;
   const worstDay  = rDaily.length ? Math.min(...rDaily) : 0;
   const avgDay    = total ? (rDaily.filter(v=>v!==0).reduce((s,v)=>s+v,0)/total) : 0;
@@ -467,7 +467,7 @@ function renderAmContent() {
     curDd = dd;
   });
 
-  const fmt = n => (n >= 0 ? '+' : '') + 'â‚¹' + Math.abs(Math.round(n)).toLocaleString('en-IN');
+  const fmt = n => (n >= 0 ? '+' : '') + '₹' + Math.abs(Math.round(n)).toLocaleString('en-IN');
   const fmtPct = n => (n >= 0 ? '+' : '') + n.toFixed(1) + '%';
   const posNeg = n => n >= 0 ? 'pos' : 'neg';
 
@@ -491,7 +491,7 @@ function renderAmContent() {
     scales: {
       x: { grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'Inter', size: 10 }, maxTicksLimit: 8, maxRotation: 0 } },
       y: { grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'Inter', size: 10 },
-        callback: v => 'â‚¹' + (Math.abs(v) >= 1000 ? (v/1000).toFixed(0)+'k' : v)
+        callback: v => '₹' + (Math.abs(v) >= 1000 ? (v/1000).toFixed(0)+'k' : v)
       }}
     }
   };
@@ -531,7 +531,7 @@ function renderAmContent() {
 
     <div class="am-chart-label" style="margin-top:1.5rem;">Calendar P&L</div>
     <div class="am-cal-header">
-      <div class="am-cal-title" id="amCalTitle">â€”</div>
+      <div class="am-cal-title" id="amCalTitle">—</div>
       <div class="am-cal-nav">
         <button class="am-cal-btn" onclick="amCalNav(-1)">&#8592; Prev</button>
         <button class="am-cal-btn" onclick="amCalNav(1)">Next &#8594;</button>
@@ -562,7 +562,7 @@ function renderAmContent() {
       }]
     },
     options: { ...chartDefaults, scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y,
-      ticks: { ...chartDefaults.scales.y.ticks, callback: v => (v >= 0 ? '+' : '') + 'â‚¹' + (Math.abs(v)>=1000?(v/1000).toFixed(0)+'k':v) }
+      ticks: { ...chartDefaults.scales.y.ticks, callback: v => (v >= 0 ? '+' : '') + '₹' + (Math.abs(v)>=1000?(v/1000).toFixed(0)+'k':v) }
     }}}
   }));
 
@@ -615,7 +615,7 @@ function renderAmCalendar() {
 
   titleEl.textContent = MONTHS[m] + ' ' + y;
 
-  // Build dateâ†’value lookup for this month
+  // Build date→value lookup for this month
   const lookup = {};
   dates.forEach((ds, i) => {
     const [dd, mm, yy] = ds.split('/');
@@ -629,7 +629,7 @@ function renderAmCalendar() {
   const fmtV = v => {
     const abs = Math.abs(v);
     const sign = v >= 0 ? '+' : '-';
-    return sign + 'â‚¹' + (abs >= 1000 ? (abs/1000).toFixed(1) + 'k' : abs.toLocaleString('en-IN'));
+    return sign + '₹' + (abs >= 1000 ? (abs/1000).toFixed(1) + 'k' : abs.toLocaleString('en-IN'));
   };
 
   let html = '';
