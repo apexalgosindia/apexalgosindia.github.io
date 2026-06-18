@@ -81,6 +81,18 @@
         <span class="live-stat-sub" id="live-nap-pnl">—</span>
       </div>
       <div class="live-stat-sep"></div>
+      <div class="live-stat-item">
+        <span class="live-stat-label">NAP v2 ROI</span>
+        <span class="live-stat-val pos" id="live-napv2-roi">—</span>
+        <span class="live-stat-sub" id="live-napv2-pnl">—</span>
+      </div>
+      <div class="live-stat-sep"></div>
+      <div class="live-stat-item">
+        <span class="live-stat-label">NAP v3 ROI</span>
+        <span class="live-stat-val pos" id="live-napv3-roi">—</span>
+        <span class="live-stat-sub" id="live-napv3-pnl">—</span>
+      </div>
+      <div class="live-stat-sep"></div>
       <div class="live-stat-item" style="margin-left:auto; flex-direction:row; align-items:center; gap:1rem;">
         <div id="live-status" class="live-status-badge">LOADING”¦</div>
         <a href="https://docs.google.com/spreadsheets/d/1Rgy-HH8bcY7guN7PuH6biiK-JVV-PaFOH5aDII8oVf8/edit?usp=sharing" target="_blank" rel="noopener" class="sheet-link">Full P&amp;L Sheet ↗</a>
@@ -285,6 +297,10 @@
       setEl('live-nap-roi',  '+' + s.nap.roi  + '%');
       setEl('live-nap-roi2', '+' + s.nap.roi  + '%');
       setEl('live-nap-pnl',  fmt(s.nap.pnl));
+      setEl('live-napv2-roi','+' + s.napv2.roi + '%');
+      setEl('live-napv2-pnl',fmt(s.napv2.pnl));
+      setEl('live-napv3-roi','+' + s.napv3.roi + '%');
+      setEl('live-napv3-pnl',fmt(s.napv3.pnl));
       setEl('live-updated',  d.updated || '—');
 
       const badge = document.getElementById('live-status');
