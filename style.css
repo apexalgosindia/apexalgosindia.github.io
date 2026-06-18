@@ -526,15 +526,15 @@ nav {
 }
 
 .features-grid {
-  display: grid; grid-template-columns: 1fr;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
 }
 
 .feature-card {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.5rem;
   padding: 2.2rem 2.5rem;
   border: 1px solid var(--rule);
   border-radius: 12px;
@@ -1030,8 +1030,8 @@ td { font-size: 0.82rem; color: var(--mid); }
 /* Strategy grid layout */
 .strategy-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.2rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
   margin-bottom: 2rem;
 }
 
@@ -1041,10 +1041,10 @@ td { font-size: 0.82rem; color: var(--mid); }
   border: 1px solid var(--rule);
   border-radius: 12px;
   padding: 1.5rem 1.8rem;
-  display: grid;
-  grid-template-columns: 1.8fr 1fr 1.2fr 1.8fr;
-  align-items: center;
-  gap: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.2rem;
   box-shadow: var(--card-shadow);
   transition: background-color 0.30s ease, border-color 0.30s ease, box-shadow 0.30s ease, transform 0.30s ease;
 }
@@ -2355,10 +2355,10 @@ td { font-size: 0.82rem; color: var(--mid); }
 
 /* How it works strip (index.html) */
 .how-it-works {
-  display: flex; align-items: center; justify-content: center;
-  gap: 0; margin-top: 4rem;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; margin-top: 4rem;
   background: var(--surface); border: 1px solid var(--rule); border-radius: 12px;
-  padding: 2.5rem 3rem; flex-wrap: wrap;
+  padding: 2.5rem 3rem;
   box-shadow: var(--card-shadow);
 }
 .hiw-step {
