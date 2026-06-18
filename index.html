@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Apex Algos — Algorithmic Trading | Systematic Strategies</title>
+  <title>Apex Algos â€” Algorithmic Trading | Systematic Strategies</title>
   <meta name="description" content="Apex Algos builds systematic, data-driven algorithmic trading strategies for Nifty and Sensex. Live track record: 52.7% ROI, 3.3 Sharpe Ratio." />
   <link rel="icon" type="image/png" href="favicon.png" />
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -12,463 +12,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
-  <style>
-    /* ── INDEX-PAGE SPECIFIC OVERRIDES ── */
-
-    /* Hero gradient – warm amber glow bottom-left */
-    #hero {
-      background:
-        radial-gradient(ellipse 65% 55% at 18% 72%, rgba(240,180,41,0.11) 0%, transparent 60%),
-        radial-gradient(ellipse 35% 25% at 82% 15%, rgba(100,140,255,0.04) 0%, transparent 55%),
-        var(--ink);
-    }
-    :root.light #hero {
-      background:
-        radial-gradient(ellipse 65% 50% at 18% 72%, rgba(212,146,10,0.07) 0%, transparent 60%),
-        var(--ink);
-    }
-
-    /* Hero vertical grid lines */
-    .hero-rule {
-      position: absolute; top: 0; left: 0; right: 0; height: 100%;
-      background: repeating-linear-gradient(
-        90deg, transparent, transparent calc(100%/12 - 1px),
-        rgba(240,180,41,0.05) calc(100%/12 - 1px), rgba(240,180,41,0.05) calc(100%/12)
-      );
-      pointer-events: none;
-    }
-    :root.light .hero-rule {
-      background: repeating-linear-gradient(
-        90deg, transparent, transparent calc(100%/12 - 1px),
-        rgba(13,18,38,0.04) calc(100%/12 - 1px), rgba(13,18,38,0.04) calc(100%/12)
-      );
-    }
-
-    /* Hero content */
-    #hero {
-      min-height: 100vh;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 0 4rem 5.5rem;
-      position: relative; overflow: hidden;
-    }
-    .hero-tag {
-      font-size: 0.65rem; letter-spacing: 0.24em;
-      text-transform: uppercase; color: var(--accent);
-      margin-bottom: 1.8rem;
-      display: flex; align-items: center; gap: 0.7rem;
-      opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
-    }
-    .hero-tag::before { content:''; width:28px; height:1px; background:var(--accent); }
-    .hero-headline {
-      font-size: clamp(3.2rem, 7vw, 6.8rem);
-      font-weight: 300; line-height: 1.04; letter-spacing: -0.02em;
-      max-width: 14ch;
-      color: var(--cream);
-      opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
-    }
-    .hero-headline em {
-      font-style: italic; font-weight: 600;
-      background: linear-gradient(135deg, var(--accent), var(--accent-light));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    :root.light .hero-headline em { -webkit-text-fill-color: var(--accent); }
-    .hero-sub {
-      margin-top: 2rem; max-width: 46ch;
-      font-size: 1rem; line-height: 1.78; color: var(--muted);
-      opacity: 0; animation: fadeUp 0.8s 0.6s forwards;
-    }
-    .hero-actions {
-      margin-top: 3rem; display: flex; gap: 1.2rem; align-items: center;
-      opacity: 0; animation: fadeUp 0.8s 0.8s forwards;
-    }
-    .btn-primary {
-      background: var(--accent); color: var(--ink);
-      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
-      text-transform: uppercase; text-decoration: none;
-      padding: 0.95rem 2.2rem; border-radius: 5px; border: none; cursor: pointer;
-      transition: background 0.22s, transform 0.15s, box-shadow 0.22s;
-      box-shadow: 0 4px 22px rgba(240,180,41,0.30);
-    }
-    .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(240,180,41,0.45); }
-    .btn-ghost {
-      font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em;
-      text-transform: uppercase; text-decoration: none; color: var(--muted);
-      display: flex; align-items: center; gap: 0.4rem;
-      transition: color 0.22s, gap 0.22s;
-    }
-    .btn-ghost:hover { color: var(--cream); gap: 0.7rem; }
-
-    /* Ticker */
-    .hero-ticker {
-      position: absolute; right: 4rem; bottom: 5.5rem;
-      display: flex; flex-direction: column; gap: 0.85rem; align-items: flex-end;
-      opacity: 0; animation: fadeIn 1s 1.2s forwards;
-    }
-    .ticker-market-status {
-      display: flex; align-items: center; gap: 0.4rem;
-      font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 0.15rem; justify-content: flex-end;
-    }
-    .market-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); }
-    .market-dot.open { background: var(--pos); box-shadow: 0 0 6px rgba(34,216,122,0.6); animation: pulse 2s infinite; }
-    .market-dot.closed { background: var(--neg); }
-    .ticker-item {
-      display: flex; align-items: center; gap: 0.75rem;
-      background: var(--glass-bg, rgba(8,9,12,0.70)); backdrop-filter: blur(12px);
-      border: 1px solid var(--glass-border, rgba(240,244,255,0.08)); border-radius: 8px;
-      padding: 0.55rem 0.9rem; font-size: 0.7rem; color: var(--muted);
-      transition: border-color 0.2s;
-    }
-    .ticker-item:hover { border-color: rgba(240,180,41,0.25); }
-    .ticker-symbol { font-weight: 600; color: var(--cream); }
-    .ticker-val { color: var(--mid); }
-    .ticker-change { color: var(--pos); font-weight: 500; }
-    .ticker-change.neg { color: var(--neg); }
-    .ticker-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
-
-    @media (max-width: 900px) {
-      #hero { padding: 0 2rem 4rem; }
-      .hero-ticker { display: none; }
-    }
-
-    /* Stats */
-    #stats {
-      display: grid; grid-template-columns: repeat(4,1fr);
-      background: var(--surface);
-      border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
-    }
-    .stat-cell {
-      padding: 3.5rem 3.5rem; border-right: 1px solid var(--rule);
-      position: relative; overflow: hidden; cursor: default;
-      transition: background 0.25s;
-    }
-    .stat-cell::after {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, var(--accent), transparent);
-      transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
-    }
-    .stat-cell:hover { background: var(--surface2); }
-    .stat-cell:hover::after { transform: scaleX(1); }
-    .stat-cell:last-child { border-right: none; }
-    .stat-num {
-      font-size: clamp(2.2rem, 3.5vw, 3.4rem); font-weight: 300;
-      line-height: 1; letter-spacing: -0.02em; color: var(--cream);
-    }
-    .stat-num span { color: var(--accent); font-weight: 600; font-style: normal; }
-    .stat-label {
-      margin-top: 0.8rem; font-size: 0.62rem; font-weight: 500;
-      letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
-    }
-    @media (max-width: 900px) {
-      #stats { grid-template-columns: repeat(2,1fr); }
-      .stat-cell { padding: 2.5rem 2rem; border-bottom: 1px solid var(--rule); }
-    }
-
-    /* Features */
-    #features { padding: 8rem 4rem; background: var(--ink); }
-    .section-label {
-      font-size: 0.62rem; font-weight: 600; letter-spacing: 0.24em;
-      text-transform: uppercase; color: var(--accent); margin-bottom: 1.2rem;
-    }
-    .section-title {
-      font-size: clamp(1.9rem, 3.8vw, 3rem); font-weight: 300; line-height: 1.14;
-      max-width: 22ch; margin-bottom: 4.5rem; color: var(--cream);
-    }
-
-
-    /* Performance */
-    #performance { padding: 8rem 4rem; background: var(--surface); }
-    .perf-tabs {
-      display: flex; gap: 0; margin-bottom: 3rem;
-      border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; width: fit-content;
-    }
-    .perf-tab {
-      font-size: 0.65rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--muted); padding: 0.65rem 1.6rem; cursor: pointer; border: none;
-      background: transparent; border-right: 1px solid var(--rule);
-      transition: background 0.22s, color 0.22s;
-    }
-    .perf-tab:last-child { border-right: none; }
-    .perf-tab.active { background: var(--accent); color: var(--ink); font-weight: 700; }
-    .perf-tab:hover:not(.active) { color: var(--cream); background: var(--accent-glow); }
-    .perf-panel { display: none; }
-    .perf-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
-    .perf-charts { display: flex; flex-direction: column; }
-    .chart-label {
-      font-size: 0.6rem; font-weight: 500; letter-spacing: 0.14em;
-      text-transform: uppercase; color: var(--muted); margin-bottom: 0.7rem;
-    }
-    .chart-wrap { margin-bottom: 2rem; }
-    .chart-inner { position: relative; width: 100%; }
-    .chart-inner.tall { height: 180px; }
-    .chart-inner.short { height: 130px; }
-    .chart-inner canvas { position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important; }
-    .view-toggle {
-      display: flex; border: 1px solid var(--rule); border-radius: 4px;
-      overflow: hidden; width: fit-content; margin-bottom: 1.2rem;
-    }
-    .view-btn {
-      font-size: 0.58rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--muted); background: transparent; border: none;
-      border-right: 1px solid var(--rule); padding: 0.35rem 0.85rem;
-      cursor: pointer; transition: background 0.2s, color 0.2s;
-    }
-    .view-btn:last-child { border-right: none; }
-    .view-btn.active { background: var(--accent); color: var(--ink); font-weight: 700; }
-    .view-btn:hover:not(.active) { color: var(--cream); }
-    .perf-metrics { display: flex; flex-direction: column; }
-    .metric-row {
-      display: flex; justify-content: space-between; align-items: flex-end;
-      padding: 1rem 0; border-bottom: 1px solid var(--rule);
-    }
-    .metric-name {
-      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.14em;
-      text-transform: uppercase; color: var(--muted);
-    }
-    .metric-val { font-size: 1.45rem; font-weight: 600; letter-spacing: -0.01em; color: var(--cream); }
-    .metric-val.pos { color: var(--pos); }
-    .metric-val.neg { color: var(--neg); }
-    .strategy-badge {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      font-size: 0.62rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--accent); border: 1px solid rgba(240,180,41,0.25);
-      padding: 0.4rem 0.95rem; margin-bottom: 2rem;
-      background: var(--accent-glow); border-radius: 4px;
-    }
-    .strategy-badge span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
-    .disclaimer {
-      margin-top: 2rem; font-size: 0.76rem; font-weight: 300; line-height: 1.75;
-      color: var(--disclaimer-color); border-top: 1px solid var(--rule); padding-top: 1.2rem;
-    }
-    @media (max-width: 900px) {
-      #performance { padding: 5rem 2rem; }
-      .perf-panel.active { grid-template-columns: 1fr; gap: 3rem; }
-    }
-
-    /* Contact */
-    #contact {
-      padding: 8rem 4rem; display: grid; grid-template-columns: 1fr 1fr;
-      gap: 8rem; align-items: start; background: var(--ink);
-    }
-    .contact-intro .section-title { margin-bottom: 1.5rem; }
-    .contact-intro > p { font-size: 0.96rem; line-height: 1.82; color: var(--muted); max-width: 40ch; }
-    .contact-detail { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 0.8rem; }
-    .contact-detail a {
-      font-size: 0.78rem; color: var(--accent); text-decoration: none;
-      display: inline-flex; align-items: center; gap: 0.4rem; transition: color 0.2s, gap 0.2s;
-    }
-    .contact-detail a:hover { color: var(--accent-light); gap: 0.7rem; }
-    .contact-form { display: flex; flex-direction: column; gap: 1.3rem; }
-    .form-group { display: flex; flex-direction: column; gap: 0.45rem; }
-    .form-group label {
-      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.16em;
-      text-transform: uppercase; color: var(--muted);
-    }
-    .required-star { color: var(--accent); margin-left: 2px; }
-    .form-group input, .form-group textarea {
-      background: var(--surface); border: 1px solid var(--rule);
-      padding: 0.75rem 1rem; font-family: 'Inter', sans-serif;
-      font-size: 0.88rem; color: var(--cream); border-radius: 5px;
-      outline: none; transition: border-color 0.22s, box-shadow 0.22s; resize: none;
-    }
-    .form-group input::placeholder, .form-group textarea::placeholder { color: var(--disclaimer-color); }
-    .form-group input:focus, .form-group textarea:focus {
-      border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow);
-    }
-    .form-group textarea { height: 110px; }
-    .form-group select {
-      background: var(--surface); color: var(--cream); border: 1px solid var(--rule);
-      padding: 0.75rem 1rem; font-family: 'Inter', sans-serif; font-size: 0.88rem;
-      outline: none; cursor: pointer; border-radius: 5px;
-      transition: border-color 0.22s, box-shadow 0.22s;
-      appearance: none; -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem;
-    }
-    .form-group select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-    .form-group select option { background: var(--surface2); color: var(--cream); }
-    .radio-group { display: flex; gap: 2rem; padding: 0.5rem 0; }
-    .radio-label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.88rem; color: var(--mid); }
-    .radio-label input[type="radio"] { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
-    .radio-label span { color: var(--cream); }
-    .form-submit {
-      margin-top: 0.5rem; background: var(--accent); color: var(--ink);
-      font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700;
-      letter-spacing: 0.16em; text-transform: uppercase; border: none;
-      padding: 0.95rem 2rem; cursor: pointer; width: fit-content; border-radius: 5px;
-      transition: background 0.22s, transform 0.15s, box-shadow 0.22s;
-      box-shadow: 0 4px 20px rgba(240,180,41,0.25);
-    }
-    .form-submit:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(240,180,41,0.40); }
-    .toast {
-      position: fixed; bottom: 2rem; right: 2rem; padding: 0.9rem 1.6rem;
-      font-family: 'Inter', sans-serif; font-size: 0.75rem; letter-spacing: 0.06em;
-      border-radius: 8px; z-index: 999; opacity: 0; transform: translateY(12px);
-      transition: opacity 0.3s, transform 0.3s; pointer-events: none; backdrop-filter: blur(12px);
-    }
-    .toast.show { opacity: 1; transform: translateY(0); }
-    .toast.success { background: rgba(34,216,122,0.12); color: var(--pos); border: 1px solid rgba(34,216,122,0.25); }
-    .toast.error { background: rgba(255,94,110,0.12); color: var(--neg); border: 1px solid rgba(255,94,110,0.25); }
-    @media (max-width: 900px) { #contact { padding: 5rem 2rem; grid-template-columns: 1fr; gap: 3rem; } }
-
-    /* Footer */
-    footer { background: var(--surface); border-top: 1px solid var(--rule); }
-    .footer-disclaimer { padding: 1.5rem 4rem; border-bottom: 1px solid var(--rule); }
-    .footer-disclaimer-text {
-      font-size: 0.72rem; line-height: 1.7; color: var(--disclaimer-color);
-      max-width: 900px; margin: 0 auto; text-align: center;
-    }
-    .footer-bottom {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1.2rem 4rem; flex-wrap: wrap; gap: 0.5rem;
-    }
-    .footer-bottom p { font-size: 0.65rem; letter-spacing: 0.06em; color: var(--disclaimer-color); }
-    @media (max-width: 900px) {
-      .footer-disclaimer { padding: 1.2rem 1.5rem; }
-      .footer-bottom { padding: 1rem 1.5rem; flex-direction: column; text-align: center; }
-    }
-
-    /* Animations */
-    @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:none; } }
-    @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
-    @keyframes pulse   { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
-
-    /* Scroll reveal */
-    .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
-    .reveal.visible { opacity: 1; transform: none; }
-
-    /* Nav */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1.1rem 4rem;
-      background: var(--glass-bg, rgba(8,9,12,0.88));
-      backdrop-filter: blur(20px) saturate(180%);
-      border-bottom: 1px solid var(--glass-border, rgba(240,244,255,0.06));
-      box-shadow: 0 1px 30px rgba(0,0,0,0.35);
-    }
-    :root.light nav { background: rgba(248,249,252,0.92); border-bottom-color: var(--rule); }
-    .nav-logo {
-      font-size: 1.05rem; font-weight: 700; letter-spacing: 0.06em;
-      text-transform: uppercase; color: var(--cream); text-decoration: none;
-      display: flex; align-items: center; gap: 0.65rem;
-    }
-    .nav-logo img { width: 30px; height: 30px; object-fit: contain; border-radius: 6px; }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a {
-      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.10em;
-      text-transform: uppercase; color: var(--muted); text-decoration: none;
-      position: relative; transition: color 0.22s;
-    }
-    .nav-links a::after {
-      content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
-      height: 1px; background: var(--accent);
-      transform: scaleX(0); transform-origin: left; transition: transform 0.25s;
-    }
-    .nav-links a:hover, .nav-links a.active { color: var(--cream); }
-    .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
-    .nav-cta {
-      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--accent); text-decoration: none; border: 1px solid rgba(240,180,41,0.45);
-      padding: 0.48rem 1.2rem; border-radius: 4px;
-      transition: background 0.22s, color 0.22s, box-shadow 0.22s, transform 0.15s;
-    }
-    .nav-cta:hover { background: var(--accent); color: var(--ink); box-shadow: 0 0 20px rgba(240,180,41,0.35); transform: translateY(-1px); }
-    @media (max-width: 900px) { nav { padding: 1rem 1.5rem; } .nav-links { display: none; } .nav-cta { display: none !important; } }
-    .theme-toggle {
-      background: var(--surface2, rgba(22,25,33,1)); border: 1px solid var(--rule);
-      color: var(--muted); font-family: 'Inter', sans-serif;
-      font-size: 0.65rem; font-weight: 500; letter-spacing: 0.08em;
-      padding: 0.42rem 0.9rem; cursor: pointer; border-radius: 4px;
-      transition: all 0.22s; display: flex; align-items: center; gap: 0.45rem;
-    }
-    .theme-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
-    .theme-toggle .icon { font-size: 0.85rem; }
-    .hamburger {
-      display: none; flex-direction: column; justify-content: center;
-      gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; z-index: 200;
-    }
-    .hamburger span {
-      display: block; width: 22px; height: 2px; background: var(--cream);
-      border-radius: 2px; transition: all 0.25s ease; transform-origin: center;
-    }
-    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-    @media (max-width: 900px) { .hamburger { display: flex !important; } }
-    .mobile-nav {
-      display: none; position: fixed; top: 64px; left: 0; right: 0;
-      background: var(--glass-bg, rgba(8,9,12,0.92)); backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--glass-border, rgba(240,244,255,0.07));
-      padding: 1.5rem 2rem; z-index: 99; flex-direction: column;
-    }
-    .mobile-nav.open { display: flex; }
-    .mobile-nav a {
-      font-size: 0.88rem; font-weight: 500; color: var(--mid); text-decoration: none;
-      padding: 0.9rem 0; border-bottom: 1px solid var(--rule); transition: color 0.2s;
-    }
-    .mobile-nav a:last-child { border-bottom: none; }
-    .mobile-nav a:hover, .mobile-nav a.active { color: var(--accent); }
-
-    /* Grain */
-    body::before {
-      content: ''; position: fixed; inset: 0; z-index: 1; pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-      opacity: 0.022; mix-blend-mode: overlay;
-    }
-    :root.light body::before { opacity: 0.012; }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-track { background: var(--ink); }
-    ::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--rule2, #252B3E); }
-
-    /* Feature icon */
-    .feature-icon {
-      width: 48px; height: 48px; margin-bottom: 1.6rem;
-      color: var(--accent);
-    }
-    .feature-icon svg { width: 100%; height: 100%; }
-
-    /* How it works strip */
-    .how-it-works {
-      display: flex; align-items: center; justify-content: center;
-      gap: 0; margin-top: 4rem;
-      background: var(--surface); border: 1px solid var(--rule); border-radius: 12px;
-      padding: 2.5rem 3rem; flex-wrap: wrap;
-    }
-    .hiw-step {
-      display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
-      text-align: center; flex: 1; min-width: 120px;
-    }
-    .hiw-icon {
-      width: 44px; height: 44px; color: var(--accent);
-      background: rgba(212,168,64,0.08); border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      padding: 10px;
-    }
-    .hiw-icon svg { width: 100%; height: 100%; }
-    .hiw-label {
-      font-size: 0.78rem; color: var(--muted); line-height: 1.45; max-width: 10ch;
-    }
-    .hiw-arrow {
-      font-size: 1.2rem; color: var(--accent); opacity: 0.4;
-      padding: 0 0.5rem; flex-shrink: 0;
-    }
-    @media (max-width: 700px) {
-      .how-it-works { flex-direction: column; gap: 1.2rem; }
-      .hiw-arrow { transform: rotate(90deg); }
-      .hiw-label { max-width: none; }
-    }
-
-    /* Smooth transitions */
-    body, nav, section, footer, .feature-card, .stat-cell, .metric-row,
-    .perf-tab, .btn-primary, .theme-toggle {
-      transition: background-color 0.30s ease, color 0.30s ease, border-color 0.30s ease;
-    }
-  </style>
 </head>
 <body>
 
@@ -487,7 +30,7 @@
     <div style="display:flex;align-items:center;gap:0.8rem;">
       <a class="nav-cta" href="#contact">Get Started</a>
     <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
-        <span class="icon" id="themeIcon">☀</span><span id="themeLabel">Light</span>
+        <span class="icon" id="themeIcon">â˜€</span><span id="themeLabel">Light</span>
       </button>
       <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" onclick="
         var nav = document.getElementById('mobileNav');
@@ -517,12 +60,12 @@
   <!-- HERO -->
   <section id="hero">
     <div class="hero-rule"></div>
-    <p class="hero-tag">Nifty · Intraday · Systematic</p>
+    <p class="hero-tag">Nifty Â· Intraday Â· Systematic</p>
     <h1 class="hero-headline">Trade smarter,<br>not <em>harder.</em></h1>
-    <p class="hero-sub">We built algo strategies so you don't have to stare at screens all day. Set it up once on Tradetron, let it trade — consistently, calmly, without the emotional noise.</p>
+    <p class="hero-sub">We built algo strategies so you don't have to stare at screens all day. Set it up once on Tradetron, let it trade â€” consistently, calmly, without the emotional noise.</p>
     <div class="hero-actions">
       <a class="btn-primary" href="#features">See Our Strategies</a>
-      <a class="btn-ghost" href="#performance">Live Track Record →</a>
+      <a class="btn-ghost" href="#performance">Live Track Record â†’</a>
     </div>
     <div class="hero-ticker" id="heroTicker">
       <div class="ticker-market-status" id="marketStatus">
@@ -532,20 +75,20 @@
       <div class="ticker-item">
         <div class="ticker-dot"></div>
         <span class="ticker-symbol">NIFTY</span>
-        <span class="ticker-val" id="tick-nifty-val">—</span>
-        <span class="ticker-change" id="tick-nifty-chg">—</span>
+        <span class="ticker-val" id="tick-nifty-val">â€”</span>
+        <span class="ticker-change" id="tick-nifty-chg">â€”</span>
       </div>
       <div class="ticker-item">
         <div class="ticker-dot"></div>
         <span class="ticker-symbol">SENSEX</span>
-        <span class="ticker-val" id="tick-sensex-val">—</span>
-        <span class="ticker-change" id="tick-sensex-chg">—</span>
+        <span class="ticker-val" id="tick-sensex-val">â€”</span>
+        <span class="ticker-change" id="tick-sensex-chg">â€”</span>
       </div>
       <div class="ticker-item">
         <div class="ticker-dot"></div>
         <span class="ticker-symbol">INDIA VIX</span>
-        <span class="ticker-val" id="tick-vix-val">—</span>
-        <span class="ticker-change" id="tick-vix-chg">—</span>
+        <span class="ticker-val" id="tick-vix-val">â€”</span>
+        <span class="ticker-change" id="tick-vix-chg">â€”</span>
       </div>
     </div>
   </section>
@@ -565,7 +108,7 @@
       <div class="stat-label">Sharpe Ratio</div>
     </div>
     <div class="stat-cell reveal">
-      <div class="stat-num">−7.6<span>%</span></div>
+      <div class="stat-num">âˆ’7.6<span>%</span></div>
       <div class="stat-label">Max Drawdown</div>
     </div>
   </section>
@@ -573,7 +116,7 @@
   <!-- FEATURES -->
   <section id="features">
     <p class="section-label reveal">Our Strategies</p>
-    <h2 class="section-title reveal">Three versions. One goal — grow your money while you sleep.</h2>
+    <h2 class="section-title reveal">Three versions. One goal â€” grow your money while you sleep.</h2>
     <div class="features-grid">
       <div class="feature-card reveal">
         <div class="feature-icon">
@@ -585,11 +128,13 @@
             <path d="M14 34 L34 34" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
           </svg>
         </div>
-        <div class="feature-num">NAP v1</div>
-        <h3 class="feature-title">Nifty Apex Predator</h3>
-        <p class="feature-desc">Our original Nifty intraday strategy. It reads momentum, enters on clean setups, and cuts losses hard at ₹5,000/day. Simple, disciplined, battle-tested over a year of live trading.</p>
+        <div class="feature-info">
+          <div class="feature-num">NAP v1</div>
+          <h3 class="feature-title">Nifty Apex Predator</h3>
+          <p class="feature-desc">Our original Nifty intraday strategy. It reads momentum, enters on clean setups, and cuts losses hard at â‚¹5,000/day. Simple, disciplined, battle-tested over a year of live trading.</p>
+        </div>
         <div class="strategy-links">
-          <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">Deploy on Tradetron →</a>
+          <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">Deploy on Tradetron â†’</a>
         </div>
       </div>
       <div class="feature-card reveal">
@@ -603,11 +148,13 @@
             <path d="M19 36 L22 33 L25 35 L29 30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"/>
           </svg>
         </div>
-        <div class="feature-num">NAP v2</div>
-        <h3 class="feature-title">Smarter Entries</h3>
-        <p class="feature-desc">We took v1 and tightened it up. Better signal filtering means fewer trades overall — but higher quality. Less noise, more conviction on every entry.</p>
+        <div class="feature-info">
+          <div class="feature-num">NAP v2</div>
+          <h3 class="feature-title">Smarter Entries</h3>
+          <p class="feature-desc">We took v1 and tightened it up. Better signal filtering means fewer trades overall â€” but higher quality. Less noise, more conviction on every entry.</p>
+        </div>
         <div class="strategy-links">
-          <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">Deploy on Tradetron →</a>
+          <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">Deploy on Tradetron â†’</a>
         </div>
       </div>
       <div class="feature-card reveal">
@@ -620,11 +167,13 @@
             <path d="M24 12 L24 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
           </svg>
         </div>
-        <div class="feature-num">NAP v3</div>
-        <h3 class="feature-title">Multi-Timeframe Edge</h3>
-        <p class="feature-desc">The newest version looks at the market from multiple angles before committing. Adaptive sizing means it bets bigger when confidence is high and holds back when it isn't.</p>
+        <div class="feature-info">
+          <div class="feature-num">NAP v3</div>
+          <h3 class="feature-title">Multi-Timeframe Edge</h3>
+          <p class="feature-desc">The newest version looks at the market from multiple angles before committing. Adaptive sizing means it bets bigger when confidence is high and holds back when it isn't.</p>
+        </div>
         <div class="strategy-links">
-          <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">Deploy on Tradetron →</a>
+          <a class="feature-link" href="https://tradetron.tech/strategy/7324677" target="_blank" rel="noopener">Deploy on Tradetron â†’</a>
         </div>
       </div>
     </div>
@@ -637,21 +186,21 @@
         </div>
         <p class="hiw-label">Subscribe on Tradetron</p>
       </div>
-      <div class="hiw-arrow">→</div>
+      <div class="hiw-arrow">â†’</div>
       <div class="hiw-step">
         <div class="hiw-icon">
           <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.2"/><rect x="10" y="11" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M13 15 L19 15 M13 18 L16 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </div>
         <p class="hiw-label">Link your broker</p>
       </div>
-      <div class="hiw-arrow">→</div>
+      <div class="hiw-arrow">â†’</div>
       <div class="hiw-step">
         <div class="hiw-icon">
           <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.2"/><path d="M11 20 L15 14 L19 17 L23 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="23" cy="11" r="1.5" fill="currentColor"/></svg>
         </div>
         <p class="hiw-label">Strategy trades automatically</p>
       </div>
-      <div class="hiw-arrow">→</div>
+      <div class="hiw-arrow">â†’</div>
       <div class="hiw-step">
         <div class="hiw-icon">
           <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.2"/><path d="M16 10 L17.5 14.5 L22 14.5 L18.5 17.5 L20 22 L16 19 L12 22 L13.5 17.5 L10 14.5 L14.5 14.5 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
@@ -679,7 +228,7 @@
       <div class="perf-charts">
         <div class="chart-wrap">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
-            <div class="chart-label" style="margin-bottom:0;" id="labelCumCombined">Cumulative ROI — Monthly</div>
+            <div class="chart-label" style="margin-bottom:0;" id="labelCumCombined">Cumulative ROI â€” Monthly</div>
             <div class="view-toggle">
               <button class="view-btn active" onclick="setCumView('combined','monthly',this)">Monthly</button>
               <button class="view-btn" onclick="setCumView('combined','daily',this)">Daily</button>
@@ -689,7 +238,7 @@
         </div>
         <div class="chart-wrap">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
-            <div class="chart-label" style="margin-bottom:0;" id="labelBarCombined">Monthly P&L — NAP vs SAP (₹)</div>
+            <div class="chart-label" style="margin-bottom:0;" id="labelBarCombined">Monthly P&L â€” NAP vs SAP (â‚¹)</div>
             <div class="view-toggle">
               <button class="view-btn active" onclick="setView('combined','monthly',this)">Monthly</button>
               <button class="view-btn" onclick="setView('combined','daily',this)">Daily</button>
@@ -699,14 +248,14 @@
         </div>
       </div>
       <div class="perf-metrics">
-        <div class="strategy-badge"><span></span>All three NAP strategies combined · Nifty</div>
+        <div class="strategy-badge"><span></span>All three NAP strategies combined Â· Nifty</div>
         <div class="metric-row"><span class="metric-name">Total ROI</span><span class="metric-val pos" id="m-comb-roi">+52.7%</span></div>
-        <div class="metric-row"><span class="metric-name">Total P&L</span><span class="metric-val pos" id="m-comb-pnl">₹2,63,686</span></div>
-        <div class="metric-row"><span class="metric-name">Max Drawdown</span><span class="metric-val neg" id="m-comb-dd">−7.6%</span></div>
+        <div class="metric-row"><span class="metric-name">Total P&L</span><span class="metric-val pos" id="m-comb-pnl">â‚¹2,63,686</span></div>
+        <div class="metric-row"><span class="metric-name">Max Drawdown</span><span class="metric-val neg" id="m-comb-dd">âˆ’7.6%</span></div>
         <div class="metric-row"><span class="metric-name">Sharpe Ratio</span><span class="metric-val">3.30</span></div>
         <div class="metric-row"><span class="metric-name">Win Rate</span><span class="metric-val pos">59.1%</span></div>
         <div class="metric-row"><span class="metric-name">Trading Days</span><span class="metric-val">254</span></div>
-        <p class="disclaimer" id="disc-combined">Live track record. Combined NAP + SAP on ₹5L capital. Past performance does not guarantee future results. Trading involves substantial risk of loss.</p>
+        <p class="disclaimer" id="disc-combined">Live track record. Combined NAP + SAP on â‚¹5L capital. Past performance does not guarantee future results. Trading involves substantial risk of loss.</p>
       </div>
     </div>
 
@@ -715,7 +264,7 @@
       <div class="perf-charts">
         <div class="chart-wrap">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
-            <div class="chart-label" style="margin-bottom:0;" id="labelCumNAP">Cumulative ROI — NAP Monthly</div>
+            <div class="chart-label" style="margin-bottom:0;" id="labelCumNAP">Cumulative ROI â€” NAP Monthly</div>
             <div class="view-toggle">
               <button class="view-btn active" onclick="setCumView('nap','monthly',this)">Monthly</button>
               <button class="view-btn" onclick="setCumView('nap','daily',this)">Daily</button>
@@ -725,7 +274,7 @@
         </div>
         <div class="chart-wrap">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
-            <div class="chart-label" style="margin-bottom:0;" id="labelBarNAP">Monthly P&L — NAP (₹)</div>
+            <div class="chart-label" style="margin-bottom:0;" id="labelBarNAP">Monthly P&L â€” NAP (â‚¹)</div>
             <div class="view-toggle">
               <button class="view-btn active" onclick="setView('nap','monthly',this)">Monthly</button>
               <button class="view-btn" onclick="setView('nap','daily',this)">Daily</button>
@@ -735,14 +284,14 @@
         </div>
       </div>
       <div class="perf-metrics">
-        <div class="strategy-badge"><span></span>NAP · Nifty · ₹2.5L Capital</div>
+        <div class="strategy-badge"><span></span>NAP Â· Nifty Â· â‚¹2.5L Capital</div>
         <div class="metric-row"><span class="metric-name">Total ROI</span><span class="metric-val pos" id="m-nap-roi">+65.6%</span></div>
-        <div class="metric-row"><span class="metric-name">Total P&L</span><span class="metric-val pos" id="m-nap-pnl">₹1,63,961</span></div>
-        <div class="metric-row"><span class="metric-name">Max Drawdown</span><span class="metric-val neg">−11.4%</span></div>
+        <div class="metric-row"><span class="metric-name">Total P&L</span><span class="metric-val pos" id="m-nap-pnl">â‚¹1,63,961</span></div>
+        <div class="metric-row"><span class="metric-name">Max Drawdown</span><span class="metric-val neg">âˆ’11.4%</span></div>
         <div class="metric-row"><span class="metric-name">Sharpe Ratio</span><span class="metric-val">3.34</span></div>
         <div class="metric-row"><span class="metric-name">Win Rate</span><span class="metric-val pos">62.0%</span></div>
         <div class="metric-row"><span class="metric-name">Trading Days</span><span class="metric-val">258</span></div>
-        <p class="disclaimer" id="disc-nap">Live track record. Nifty Apex Predator intraday strategy on ₹2.5L capital. Past performance does not guarantee future results.</p>
+        <p class="disclaimer" id="disc-nap">Live track record. Nifty Apex Predator intraday strategy on â‚¹2.5L capital. Past performance does not guarantee future results.</p>
       </div>
     </div>
 
@@ -751,7 +300,7 @@
       <div class="perf-charts">
         <div class="chart-wrap">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
-            <div class="chart-label" style="margin-bottom:0;" id="labelCumNAPv2">Cumulative ROI — NAP v2 Monthly</div>
+            <div class="chart-label" style="margin-bottom:0;" id="labelCumNAPv2">Cumulative ROI â€” NAP v2 Monthly</div>
             <div class="view-toggle">
               <button class="view-btn active" onclick="setCumView('napv2','monthly',this)">Monthly</button>
               <button class="view-btn" onclick="setCumView('napv2','daily',this)">Daily</button>
@@ -761,7 +310,7 @@
         </div>
         <div class="chart-wrap">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
-            <div class="chart-label" style="margin-bottom:0;" id="labelBarNAPv2">Monthly P&amp;L — NAP v2 (₹)</div>
+            <div class="chart-label" style="margin-bottom:0;" id="labelBarNAPv2">Monthly P&amp;L â€” NAP v2 (â‚¹)</div>
             <div class="view-toggle">
               <button class="view-btn active" onclick="setView('napv2','monthly',this)">Monthly</button>
               <button class="view-btn" onclick="setView('napv2','daily',this)">Daily</button>
@@ -771,13 +320,13 @@
         </div>
       </div>
       <div class="perf-metrics">
-        <div class="strategy-badge"><span></span>NAP v2 · Nifty · ₹2.5L Capital</div>
-        <div class="metric-row"><span class="metric-name">Total ROI</span><span class="metric-val pos" id="m-napv2-roi">+—</span></div>
-        <div class="metric-row"><span class="metric-name">Total P&amp;L</span><span class="metric-val pos" id="m-napv2-pnl">₹—</span></div>
-        <div class="metric-row"><span class="metric-name">Max Drawdown</span><span class="metric-val neg" id="m-napv2-dd">−—</span></div>
-        <div class="metric-row"><span class="metric-name">Sharpe Ratio</span><span class="metric-val" id="m-napv2-sharpe">—</span></div>
-        <div class="metric-row"><span class="metric-name">Win Rate</span><span class="metric-val pos" id="m-napv2-wr">—</span></div>
-        <p class="disclaimer">NAP v2 — Enhanced Entry Logic. Second-generation Nifty intraday strategy. Past performance does not guarantee future results.</p>
+        <div class="strategy-badge"><span></span>NAP v2 Â· Nifty Â· â‚¹2.5L Capital</div>
+        <div class="metric-row"><span class="metric-name">Total ROI</span><span class="metric-val pos" id="m-napv2-roi">+â€”</span></div>
+        <div class="metric-row"><span class="metric-name">Total P&amp;L</span><span class="metric-val pos" id="m-napv2-pnl">â‚¹â€”</span></div>
+        <div class="metric-row"><span class="metric-name">Max Drawdown</span><span class="metric-val neg" id="m-napv2-dd">âˆ’â€”</span></div>
+        <div class="metric-row"><span class="metric-name">Sharpe Ratio</span><span class="metric-val" id="m-napv2-sharpe">â€”</span></div>
+        <div class="metric-row"><span class="metric-name">Win Rate</span><span class="metric-val pos" id="m-napv2-wr">â€”</span></div>
+        <p class="disclaimer">NAP v2 â€” Enhanced Entry Logic. Second-generation Nifty intraday strategy. Past performance does not guarantee future results.</p>
       </div>
     </div>
 
@@ -786,7 +335,7 @@
       <div class="perf-charts">
         <div class="chart-wrap">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
-            <div class="chart-label" style="margin-bottom:0;" id="labelCumNAPv3">Cumulative ROI — NAP v3 Monthly</div>
+            <div class="chart-label" style="margin-bottom:0;" id="labelCumNAPv3">Cumulative ROI â€” NAP v3 Monthly</div>
             <div class="view-toggle">
               <button class="view-btn active" onclick="setCumView('napv3','monthly',this)">Monthly</button>
               <button class="view-btn" onclick="setCumView('napv3','daily',this)">Daily</button>
@@ -796,7 +345,7 @@
         </div>
         <div class="chart-wrap">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
-            <div class="chart-label" style="margin-bottom:0;" id="labelBarNAPv3">Monthly P&amp;L — NAP v3 (₹)</div>
+            <div class="chart-label" style="margin-bottom:0;" id="labelBarNAPv3">Monthly P&amp;L â€” NAP v3 (â‚¹)</div>
             <div class="view-toggle">
               <button class="view-btn active" onclick="setView('napv3','monthly',this)">Monthly</button>
               <button class="view-btn" onclick="setView('napv3','daily',this)">Daily</button>
@@ -806,13 +355,13 @@
         </div>
       </div>
       <div class="perf-metrics">
-        <div class="strategy-badge"><span></span>NAP v3 · Nifty · ₹2.5L Capital</div>
-        <div class="metric-row"><span class="metric-name">Total ROI</span><span class="metric-val pos" id="m-napv3-roi">+—</span></div>
-        <div class="metric-row"><span class="metric-name">Total P&amp;L</span><span class="metric-val pos" id="m-napv3-pnl">₹—</span></div>
-        <div class="metric-row"><span class="metric-name">Max Drawdown</span><span class="metric-val neg" id="m-napv3-dd">−—</span></div>
-        <div class="metric-row"><span class="metric-name">Sharpe Ratio</span><span class="metric-val" id="m-napv3-sharpe">—</span></div>
-        <div class="metric-row"><span class="metric-name">Win Rate</span><span class="metric-val pos" id="m-napv3-wr">—</span></div>
-        <p class="disclaimer">NAP v3 — Next Generation. Advanced multi-timeframe Nifty intraday strategy. Past performance does not guarantee future results.</p>
+        <div class="strategy-badge"><span></span>NAP v3 Â· Nifty Â· â‚¹2.5L Capital</div>
+        <div class="metric-row"><span class="metric-name">Total ROI</span><span class="metric-val pos" id="m-napv3-roi">+â€”</span></div>
+        <div class="metric-row"><span class="metric-name">Total P&amp;L</span><span class="metric-val pos" id="m-napv3-pnl">â‚¹â€”</span></div>
+        <div class="metric-row"><span class="metric-name">Max Drawdown</span><span class="metric-val neg" id="m-napv3-dd">âˆ’â€”</span></div>
+        <div class="metric-row"><span class="metric-name">Sharpe Ratio</span><span class="metric-val" id="m-napv3-sharpe">â€”</span></div>
+        <div class="metric-row"><span class="metric-name">Win Rate</span><span class="metric-val pos" id="m-napv3-wr">â€”</span></div>
+        <p class="disclaimer">NAP v3 â€” Next Generation. Advanced multi-timeframe Nifty intraday strategy. Past performance does not guarantee future results.</p>
       </div>
     </div>
   </section>
@@ -822,11 +371,11 @@
     <div class="contact-intro reveal">
       <p class="section-label">Get In Touch</p>
       <h2 class="section-title">Interested? Let's talk.</h2>
-      <p>Whether you're brand new to algo trading or already have capital deployed elsewhere — we're happy to walk you through how this works, what to expect, and whether it's a good fit for you.</p>
+      <p>Whether you're brand new to algo trading or already have capital deployed elsewhere â€” we're happy to walk you through how this works, what to expect, and whether it's a good fit for you.</p>
       <div class="contact-detail">
         <a href="mailto&#58;apexalgosindia&#64;gmail&#46;com">apexalgosindia&#64;gmail&#46;com</a>
-        <a href="https://t.me/apexalgosadmin" target="_blank" rel="noopener">Contact Us on Telegram →</a>
-        <a href="https://t.me/apexalgoschat" target="_blank" rel="noopener">Join Our Community →</a>
+        <a href="https://t.me/apexalgosadmin" target="_blank" rel="noopener">Contact Us on Telegram â†’</a>
+        <a href="https://t.me/apexalgoschat" target="_blank" rel="noopener">Join Our Community â†’</a>
       </div>
     </div>
     <form class="contact-form reveal" onsubmit="handleSubmit(event)">
@@ -843,8 +392,8 @@
         <select name="trading_experience">
           <option value="" disabled selected>Select your experience</option>
           <option value="Beginner (< 1 year)">Beginner (&lt; 1 year)</option>
-          <option value="Intermediate (1–3 years)">Intermediate (1–3 years)</option>
-          <option value="Experienced (3–5 years)">Experienced (3–5 years)</option>
+          <option value="Intermediate (1â€“3 years)">Intermediate (1â€“3 years)</option>
+          <option value="Experienced (3â€“5 years)">Experienced (3â€“5 years)</option>
           <option value="Expert (5+ years)">Expert (5+ years)</option>
         </select>
       </div>
@@ -852,11 +401,11 @@
         <label>Capital</label>
         <select name="capital">
           <option value="" disabled selected>Select capital range</option>
-          <option value="Under ₹1L">Under ₹1L</option>
-          <option value="₹1L – ₹5L">₹1L – ₹5L</option>
-          <option value="₹5L – ₹10L">₹5L – ₹10L</option>
-          <option value="₹10L – ₹25L">₹10L – ₹25L</option>
-          <option value="₹25L+">₹25L+</option>
+          <option value="Under â‚¹1L">Under â‚¹1L</option>
+          <option value="â‚¹1L â€“ â‚¹5L">â‚¹1L â€“ â‚¹5L</option>
+          <option value="â‚¹5L â€“ â‚¹10L">â‚¹5L â€“ â‚¹10L</option>
+          <option value="â‚¹10L â€“ â‚¹25L">â‚¹10L â€“ â‚¹25L</option>
+          <option value="â‚¹25L+">â‚¹25L+</option>
         </select>
       </div>
       <div class="form-group">
@@ -874,7 +423,7 @@
       </div>
       <div class="form-group">
         <label>Current Broker &amp; Brokerage Plan</label>
-        <input type="text" name="broker_plan" placeholder="e.g. Zerodha — Flat ₹20 per order" />
+        <input type="text" name="broker_plan" placeholder="e.g. Zerodha â€” Flat â‚¹20 per order" />
       </div>
       <div class="form-group">
         <label>Message</label>
@@ -887,10 +436,10 @@
   <!-- FOOTER -->
   <footer>
     <div class="footer-disclaimer">
-      <p class="footer-disclaimer-text">⚠ Disclaimer: Past performance is not a guarantee of future results. As per SEBI, 93% of traders lose money in F&O. Apex Algos is not a SEBI-registered advisor. You are responsible for your trading decisions &amp; losses.</p>
+      <p class="footer-disclaimer-text">âš  Disclaimer: Past performance is not a guarantee of future results. As per SEBI, 93% of traders lose money in F&O. Apex Algos is not a SEBI-registered advisor. You are responsible for your trading decisions &amp; losses.</p>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 Apex Algos. All rights reserved.</p>
+      <p>Â© 2025 Apex Algos. All rights reserved.</p>
       <p>Built for performance. Engineered with discipline.</p>
     </div>
   </footer>
@@ -911,7 +460,7 @@
     }, { threshold: 0.1 });
     reveals.forEach(el => observer.observe(el));
 
-    // ── Toast helper ──────────────────────────────────────────────────────────
+    // â”€â”€ Toast helper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     function showToast(msg, type) {
       const t = document.getElementById('formToast');
       t.textContent = msg;
@@ -919,7 +468,7 @@
       setTimeout(() => { t.classList.remove('show'); }, 4000);
     }
 
-    // ── EmailJS form submit ────────────────────────────────────────────────────
+    // â”€â”€ EmailJS form submit â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     function handleSubmit(e) {
       e.preventDefault();
       const form = e.target;
@@ -934,7 +483,7 @@
       }
 
       // Loading state
-      btn.textContent = 'Sending…';
+      btn.textContent = 'Sendingâ€¦';
       btn.disabled = true;
       btn.style.opacity = '0.7';
 
@@ -955,11 +504,11 @@
         });
     }
 
-    // ── Theme toggle ──────────────────────────────────────────────────────────
+    // â”€â”€ Theme toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     function toggleTheme() {
       const isLight = document.documentElement.classList.toggle('light');
-      document.getElementById('themeIcon').textContent  = isLight ? '◐' : '☀';
+      document.getElementById('themeIcon').textContent  = isLight ? 'â—' : 'â˜€';
       document.getElementById('themeLabel').textContent = isLight ? 'Dark' : 'Light';
       localStorage.setItem('apex-theme', isLight ? 'light' : 'dark');
       updateChartTheme();
@@ -972,13 +521,13 @@
         document.addEventListener('DOMContentLoaded', () => {
           const icon  = document.getElementById('themeIcon');
           const label = document.getElementById('themeLabel');
-          if (icon)  icon.textContent  = '◐';
+          if (icon)  icon.textContent  = 'â—';
           if (label) label.textContent = 'Dark';
         });
       }
     })();
 
-    // ── Strategy tab switching ─────────────────────────────────────────────────
+    // â”€â”€ Strategy tab switching â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     function switchTab(tab) {
       document.querySelectorAll('.perf-tab').forEach((t,i) => {
         t.classList.toggle('active', ['combined','nap','napv2','napv3'][i] === tab);
@@ -988,8 +537,8 @@
       });
     }
 
-    // ── Dynamic date range helpers ─────────────────────────────────────────────
-    // Converts ["19/02/25", ..., "19/06/26"] → "Feb 2025 – Jun 2026"
+    // â”€â”€ Dynamic date range helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // Converts ["19/02/25", ..., "19/06/26"] â†’ "Feb 2025 â€“ Jun 2026"
     function formatDateRange(dates) {
       if (!dates || dates.length === 0) return '';
       function parseDD(s) {
@@ -999,16 +548,16 @@
         const y = parseInt(p[2], 10) < 100 ? 2000 + parseInt(p[2], 10) : parseInt(p[2], 10);
         return m + ' ' + y;
       }
-      return parseDD(dates[0]) + ' – ' + parseDD(dates[dates.length - 1]);
+      return parseDD(dates[0]) + ' â€“ ' + parseDD(dates[dates.length - 1]);
     }
-    // Converts ["Feb 25", ..., "Jun 26"] → "Feb 2025 – Jun 2026"
+    // Converts ["Feb 25", ..., "Jun 26"] â†’ "Feb 2025 â€“ Jun 2026"
     function formatMonthRange(months) {
       if (!months || months.length === 0) return '';
       function expandMon(s) {
         const p = s.split(' ');
         return p[0] + ' 20' + p[1];
       }
-      return expandMon(months[0]) + ' – ' + expandMon(months[months.length - 1]);
+      return expandMon(months[0]) + ' â€“ ' + expandMon(months[months.length - 1]);
     }
     // Update all dynamic period labels across the page
     function updatePeriodLabels(months, dates) {
@@ -1016,15 +565,15 @@
       const dRange = dates  ? formatDateRange(dates)   : mRange;
       const setTxt = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
       setTxt('stat-period-label', 'Total ROI (' + mRange + ')');
-      setTxt('labelCumCombined', 'Cumulative ROI — Monthly (' + mRange + ')');
-      setTxt('labelBarCombined', 'Monthly P&L — NAP v1 vs v2 vs v3 (₹)');
+      setTxt('labelCumCombined', 'Cumulative ROI â€” Monthly (' + mRange + ')');
+      setTxt('labelBarCombined', 'Monthly P&L â€” NAP v1 vs v2 vs v3 (â‚¹)');
       const discC = document.getElementById('disc-combined');
-      if (discC) discC.textContent = 'Live track record ' + mRange + '. Combined NAP + SAP on ₹5L capital. Past performance does not guarantee future results. Trading involves substantial risk of loss.';
+      if (discC) discC.textContent = 'Live track record ' + mRange + '. Combined NAP + SAP on â‚¹5L capital. Past performance does not guarantee future results. Trading involves substantial risk of loss.';
       const discN = document.getElementById('disc-nap');
-      if (discN) discN.textContent = 'Live track record ' + mRange + '. Nifty Apex Predator intraday strategy on ₹2.5L capital. Past performance does not guarantee future results.';
+      if (discN) discN.textContent = 'Live track record ' + mRange + '. Nifty Apex Predator intraday strategy on â‚¹2.5L capital. Past performance does not guarantee future results.';
     }
 
-    // ── Daily / Monthly view toggle ────────────────────────────────────────────
+    // â”€â”€ Daily / Monthly view toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     // Store the raw daily data once fetched from data.json
     const VIEW_STATE = { combined: 'monthly', nap: 'monthly', napv2: 'monthly', napv3: 'monthly' };
 
@@ -1038,7 +587,7 @@
       const hasDaily = DAILY_DATA.nap.length > 0;
 
       if (isDaily && !hasDaily) {
-        // Daily data not loaded yet — show fallback monthly
+        // Daily data not loaded yet â€” show fallback monthly
         return;
       }
 
@@ -1054,7 +603,7 @@
         chart.data.labels = labels;
         if (strategy === 'combined') {
           chart.data.datasets[0].data = DAILY_DATA.nap;
-          document.getElementById(labelMap[strategy]).textContent = 'Daily P&L — NAP (₹)';
+          document.getElementById(labelMap[strategy]).textContent = 'Daily P&L â€” NAP (â‚¹)';
         } else {
           const data = DAILY_DATA[strategy] || [];
           chart.data.datasets[0].data = data;
@@ -1062,7 +611,7 @@
             v >= 0 ? 'rgba(74,222,128,0.7)'
                    : 'rgba(192,80,80,0.62)'
           );
-          document.getElementById(labelMap[strategy]).textContent = `Daily P&L — ${strategy.toUpperCase()} (₹)`;
+          document.getElementById(labelMap[strategy]).textContent = `Daily P&L â€” ${strategy.toUpperCase()} (â‚¹)`;
         }
       } else {
         // Back to monthly
@@ -1075,7 +624,7 @@
         if (strategy === 'combined') {
           chart.data.datasets[0].data = nap_m;
           chart.data.datasets[0].backgroundColor = nap_m.map(v => v >= 0 ? 'rgba(212,168,67,0.75)' : 'rgba(192,80,80,0.62)');
-          document.getElementById(labelMap[strategy]).textContent = 'Monthly P&L — NAP (' + formatMonthRange(lbls) + ') (₹)';
+          document.getElementById(labelMap[strategy]).textContent = 'Monthly P&L â€” NAP (' + formatMonthRange(lbls) + ') (â‚¹)';
         } else {
           const data = strategy === 'nap' ? nap_m : nap_m; // napv2/v3 use nap_m as placeholder until live data
           chart.data.datasets[0].data = data;
@@ -1083,13 +632,13 @@
             v >= 0 ? 'rgba(74,222,128,0.7)'
                    : 'rgba(192,80,80,0.62)'
           );
-          document.getElementById(labelMap[strategy]).textContent = `Monthly P&L — ${strategy.toUpperCase()} (₹)`;
+          document.getElementById(labelMap[strategy]).textContent = `Monthly P&L â€” ${strategy.toUpperCase()} (â‚¹)`;
         }
       }
       chart.update('none');
     }
 
-    // ── Cumulative ROI chart toggle (monthly line vs daily cumulative line) ──
+    // â”€â”€ Cumulative ROI chart toggle (monthly line vs daily cumulative line) â”€â”€
     function cumROIFromDaily(daily, capital) {
       let cum = 0;
       return daily.map(v => { cum += v; return parseFloat((cum / capital * 100).toFixed(2)); });
@@ -1115,14 +664,14 @@
           const napCum  = cumROIFromDaily(DAILY_DATA.nap, CAP_NAP);
           chart.data.labels = dates;
           chart.data.datasets[0].data = napCum;
-          if (labelEl) labelEl.textContent = 'Cumulative ROI — Daily (' + formatDateRange(dates) + ')';
+          if (labelEl) labelEl.textContent = 'Cumulative ROI â€” Daily (' + formatDateRange(dates) + ')';
         } else {
           const dailyArr = DAILY_DATA[strategy] || DAILY_DATA.nap;
           const cap = CAP_NAP;
           const cumArr = cumROIFromDaily(dailyArr, cap);
           chart.data.labels = dates;
           chart.data.datasets[0].data = cumArr;
-          if (labelEl) labelEl.textContent = `Cumulative ROI — ${strategy.toUpperCase()} Daily`;
+          if (labelEl) labelEl.textContent = `Cumulative ROI â€” ${strategy.toUpperCase()} Daily`;
         }
       } else {
         // Back to monthly
@@ -1134,17 +683,17 @@
         chart.data.labels = lbls;
         if (strategy === 'combined') {
           chart.data.datasets[0].data = nap_cum;
-          if (labelEl) labelEl.textContent = 'Cumulative ROI — Monthly (' + formatMonthRange(lbls) + ')';
+          if (labelEl) labelEl.textContent = 'Cumulative ROI â€” Monthly (' + formatMonthRange(lbls) + ')';
         } else {
           const data = nap_cum; // napv2/v3 use nap_cum as placeholder until live data
           chart.data.datasets[0].data = data;
-          if (labelEl) labelEl.textContent = `Cumulative ROI — ${strategy.toUpperCase()} Monthly`;
+          if (labelEl) labelEl.textContent = `Cumulative ROI â€” ${strategy.toUpperCase()} Monthly`;
         }
       }
       chart.update('none');
     }
 
-    // ── Google Sheets Live Data ──
+    // â”€â”€ Google Sheets Live Data â”€â”€
     const SHEET_ID = '1Rgy-HH8bcY7guN7PuH6biiK-JVV-PaFOH5aDII8oVf8';
     const CAP_NAP = 250000, CAP_SAP = 250000, CAP_COMB = 500000;
 
@@ -1187,7 +736,7 @@
     }
 
     function fmtINR(n) {
-      return '₹' + Math.abs(Math.round(n)).toLocaleString('en-IN');
+      return 'â‚¹' + Math.abs(Math.round(n)).toLocaleString('en-IN');
     }
 
     function setText(id, val) {
@@ -1206,7 +755,7 @@
       // Combined panel (shows NAP v1 as primary)
       setText('m-comb-roi', '+' + napRoi + '%');
       setText('m-comb-pnl', fmtINR(nap_tot));
-      setText('m-comb-dd',  '−7.6%');
+      setText('m-comb-dd',  'âˆ’7.6%');
 
       // NAP panel
       setText('m-nap-roi', '+' + napRoi + '%');
@@ -1248,7 +797,7 @@
     async function fetchSheetData() {
       const status = document.getElementById('dataStatus');
       try {
-        // Load data.json — committed to the repo by GitHub Action (no CORS issues)
+        // Load data.json â€” committed to the repo by GitHub Action (no CORS issues)
         const res  = await fetch('./data.json?t=' + Date.now());
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const d = await res.json();
@@ -1268,7 +817,7 @@
 
         // Update stats with server-computed values
         const s = d.stats;
-        const fmt = n => '₹' + Math.abs(n).toLocaleString('en-IN');
+        const fmt = n => 'â‚¹' + Math.abs(n).toLocaleString('en-IN');
         const setEl = (id, v) => { const e = document.getElementById(id); if(e) e.textContent = v; };
         setEl('m-comb-roi', '+' + s.nap.roi + '%');
         setEl('m-comb-pnl', fmt(s.nap.pnl));
@@ -1279,7 +828,7 @@
         if (statEl) statEl.innerHTML = s.nap.roi + '<span>%</span>';
 
         if (status) {
-          status.textContent = 'LIVE · ' + d.updated;
+          status.textContent = 'LIVE Â· ' + d.updated;
           status.style.background = 'rgba(78,160,110,0.12)';
           status.style.borderColor = 'rgba(78,160,110,0.35)';
           status.style.color = '#7EC8A0';
@@ -1333,14 +882,14 @@
             tooltip: { backgroundColor: tooltip, titleColor: text, bodyColor: text, callbacks:
               type === 'line'
                 ? { label: ctx => ' ' + ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1) + '%' }
-                : { label: ctx => ' ' + ctx.dataset.label + ': ₹' + Math.round(ctx.parsed.y).toLocaleString('en-IN') }
+                : { label: ctx => ' ' + ctx.dataset.label + ': â‚¹' + Math.round(ctx.parsed.y).toLocaleString('en-IN') }
             }
           },
           scales: type === 'line'
             ? { x: { grid: { color: grid }, ticks: { color: text } },
                 y: { grid: { color: grid }, ticks: { color: text, callback: v => v + '%' } } }
             : { x: { grid: { display: false }, ticks: { color: text } },
-                y: { grid: { color: grid }, ticks: { color: text, callback: v => '₹' + (v/1000).toFixed(0) + 'k' } } }
+                y: { grid: { color: grid }, ticks: { color: text, callback: v => 'â‚¹' + (v/1000).toFixed(0) + 'k' } } }
         };
       }
 
@@ -1434,7 +983,7 @@
       setInterval(fetchSheetData, 5 * 60 * 1000);
     });
 
-    // ── Live Market Ticker — NIFTY / SENSEX / India VIX ─────────────────────
+    // â”€â”€ Live Market Ticker â€” NIFTY / SENSEX / India VIX â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const TICKER_SYMBOLS = [
       { sym: '^NSEI',     valId: 'tick-nifty-val',  chgId: 'tick-nifty-chg'  },
       { sym: '^BSESN',    valId: 'tick-sensex-val', chgId: 'tick-sensex-chg' },
@@ -1449,7 +998,7 @@
       const h = ist.getHours(), m = ist.getMinutes();
       const mins = h * 60 + m;
       if (day === 0 || day === 6) return false; // weekend
-      return mins >= 555 && mins <= 930; // 9:15 AM – 3:30 PM IST
+      return mins >= 555 && mins <= 930; // 9:15 AM â€“ 3:30 PM IST
     }
 
     function updateMarketStatus() {
@@ -1496,7 +1045,7 @@
 
           chgEl.className    = 'ticker-change' + (chgPct < 0 ? ' neg' : '');
         } catch (e) {
-          // silently keep '—' if fetch fails
+          // silently keep 'â€”' if fetch fails
         }
       }
       updateMarketStatus();
@@ -1506,7 +1055,7 @@
     fetchTicker();
     setInterval(fetchTicker, 30000);
 
-    // ── Close mobile menu when clicking outside ──────────────────────────────
+    // â”€â”€ Close mobile menu when clicking outside â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     document.onclick = function(e) {
       var nav = document.getElementById('mobileNav');
       var burger = document.getElementById('hamburger');
@@ -1519,3 +1068,4 @@
   </script>
 </body>
 </html>
+
