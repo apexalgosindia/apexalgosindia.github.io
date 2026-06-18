@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apex Algos — Strategies &amp; Share Codes</title>
+  <meta name="description" content="Explore Apex Algos algorithmic trading strategies — NAP (Nifty Apex Predator) and SAP (Sensex Apex Predator). Get share codes for Tradetron." />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --ink:#08090C;--surface:#0E1014;--surface2:#161921;--surface3:#1C2030;
+      --rule:#1E2235;--rule2:#252B3E;--cream:#F0F4FF;--muted:#8892AA;--mid:#B8C4D8;
+      --accent:#F0B429;--accent-dim:#C48A0A;--accent-light:#FFD166;
+      --accent-glow:rgba(240,180,41,0.12);--accent-glow2:rgba(240,180,41,0.06);
+      --pos:#22D87A;--pos-bg:rgba(34,216,122,0.10);--neg:#FF5E6E;--neg-bg:rgba(255,94,110,0.10);
+      --nav-bg:rgba(8,9,12,0.88);--glass-bg:rgba(8,9,12,0.70);--glass-border:rgba(240,244,255,0.08);
+      --chart-grid:rgba(240,244,255,0.05);--chart-text:rgba(184,196,216,0.70);
+      --disclaimer-color:#5A6478;--tab-border:#252B3E;--tab-text:#8892AA;
+      --metric-name-color:#8892AA;--metric-border:#1E2235;--chart-label-color:#6A7488;
+      --chart-tooltip-bg:#161921;
+    }
+    :root.light{
+      --ink:#F8F9FC;--surface:#FFFFFF;--surface2:#F0F2F8;--surface3:#E8ECF4;
+      --rule:#E0E5F0;--rule2:#CDD3E3;--cream:#0D1226;--muted:#5A6480;--mid:#2D3555;
+      --accent:#D4920A;--accent-dim:#A86E04;--accent-light:#F0B429;
+      --accent-glow:rgba(212,146,10,0.10);--accent-glow2:rgba(212,146,10,0.05);
+      --pos:#0D8A45;--pos-bg:rgba(13,138,69,0.08);--neg:#C0202E;--neg-bg:rgba(192,32,46,0.08);
+      --nav-bg:rgba(248,249,252,0.92);--glass-bg:rgba(255,255,255,0.75);--glass-border:rgba(13,18,38,0.08);
+      --chart-grid:rgba(13,18,38,0.06);--chart-text:rgba(13,18,38,0.60);
+      --disclaimer-color:#8090B0;--tab-border:#CDD3E3;--tab-text:#6070A0;
+      --metric-name-color:#6070A0;--metric-border:#E0E5F0;--chart-label-color:#7080A8;
+      --chart-tooltip-bg:#FFFFFF;
+    }
+    html{scroll-behavior:smooth;}
+    body{background:var(--ink);color:var(--cream);font-family:'Inter',sans-serif;font-size:15px;line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+    body::before{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.022;mix-blend-mode:overlay;}
+    :root.light body::before{opacity:0.012;}
+    ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--ink);}::-webkit-scrollbar-thumb{background:var(--rule2);border-radius:10px;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 4rem;background:var(--glass-bg);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--glass-border);box-shadow:0 1px 30px rgba(0,0,0,0.30);}
+    :root.light nav{background:rgba(248,249,252,0.92);border-bottom-color:var(--rule);}
+    .nav-logo{font-size:1.05rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--cream);text-decoration:none;display:flex;align-items:center;gap:0.65rem;}
+    .nav-logo img{width:30px;height:30px;object-fit:contain;border-radius:6px;}
+    .nav-links{display:flex;gap:2rem;list-style:none;}
+    .nav-links a{font-size:0.75rem;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;color:var(--muted);text-decoration:none;position:relative;transition:color 0.22s;}
+    .nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:1px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform 0.25s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--cream);}
+    .nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
+    .nav-cta{font-size:0.68rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);text-decoration:none;border:1px solid rgba(240,180,41,0.45);padding:0.48rem 1.2rem;border-radius:4px;transition:background 0.22s,color 0.22s,box-shadow 0.22s;}
+    .nav-cta:hover{background:var(--accent);color:var(--ink);box-shadow:0 0 20px rgba(240,180,41,0.35);}
+    .theme-toggle,.theme-btn{background:var(--surface2);border:1px solid var(--rule2);color:var(--muted);font-family:'Inter',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.08em;padding:0.42rem 0.9rem;cursor:pointer;border-radius:4px;transition:all 0.22s;display:flex;align-items:center;gap:0.45rem;}
+    .theme-toggle:hover,.theme-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-glow);}
+    .hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:6px;z-index:200;}
+    .hamburger span{display:block;width:22px;height:2px;background:var(--cream);border-radius:2px;transition:all 0.25s ease;transform-origin:center;}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .mobile-nav{display:none;position:fixed;top:64px;left:0;right:0;background:var(--glass-bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);padding:1.5rem 2rem;z-index:99;flex-direction:column;}
+    .mobile-nav.open{display:flex;}
+    .mobile-nav a{font-size:0.88rem;font-weight:500;color:var(--mid);text-decoration:none;padding:0.9rem 0;border-bottom:1px solid var(--rule);transition:color 0.2s;}
+    .mobile-nav a:last-child{border-bottom:none;}
+    .mobile-nav a:hover,.mobile-nav a.active{color:var(--accent);}
+    @media(max-width:900px){nav{padding:1rem 1.5rem;}.nav-links{display:none;}.hamburger{display:flex!important;}.nav-cta{display:none!important;}}
+    main{max-width:1380px;margin:0 auto;padding:100px 3rem 6rem;}
+    .page-label,.page-eyebrow{font-size:0.62rem;font-weight:600;letter-spacing:0.24em;text-transform:uppercase;color:var(--accent);margin-bottom:0.9rem;display:flex;align-items:center;gap:0.6rem;}
+    .page-label::before,.page-eyebrow::before{content:'';width:18px;height:1px;background:var(--accent);display:block;}
+    .page-title{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;line-height:1.15;color:var(--cream);letter-spacing:-0.01em;margin-bottom:0.6rem;}
+    .page-subtitle,.page-sub{font-size:0.88rem;color:var(--muted);max-width:52ch;margin-bottom:2.5rem;line-height:1.7;}
+    footer{background:var(--surface);border-top:1px solid var(--rule);}
+    .footer-disclaimer{padding:1.5rem 4rem;border-bottom:1px solid var(--rule);}
+    .footer-disclaimer-text{font-size:0.72rem;line-height:1.7;color:var(--disclaimer-color);max-width:900px;margin:0 auto;text-align:center;}
+    .footer-bottom{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 4rem;flex-wrap:wrap;gap:0.5rem;}
+    .footer-bottom p{font-size:0.65rem;letter-spacing:0.06em;color:var(--disclaimer-color);}
+    .reveal{opacity:0;transform:translateY(26px);transition:opacity 0.7s ease,transform 0.7s ease;}
+    .reveal.visible{opacity:1;transform:none;}
+    body,nav,footer,.theme-toggle,.theme-btn{transition:background-color 0.30s ease,color 0.30s ease,border-color 0.30s ease;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
+    @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
+    td,th{font-family:'Inter',sans-serif;}
+    th{font-size:0.6rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
+    td{font-size:0.82rem;color:var(--mid);}
+    .pos{color:var(--pos)!important;}.neg{color:var(--neg)!important;}
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="nav-logo" href="./index.html" style="display:flex;align-items:center;gap:0.6rem;" title="Home">
+      <img src="logo.jpg" alt="Apex Algos" style="width:32px;height:32px;object-fit:contain;border-radius:4px;" />
+      <span style="color:var(--accent);">Apex <span style="color:var(--cream);">Algos</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./strategies.html" class="active">Strategies</a></li>
+      <li><a href="./analytics.html">Performance</a></li>
+      <li><a href="./index.html#contact">Contact</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:0.8rem;">
+      <a class="nav-cta" href="./index.html#contact">Get Started</a>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+        <span class="icon" id="themeIcon">&#9728;</span><span id="themeLabel">Light</span>
+      </button>
+      <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" onclick="
+        var nav = document.getElementById('mobileNav');
+        var btn = this;
+        var isOpen = nav.classList.contains('open');
+        if (isOpen) { nav.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+        else { nav.classList.add('open'); btn.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+      "><span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-nav" id="mobileNav">
+      <a href="./index.html">Home</a>
+      <a href="./strategies.html" class="active">Strategies</a>
+      <a href="./analytics.html">Performance</a>
+      <a href="./index.html#contact">Contact</a>
+    </div>
+
+  <main>
+    <p class="page-label">Tradetron Strategy Links</p>
+    <h1 class="page-title">Share Codes &amp;<br><em>Strategy Links</em></h1>
+    <p class="page-subtitle">Use the share codes below to check live performance on Tradetron.</p>
+
+    <!-- LIVE P&L BANNER -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:3rem;">
+      <div style="background:var(--surface);border:1px solid rgba(237,230,214,0.07);border-radius:4px;padding:1.2rem 1.5rem;">
+        <div style="font-family:'Inter',sans-serif;font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">Combined ROI</div>
+        <div id="live-comb-roi" style="font-family:'Inter',sans-serif;font-size:1.4rem;color:var(--pos);">—</div>
+        <div id="live-comb-pnl" style="font-family:'Inter',sans-serif;font-size:0.72rem;color:var(--mid);margin-top:0.2rem;">—</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid rgba(237,230,214,0.07);border-radius:4px;padding:1.2rem 1.5rem;">
+        <div style="font-family:'Inter',sans-serif;font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">NAP ROI</div>
+        <div id="live-nap-roi" style="font-family:'Inter',sans-serif;font-size:1.4rem;color:var(--pos);">—</div>
+        <div id="live-nap-pnl" style="font-family:'Inter',sans-serif;font-size:0.72rem;color:var(--mid);margin-top:0.2rem;">—</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3rem;flex-wrap:wrap;gap:0.75rem;">
+      <div id="live-status" style="font-family:'Inter',sans-serif;font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;padding:0.3rem 0.8rem;border:1px solid rgba(237,230,214,0.15);border-radius:2px;color:var(--muted);">LOADING…</div>
+      <a href="https://docs.google.com/spreadsheets/d/1Rgy-HH8bcY7guN7PuH6biiK-JVV-PaFOH5aDII8oVf8/edit?usp=sharing" target="_blank" rel="noopener" style="font-family:'Inter',sans-serif;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);text-decoration:none;">Full P&amp;L Sheet &#8599;</a>
+    </div>
+
+    <!-- Google Sheet Banner -->
+    <a class="sheet-banner" href="https://docs.google.com/spreadsheets/d/1Rgy-HH8bcY7guN7PuH6biiK-JVV-PaFOH5aDII8oVf8/edit?usp=sharing" target="_blank" rel="noopener">
+      <span class="sheet-icon">&#128202;</span>
+      <div class="sheet-banner-text">
+        <div class="sheet-banner-label">Live Performance Data</div>
+        <div class="sheet-banner-title">Apex Algos — P&amp;L Tracking Sheet &rarr;</div>
+      </div>
+      <span class="sheet-banner-arrow">&#8599;</span>
+    </a>
+
+    <!-- NFO/BFO SECTION -->
+    <div class="section-header" id="section-nfo" style="display:none;">
+      <span class="section-badge">NFO / BFO</span>
+      <h2 class="section-heading">NFO / BFO Strategies</h2>
+    </div>
+    <div class="strategy-grid" id="grid-nfo"></div>
+    <div class="sub-section-header" id="sub-section-nfo-hedged" style="display:none;">
+      <span class="sub-section-badge">&#128737; Hedged</span>
+      <h3 class="sub-section-heading">Hedged Strategies</h3>
+      <div class="sub-section-divider"></div>
+    </div>
+    <div class="strategy-grid" id="grid-nfo-hedged"></div>
+
+    <!-- MCX SECTION -->
+    <div class="section-header" id="section-mcx" style="display:none;">
+      <span class="section-badge" style="background:var(--surface2);color:var(--accent);border:1px solid rgba(212,168,64,0.4);">MCX</span>
+      <h2 class="section-heading">MCX Strategies</h2>
+    </div>
+    <div class="strategy-grid" id="grid-mcx"></div>
+    <div class="sub-section-header" id="sub-section-mcx-hedged" style="display:none;">
+      <span class="sub-section-badge">&#128737; Hedged</span>
+      <h3 class="sub-section-heading">Hedged Strategies</h3>
+      <div class="sub-section-divider"></div>
+    </div>
+    <div class="strategy-grid" id="grid-mcx-hedged"></div>
+
+        <!-- Telegram -->
+    <a class="tg-card" href="https://t.me/apexalgoschat" target="_blank" rel="noopener">
+      <span class="tg-card-icon">&#9992;</span>
+      <div class="tg-card-body">
+        <div class="tg-card-label">Community</div>
+        <div class="tg-card-title">Join our telegram for more details, timely updates &amp; support &rarr;</div>
+      </div>
+      <span class="tg-card-arrow">&#8599;</span>
+    </a>
+
+  </main>
+
+  <script>
+  // ── THEME ──
+  function toggleTheme() {
+    const isLight = document.documentElement.classList.toggle('light');
+    document.getElementById('themeIcon').textContent  = isLight ? '☀' : '☾';
+    document.getElementById('themeLabel').textContent = isLight ? 'Dark' : 'Light';
+    localStorage.setItem('apex-theme', isLight ? 'light' : 'dark');
+  }
+  (function(){ const saved = localStorage.getItem('apex-theme'); if (saved==='light') document.documentElement.classList.add('light'); })();
+
+  // ── COPY SHARE CODE ──
+  function copyCode(el, code) {
+    navigator.clipboard.writeText(code).then(() => {
+      const target = el.classList.contains('copy-btn') ? el : el.querySelector('.copy-btn');
+      const orig = target.textContent; target.textContent = 'Copied!';
+      setTimeout(() => target.textContent = orig, 2000);
+    }).catch(() => {
+      const ta = document.createElement('textarea'); ta.value = code;
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    });
+  }
+
+  // ── ROI BADGE ──
+  function setRoiEl(id, roi) {
+    const el = document.getElementById(id); if (!el) return;
+    el.classList.remove('loading');
+    if (roi === null || roi === undefined) { el.textContent = 'N/A'; el.style.color = 'var(--muted)'; return; }
+    const sign = roi >= 0 ? '+' : '';
+    el.textContent = sign + roi.toFixed(1) + '% /mo';
+    el.classList.toggle('neg', roi < 0);
+    el.style.color = '';
+  }
+
+  // ── BUILD CARD HTML from strategy object ──
+  function buildCard(s) {
+    const slStr   = s.sl ? '&#8377;' + Number(s.sl).toLocaleString('en-IN') : 'Open';
+    const isHedged = (s.sheet || '') === 'DAILY P&L HEDGED';
+    const tagLabel = isHedged ? 'Hedged' : (s.tag || 'Main');
+    const linkHtml = s.tradetron_id ? `
+      <a class="card-link" href="https://tradetron.tech/strategy/${s.tradetron_id}" target="_blank" rel="noopener">
+        <span class="card-link-icon">&#128279;</span>
+        <div class="card-link-text">
+          <div class="card-link-label">Strategy Link</div>
+          <div class="card-link-val">tradetron.tech/strategy/${s.tradetron_id}</div>
+        </div>
+      </a>` : '';
+    const codeHtml = s.share_code ? `
+      <div class="share-code-row" onclick="copyCode(this,'${s.share_code}')">
+        <div style="flex:1">
+          <div class="share-code-label">Share Code</div>
+          <div class="share-code-val">${s.share_code}</div>
+        </div>
+        <button class="copy-btn">Copy</button>
+      </div>` : '';
+    const div = document.createElement('div');
+    div.className = 'strat-card';
+    div.dataset.key = s.key;
+    div.innerHTML = `
+      <div class="card-header">
+        <div>
+          <div class="card-name">${s.label}</div>
+          <div class="card-subtitle">${s.subtitle || ''}</div>
+        </div>
+        <span class="card-tag">${tagLabel}</span>
+      </div>
+      <div class="card-params">
+        <div class="param"><div class="param-label">Target</div><div class="param-val pos">Open</div></div>
+        <div class="param"><div class="param-label">Stop Loss</div><div class="param-val neg">${slStr}</div></div>
+      </div>
+      <div class="card-roi-row">
+        <span class="card-roi-label">Avg Monthly ROI</span>
+        <span class="card-roi-val loading" id="roi-${s.key}">—</span>
+      </div>
+      <div class="card-links">${linkHtml}${codeHtml}</div>
+      <button class="analytics-btn" onclick="openAnalytics('${s.key}', this.closest('.strat-card').querySelector('.card-name').textContent, event)">&#9650; View Analytics</button>`;
+    return div;
+  }
+
+  // ── GROUP & RENDER cards from data.json strategies ──
+  const CONFIG_KEY = 'apexStratConfig_v1';
+  function loadCfg() { try { return JSON.parse(localStorage.getItem(CONFIG_KEY)) || {}; } catch { return {}; } }
+
+  function renderCards(dataStrategies, stats) {
+    const cfg = loadCfg();
+    const grids = {
+      nfo:       document.getElementById('grid-nfo'),
+      nfoHedged: document.getElementById('grid-nfo-hedged'),
+      mcx:       document.getElementById('grid-mcx'),
+      mcxHedged: document.getElementById('grid-mcx-hedged'),
+    };
+    // Clear grids
+    Object.values(grids).forEach(g => { if (g) g.innerHTML = ''; });
+
+    dataStrategies.forEach(s => {
+      const cat      = cfg[s.key]?.category || s.category || 'nfo';
+      const isHedged = (s.sheet || '') === 'DAILY P&L HEDGED';
+
+      // Visibility
+      let visible;
+      if (cfg[s.key] && cfg[s.key].visible !== undefined) visible = cfg[s.key].visible;
+      else visible = s.visible !== false;
+      if (!visible || cat === 'hidden') return;
+
+      const card = buildCard(s);
+      if (cat === 'mcx') {
+        (isHedged ? grids.mcxHedged : grids.mcx).appendChild(card);
+      } else {
+        (isHedged ? grids.nfoHedged : grids.nfo).appendChild(card);
+      }
+
+      // Set ROI badge
+      if (stats && stats[s.key]) setRoiEl('roi-' + s.key, stats[s.key].avg_month_roi ?? null);
+    });
+
+    // Show/hide section headers
+    const nfoAny = grids.nfo.children.length > 0 || grids.nfoHedged.children.length > 0;
+    document.getElementById('section-nfo').style.display          = nfoAny ? '' : 'none';
+    document.getElementById('sub-section-nfo-hedged').style.display = grids.nfoHedged.children.length > 0 ? '' : 'none';
+
+    const mcxAny = grids.mcx.children.length > 0 || grids.mcxHedged.children.length > 0;
+    document.getElementById('section-mcx').style.display          = mcxAny ? '' : 'none';
+    document.getElementById('sub-section-mcx-hedged').style.display = grids.mcxHedged.children.length > 0 ? '' : 'none';
+  }
+
+  // ── FETCH data.json & REFRESH ──
+  async function refreshPnL() {
+    try {
+      const res = await fetch('./data.json?t=' + Date.now());
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const d = await res.json();
+      if (!d || !d.stats) return;
+      const s   = d.stats;
+      const fmt = n => '&#8377;' + Math.abs(Math.round(n)).toLocaleString('en-IN');
+      const setEl = (id, v) => { const e = document.getElementById(id); if (e) e.innerHTML = v; };
+
+      setEl('live-comb-roi', '+' + s.comb.roi + '%');
+      setEl('live-comb-pnl', fmt(s.comb.pnl));
+      setEl('live-nap-roi',  '+' + s.nap.roi  + '%');
+      setEl('live-nap-pnl',  fmt(s.nap.pnl));
+
+      const badge = document.getElementById('live-status');
+      if (badge && d.updated) {
+        badge.textContent = 'LIVE · ' + d.updated;
+        badge.style.background  = 'rgba(78,160,110,0.12)';
+        badge.style.borderColor = 'rgba(78,160,110,0.35)';
+        badge.style.color       = '#7EC8A0';
+      }
+
+      // Rebuild cards every refresh (picks up visibility changes)
+      if (d.strategies && d.strategies.length) {
+        renderCards(d.strategies, d.stats);
+      }
+    } catch(e) {
+      const badge = document.getElementById('live-status');
+      if (badge) badge.textContent = 'CACHED';
+      console.warn('data.json not available:', e.message);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    refreshPnL();
+    setInterval(refreshPnL, 5 * 60 * 1000);
+
+    // Theme icon init
+    const isLight = document.documentElement.classList.contains('light');
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+    if (icon)  icon.textContent  = isLight ? '☀' : '☾';
+    if (label) label.textContent = isLight ? 'Dark' : 'Light';
+  });
+</script>
+
+  <footer>
+    <div class="footer-disclaimer">
+      <p class="footer-disclaimer-text">⚠ Disclaimer: Past performance is not a guarantee of future results. As per SEBI, 93% of traders lose money in F&O. Apex Algos is not a SEBI-registered advisor. You are responsible for your trading decisions &amp; losses.</p>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Apex Algos. All rights reserved.</p>
+      <p>Built for performance. Engineered with discipline.</p>
+    </div>
+  </footer>
+
+
+<!-- ── STRATEGY ANALYTICS MODAL ── -->
+<div id="analyticsModal" aria-modal="true" role="dialog">
+  <div class="am-panel">
+    <div class="am-header">
+      <div>
+        <div class="am-title" id="amTitle">Strategy Analytics</div>
+        <div class="am-sub" id="amSub">PERFORMANCE OVERVIEW</div>
+      </div>
+      <button class="am-close" onclick="closeAnalytics()" title="Close">&times;</button>
+    </div>
+    <div class="am-body">
+      <div id="amContent"><div class="am-loading">Loading data…</div></div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ── STRATEGY ANALYTICS MODAL ──
+let _amData = null;       // cached data.json
+let _amCharts = [];       // chart instances to destroy on re-render
+let _amKey = null;
+let _amLabel = null;
+let _amRange = 'all';     // current range: 3m | 6m | 1y | all
+
+const RANGES = [
+  { key: '1m',  label: '1M'  },
+  { key: '3m',  label: '3M'  },
+  { key: '6m',  label: '6M'  },
+  { key: '1y',  label: '1Y'  },
+  { key: 'all', label: 'All' },
+];
+
+async function openAnalytics(key, label, e) {
+  if (e) e.stopPropagation();
+  _amKey   = key;
+  _amLabel = label;
+  _amRange = 'all';
+  _amCalOffset = 0;
+
+  document.getElementById('amTitle').textContent = label;
+  document.getElementById('amContent').innerHTML = '<div class="am-loading">Loading data…</div>';
+  document.getElementById('analyticsModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  try {
+    if (!_amData) {
+      const res = await fetch('./data.json?t=' + Date.now());
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      _amData = await res.json();
+    }
+    renderAmContent();
+  } catch(err) {
+    console.error('Analytics error:', err);
+    document.getElementById('amContent').innerHTML =
+      '<div class="am-loading">Error: ' + err.message + '</div>';
+  }
+}
+
+function closeAnalytics() {
+  document.getElementById('analyticsModal').classList.remove('open');
+  document.body.style.overflow = '';
+  _amCharts.forEach(c => c.destroy());
+  _amCharts = [];
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAnalytics(); });
+document.getElementById('analyticsModal').addEventListener('click', function(e) {
+  if (e.target === this) closeAnalytics();
+});
+
+function setAmRange(r) {
+  _amRange = r;
+  _amCharts.forEach(c => c.destroy());
+  _amCharts = [];
+  renderAmContent();
+}
+
+// Slice daily arrays to the chosen range
+function sliceDailyByRange(dates, values, range) {
+  if (range === 'all') return { dates, values };
+  const months = { '1m': 1, '3m': 3, '6m': 6, '1y': 12 }[range] || 999;
+  const cutoff = new Date();
+  cutoff.setMonth(cutoff.getMonth() - months);
+  const filtered = dates.reduce((acc, d, i) => {
+    const [dd, mm, yy] = d.split('/');
+    const dt = new Date(2000 + parseInt(yy), parseInt(mm) - 1, parseInt(dd));
+    if (dt >= cutoff) { acc.dates.push(d); acc.values.push(values[i]); }
+    return acc;
+  }, { dates: [], values: [] });
+  return filtered;
+}
+
+function sliceMonthlyByRange(months, values, range) {
+  if (range === 'all') return { months, values };
+  const n = { '1m': 1, '3m': 3, '6m': 6, '1y': 12 }[range] || 999;
+  return { months: months.slice(-n), values: values.slice(-n) };
+}
+
+function renderAmContent() {
+  const d    = _amData;
+  const key  = _amKey;
+  const stat = d.stats?.[key];
+  const dailyArr   = d[key + '_daily']   || [];
+  const monthlyArr = d[key + '_monthly'] || [];
+  const dates      = d.daily_dates || [];
+  const months     = d.months || [];
+  const cap        = (d.strategies?.find(s => s.key === key)?.capital) || 250000;
+
+  // Slice by range
+  const { dates: rDates, values: rDaily }     = sliceDailyByRange(dates, dailyArr, _amRange);
+  const { months: rMonths, values: rMonthly } = sliceMonthlyByRange(months, monthlyArr, _amRange);
+
+  // Cumulative P&L
+  let cum = 0;
+  const cumValues = rDaily.map(v => { cum += v; return cum; });
+
+  // Stats for range
+  const totalPnl  = rDaily.reduce((s, v) => s + v, 0);
+  const roi       = ((totalPnl / cap) * 100).toFixed(1);
+  const wins      = rDaily.filter(v => v > 0).length;
+  const total     = rDaily.filter(v => v !== 0).length;
+  const winRate   = total ? ((wins / total) * 100).toFixed(1) : '—';
+  const bestDay   = rDaily.length ? Math.max(...rDaily) : 0;
+  const worstDay  = rDaily.length ? Math.min(...rDaily) : 0;
+  const avgDay    = total ? (rDaily.filter(v=>v!==0).reduce((s,v)=>s+v,0)/total) : 0;
+
+  // Max drawdown + current drawdown
+  let peak = 0, maxDd = 0, cumDd = 0, curDd = 0;
+  rDaily.forEach(v => {
+    cumDd += v;
+    if (cumDd > peak) peak = cumDd;
+    const dd = peak > 0 ? ((cumDd - peak) / cap * 100) : 0;
+    if (dd < maxDd) maxDd = dd;
+    curDd = dd;
+  });
+
+  const fmt = n => (n >= 0 ? '+' : '') + '₹' + Math.abs(Math.round(n)).toLocaleString('en-IN');
+  const fmtPct = n => (n >= 0 ? '+' : '') + n.toFixed(1) + '%';
+  const posNeg = n => n >= 0 ? 'pos' : 'neg';
+
+  // Color palette matching analytics page
+  const isLight = document.documentElement.classList.contains('light');
+  const gridColor  = isLight ? 'rgba(24,20,12,0.07)' : 'rgba(237,230,214,0.07)';
+  const textColor  = isLight ? 'rgba(24,20,12,0.65)' : 'rgba(237,230,214,0.65)';
+  const accentHex  = isLight ? '#96680A' : '#D4A840';
+  const posHex     = isLight ? '#1F7A38' : '#3FE088';
+  const negHex     = isLight ? '#B03030' : '#F07070';
+
+  const chartDefaults = {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: {
+      backgroundColor: isLight ? '#F1EDE3' : '#1A1710',
+      titleColor: isLight ? '#18140C' : '#EDE6D6',
+      bodyColor: isLight ? '#5A4E3C' : '#C8B89A',
+      borderColor: isLight ? '#D6CEBC' : '#252118', borderWidth: 1,
+      padding: 10, cornerRadius: 0,
+    }},
+    scales: {
+      x: { grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'Inter', size: 10 }, maxTicksLimit: 8, maxRotation: 0 } },
+      y: { grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'Inter', size: 10 },
+        callback: v => '₹' + (Math.abs(v) >= 1000 ? (v/1000).toFixed(0)+'k' : v)
+      }}
+    }
+  };
+
+  document.getElementById('amContent').innerHTML = `
+    <div class="am-range-bar" id="amRangeBar">
+      ${RANGES.map(r => `<button class="am-range-btn${r.key===_amRange?' active':''}" onclick="setAmRange('${r.key}')">${r.label}</button>`).join('')}
+    </div>
+
+    <div class="am-stats">
+      <div class="am-stat"><div class="am-stat-label">Total P&L</div><div class="am-stat-val ${posNeg(totalPnl)}">${fmt(totalPnl)}</div></div>
+      <div class="am-stat"><div class="am-stat-label">ROI</div><div class="am-stat-val ${posNeg(parseFloat(roi))}">${fmtPct(parseFloat(roi))}</div></div>
+      <div class="am-stat"><div class="am-stat-label">Win Rate</div><div class="am-stat-val acc">${winRate}%</div></div>
+      <div class="am-stat am-stat-dd">
+        <div class="am-stat-label">Drawdown (Cur / Max)</div>
+        <div class="am-dd-val-row">
+          <span class="am-stat-val ${curDd < 0 ? 'neg' : 'acc'}">${curDd === 0 ? '0.00%' : curDd.toFixed(2) + '%'}</span>
+          <span class="am-dd-sep">/</span>
+          <span class="am-stat-val am-dd-max-val neg">${maxDd.toFixed(2)}%</span>
+        </div>
+        <div class="am-dd-bar-track">
+          <div class="am-dd-bar-max"></div>
+          <div class="am-dd-bar-cur" style="width:${maxDd !== 0 ? Math.min(100, Math.abs(curDd) / Math.abs(maxDd) * 100).toFixed(1) : 0}%"></div>
+        </div>
+      </div>
+      <div class="am-stat"><div class="am-stat-label">Best Day</div><div class="am-stat-val pos">${fmt(bestDay)}</div></div>
+      <div class="am-stat"><div class="am-stat-label">Worst Day</div><div class="am-stat-val neg">${fmt(worstDay)}</div></div>
+      <div class="am-stat"><div class="am-stat-label">Avg Day</div><div class="am-stat-val ${posNeg(avgDay)}">${fmt(avgDay)}</div></div>
+      <div class="am-stat"><div class="am-stat-label">Trading Days</div><div class="am-stat-val acc">${total}</div></div>
+    </div>
+
+    <div class="am-chart-label">Cumulative P&L</div>
+    <div class="am-chart-wrap"><canvas id="amCumChart"></canvas></div>
+
+    <div class="am-chart-label">Monthly P&L</div>
+    <div class="am-chart-wrap am-chart-wrap-sm"><canvas id="amMonthChart"></canvas></div>
+
+    <div class="am-chart-label" style="margin-top:1.5rem;">Calendar P&L</div>
+    <div class="am-cal-header">
+      <div class="am-cal-title" id="amCalTitle">—</div>
+      <div class="am-cal-nav">
+        <button class="am-cal-btn" onclick="amCalNav(-1)">&#8592; Prev</button>
+        <button class="am-cal-btn" onclick="amCalNav(1)">Next &#8594;</button>
+      </div>
+    </div>
+    <div class="am-cal-grid" id="amCalGrid"></div>
+  `;
+
+  // Cumulative chart
+  const cumCtx = document.getElementById('amCumChart').getContext('2d');
+  const gradient = cumCtx.createLinearGradient(0, 0, 0, 220);
+  gradient.addColorStop(0, isLight ? 'rgba(150,104,10,0.18)' : 'rgba(212,168,64,0.18)');
+  gradient.addColorStop(1, 'transparent');
+
+  _amCharts.push(new Chart(cumCtx, {
+    type: 'line',
+    data: {
+      labels: rDates,
+      datasets: [{
+        data: cumValues,
+        borderColor: accentHex,
+        backgroundColor: gradient,
+        borderWidth: 1.5,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        fill: true,
+        tension: 0.3,
+      }]
+    },
+    options: { ...chartDefaults, scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y,
+      ticks: { ...chartDefaults.scales.y.ticks, callback: v => (v >= 0 ? '+' : '') + '₹' + (Math.abs(v)>=1000?(v/1000).toFixed(0)+'k':v) }
+    }}}
+  }));
+
+  // Monthly bar chart
+  const monCtx = document.getElementById('amMonthChart').getContext('2d');
+  _amCharts.push(new Chart(monCtx, {
+    type: 'bar',
+    data: {
+      labels: rMonths,
+      datasets: [{
+        data: rMonthly,
+        backgroundColor: rMonthly.map(v => v >= 0
+          ? (isLight ? 'rgba(31,122,56,0.55)' : 'rgba(63,224,136,0.55)')
+          : (isLight ? 'rgba(176,48,48,0.55)'  : 'rgba(240,112,112,0.55)')),
+        borderColor: rMonthly.map(v => v >= 0 ? posHex : negHex),
+        borderWidth: 1,
+        borderRadius: 0,
+      }]
+    },
+    options: chartDefaults,
+  }));
+
+  // Render calendar after charts
+  renderAmCalendar();
+}
+
+let _amCalOffset = 0;
+
+function amCalNav(dir) {
+  _amCalOffset += dir;
+  renderAmCalendar();
+}
+
+function renderAmCalendar() {
+  const d = _amData;
+  const key = _amKey;
+  if (!d || !key) return;
+
+  const dailyArr = d[key + '_daily'] || [];
+  const dates    = d.daily_dates || [];
+
+  const now = new Date();
+  const ref = new Date(now.getFullYear(), now.getMonth() + _amCalOffset, 1);
+  const y = ref.getFullYear(), m = ref.getMonth();
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  const titleEl = document.getElementById('amCalTitle');
+  const gridEl  = document.getElementById('amCalGrid');
+  if (!titleEl || !gridEl) return;
+
+  titleEl.textContent = MONTHS[m] + ' ' + y;
+
+  // Build date→value lookup for this month
+  const lookup = {};
+  dates.forEach((ds, i) => {
+    const [dd, mm, yy] = ds.split('/');
+    const dt = new Date(2000 + parseInt(yy), parseInt(mm) - 1, parseInt(dd));
+    if (dt.getFullYear() === y && dt.getMonth() === m) {
+      lookup[dt.getDate()] = dailyArr[i] || 0;
+    }
+  });
+
+  const isLight = document.documentElement.classList.contains('light');
+  const fmtV = v => {
+    const abs = Math.abs(v);
+    const sign = v >= 0 ? '+' : '-';
+    return sign + '₹' + (abs >= 1000 ? (abs/1000).toFixed(1) + 'k' : abs.toLocaleString('en-IN'));
+  };
+
+  let html = '';
+  ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(d => {
+    html += `<div class="am-cal-dow">${d}</div>`;
+  });
+
+  const firstDay = new Date(y, m, 1).getDay();
+  const offset = firstDay === 0 ? 6 : firstDay - 1;
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+
+  for (let e = 0; e < offset; e++) html += '<div class="am-cal-day empty"></div>';
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const isToday = now.getFullYear()===y && now.getMonth()===m && now.getDate()===day;
+    const todayCls = isToday ? ' today-cal' : '';
+    if (lookup[day] !== undefined) {
+      const v = lookup[day];
+      const color = v > 0 ? 'var(--pos)' : v < 0 ? 'var(--neg)' : 'var(--muted)';
+      html += `<div class="am-cal-day${todayCls}">
+        <div class="am-cal-day-num">${day}</div>
+        <div class="am-cal-day-pnl" style="color:${color}">${fmtV(v)}</div>
+      </div>`;
+    } else {
+      html += `<div class="am-cal-day${todayCls}" style="opacity:0.3;"><div class="am-cal-day-num">${day}</div></div>`;
+    }
+  }
+
+  gridEl.innerHTML = html;
+}
+</script>
+
+</body>
+</html>

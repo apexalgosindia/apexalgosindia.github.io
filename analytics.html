@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apex Algos — Daily P&L Dashboard</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --ink:#08090C;--surface:#0E1014;--surface2:#161921;--surface3:#1C2030;
+      --rule:#1E2235;--rule2:#252B3E;--cream:#F0F4FF;--muted:#8892AA;--mid:#B8C4D8;
+      --accent:#F0B429;--accent-dim:#C48A0A;--accent-light:#FFD166;
+      --accent-glow:rgba(240,180,41,0.12);--accent-glow2:rgba(240,180,41,0.06);
+      --pos:#22D87A;--pos-bg:rgba(34,216,122,0.10);--neg:#FF5E6E;--neg-bg:rgba(255,94,110,0.10);
+      --nav-bg:rgba(8,9,12,0.88);--glass-bg:rgba(8,9,12,0.70);--glass-border:rgba(240,244,255,0.08);
+      --chart-grid:rgba(240,244,255,0.05);--chart-text:rgba(184,196,216,0.70);
+      --disclaimer-color:#5A6478;--tab-border:#252B3E;--tab-text:#8892AA;
+      --metric-name-color:#8892AA;--metric-border:#1E2235;--chart-label-color:#6A7488;
+      --chart-tooltip-bg:#161921;
+    }
+    :root.light{
+      --ink:#F8F9FC;--surface:#FFFFFF;--surface2:#F0F2F8;--surface3:#E8ECF4;
+      --rule:#E0E5F0;--rule2:#CDD3E3;--cream:#0D1226;--muted:#5A6480;--mid:#2D3555;
+      --accent:#D4920A;--accent-dim:#A86E04;--accent-light:#F0B429;
+      --accent-glow:rgba(212,146,10,0.10);--accent-glow2:rgba(212,146,10,0.05);
+      --pos:#0D8A45;--pos-bg:rgba(13,138,69,0.08);--neg:#C0202E;--neg-bg:rgba(192,32,46,0.08);
+      --nav-bg:rgba(248,249,252,0.92);--glass-bg:rgba(255,255,255,0.75);--glass-border:rgba(13,18,38,0.08);
+      --chart-grid:rgba(13,18,38,0.06);--chart-text:rgba(13,18,38,0.60);
+      --disclaimer-color:#8090B0;--tab-border:#CDD3E3;--tab-text:#6070A0;
+      --metric-name-color:#6070A0;--metric-border:#E0E5F0;--chart-label-color:#7080A8;
+      --chart-tooltip-bg:#FFFFFF;
+    }
+    html{scroll-behavior:smooth;}
+    body{background:var(--ink);color:var(--cream);font-family:'Inter',sans-serif;font-size:15px;line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+    body::before{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.022;mix-blend-mode:overlay;}
+    :root.light body::before{opacity:0.012;}
+    ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--ink);}::-webkit-scrollbar-thumb{background:var(--rule2);border-radius:10px;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 4rem;background:var(--glass-bg);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--glass-border);box-shadow:0 1px 30px rgba(0,0,0,0.30);}
+    :root.light nav{background:rgba(248,249,252,0.92);border-bottom-color:var(--rule);}
+    .nav-logo{font-size:1.05rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--cream);text-decoration:none;display:flex;align-items:center;gap:0.65rem;}
+    .nav-logo img{width:30px;height:30px;object-fit:contain;border-radius:6px;}
+    .nav-links{display:flex;gap:2rem;list-style:none;}
+    .nav-links a{font-size:0.75rem;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;color:var(--muted);text-decoration:none;position:relative;transition:color 0.22s;}
+    .nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:1px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform 0.25s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--cream);}
+    .nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
+    .nav-cta{font-size:0.68rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);text-decoration:none;border:1px solid rgba(240,180,41,0.45);padding:0.48rem 1.2rem;border-radius:4px;transition:background 0.22s,color 0.22s,box-shadow 0.22s;}
+    .nav-cta:hover{background:var(--accent);color:var(--ink);box-shadow:0 0 20px rgba(240,180,41,0.35);}
+    .theme-toggle,.theme-btn{background:var(--surface2);border:1px solid var(--rule2);color:var(--muted);font-family:'Inter',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.08em;padding:0.42rem 0.9rem;cursor:pointer;border-radius:4px;transition:all 0.22s;display:flex;align-items:center;gap:0.45rem;}
+    .theme-toggle:hover,.theme-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-glow);}
+    .hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:6px;z-index:200;}
+    .hamburger span{display:block;width:22px;height:2px;background:var(--cream);border-radius:2px;transition:all 0.25s ease;transform-origin:center;}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .mobile-nav{display:none;position:fixed;top:64px;left:0;right:0;background:var(--glass-bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);padding:1.5rem 2rem;z-index:99;flex-direction:column;}
+    .mobile-nav.open{display:flex;}
+    .mobile-nav a{font-size:0.88rem;font-weight:500;color:var(--mid);text-decoration:none;padding:0.9rem 0;border-bottom:1px solid var(--rule);transition:color 0.2s;}
+    .mobile-nav a:last-child{border-bottom:none;}
+    .mobile-nav a:hover,.mobile-nav a.active{color:var(--accent);}
+    @media(max-width:900px){nav{padding:1rem 1.5rem;}.nav-links{display:none;}.hamburger{display:flex!important;}.nav-cta{display:none!important;}}
+    main{max-width:1380px;margin:0 auto;padding:100px 3rem 6rem;}
+    .page-label,.page-eyebrow{font-size:0.62rem;font-weight:600;letter-spacing:0.24em;text-transform:uppercase;color:var(--accent);margin-bottom:0.9rem;display:flex;align-items:center;gap:0.6rem;}
+    .page-label::before,.page-eyebrow::before{content:'';width:18px;height:1px;background:var(--accent);display:block;}
+    .page-title{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;line-height:1.15;color:var(--cream);letter-spacing:-0.01em;margin-bottom:0.6rem;}
+    .page-subtitle,.page-sub{font-size:0.88rem;color:var(--muted);max-width:52ch;margin-bottom:2.5rem;line-height:1.7;}
+    footer{background:var(--surface);border-top:1px solid var(--rule);}
+    .footer-disclaimer{padding:1.5rem 4rem;border-bottom:1px solid var(--rule);}
+    .footer-disclaimer-text{font-size:0.72rem;line-height:1.7;color:var(--disclaimer-color);max-width:900px;margin:0 auto;text-align:center;}
+    .footer-bottom{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 4rem;flex-wrap:wrap;gap:0.5rem;}
+    .footer-bottom p{font-size:0.65rem;letter-spacing:0.06em;color:var(--disclaimer-color);}
+    .reveal{opacity:0;transform:translateY(26px);transition:opacity 0.7s ease,transform 0.7s ease;}
+    .reveal.visible{opacity:1;transform:none;}
+    body,nav,footer,.theme-toggle,.theme-btn{transition:background-color 0.30s ease,color 0.30s ease,border-color 0.30s ease;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
+    @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
+    td,th{font-family:'Inter',sans-serif;}
+    th{font-size:0.6rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
+    td{font-size:0.82rem;color:var(--mid);}
+    .pos{color:var(--pos)!important;}.neg{color:var(--neg)!important;}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="./index.html" style="display:flex;align-items:center;gap:0.6rem;" title="Home"><img src="logo.jpg" alt="Apex Algos" style="width:32px;height:32px;object-fit:contain;border-radius:4px;" /><span style="color:var(--accent);">Apex <span style="color:var(--cream);">Algos</span></span></a>
+  <ul class="nav-links">
+    <li><a href="./index.html">Home</a></li>
+    <li><a href="./strategies.html">Strategies</a></li>
+    <li><a href="./analytics.html" class="active">Performance</a></li>
+    <li><a href="./index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-btn" onclick="toggleTheme()"><span id="themeIcon">&#9728;</span> <span id="themeLabel">Light</span></button>
+    <a class="nav-cta" href="./index.html#contact">Get Started</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" onclick="
+      var nav = document.getElementById('mobileNav');
+      var btn = this;
+      var isOpen = nav.classList.contains('open');
+      if (isOpen) { nav.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+      else { nav.classList.add('open'); btn.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+    "><span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="./index.html">Home</a>
+  <a href="./strategies.html">Strategies</a>
+  <a href="./analytics.html" class="active">Performance</a>
+  <a href="./index.html#contact">Contact</a>
+</div>
+
+<main>
+  <p class="page-eyebrow">Apex Algos &middot; Daily P&amp;L Dashboard</p>
+  <h1 class="page-title" id="adminTapTarget" style="font-weight:700;cursor:default;user-select:none;">Daily Performance</h1>
+  <p class="page-subtitle">Strategy-by-strategy breakdown with daily, monthly, and all-time P&amp;L. Updated from live trading records.</p>
+  <div style="display:flex;align-items:center;gap:0.85rem;margin-bottom:1.5rem;">
+    <span class="live-badge" id="liveBadge">LIVE &middot; &mdash;</span>
+    <p class="updated-tag" style="margin-bottom:0;" id="updatedTag">Last updated: &mdash;</p>
+  </div>
+
+  <!-- ════════════ STRATEGY BREAKDOWN TABLE ════════════ -->
+  <p class="section-title">Strategy Breakdown</p>
+  <div class="breakdown-wrap">
+    <div class="breakdown-toolbar">
+      <div style="display:flex;gap:0;align-items:center;margin-right:0.5rem;">
+        <button class="range-btn active" id="cat-all"    onclick="setCatFilter('all',this)">All</button>
+        <span style="display:inline-block;width:1px;height:18px;background:var(--rule);margin:0 6px;flex-shrink:0;opacity:0.6;"></span>
+        <button class="range-btn"        id="cat-nfo"    onclick="setCatFilter('nfo',this)">NFO / BFO</button>
+        <button class="range-btn"        id="cat-mcx"    onclick="setCatFilter('mcx',this)">MCX</button>
+        <span style="display:inline-block;width:1px;height:18px;background:var(--rule);margin:0 6px;flex-shrink:0;opacity:0.6;"></span>
+        <button class="range-btn"        id="cat-unhedged" onclick="setCatFilter('unhedged',this)">Unhedged</button>
+        <button class="range-btn"        id="cat-hedged"   onclick="setCatFilter('hedged',this)">Hedged</button>
+      </div>
+      <div class="search-box">
+        <span class="search-icon">&#128269;</span>
+        <input type="text" id="searchInput" placeholder="Search strategies..." oninput="filterBreakdown()" />
+      </div>
+      <button class="export-btn" onclick="exportCSV()">&#8595; Export CSV</button>
+      <button class="export-btn" onclick="exportExcel()">&#8595; Export Excel</button>
+      <button class="export-btn" id="pdfExportBtn" onclick="exportPDF()" style="border-color:rgba(212,168,64,0.45);color:var(--accent);">&#128438; Export PDF</button>
+      <button class="export-btn" id="snapshotBtn" onclick="snapshotTable()">&#128247; Snapshot</button>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:0;">
+        <button class="nav-btn" onclick="navDate(-1)">&#8592;</button>
+      <div class="date-label" id="dateLabel">&mdash;</div>
+        <button class="nav-btn" onclick="navDate(1)">&#8594;</button>
+        <button class="nav-btn active-today" onclick="navToday()" style="margin-left:0.4rem;">&#9679; Today</button>
+      </div>
+    </div>
+    <div class="strat-toggle-bar" id="stratToggleBar"></div>
+
+    <div class="bd-today-strip" id="bdTodayStrip"></div>
+
+    <div class="bd-header">
+      <div class="bd-header-left">
+        <div class="bd-icon">&#9783;</div>
+        <div>
+          <div class="bd-title">All Strategies &mdash; Detailed View</div>
+          <div class="bd-sub">Daily &middot; Monthly &middot; Yearly Performance</div>
+        </div>
+      </div>
+      <div class="bd-date-pill" id="bdDatePill">&mdash;</div>
+    </div>
+
+    <div class="bd-table-wrap">
+      <table class="bd-table" id="bdTable">
+        <thead>
+          <tr>
+            <th onclick="sortBd('name')" id="th-name">Strategy</th>
+            <th onclick="sortBd('capital')" id="th-capital">Capital</th>
+            <th onclick="sortBd('today')" id="th-today">Today PNL (ROI%)</th>
+            <th onclick="sortBd('monthly')" id="th-monthly">Monthly PNL (ROI%)</th>
+            <th id="th-yearly" style="white-space:nowrap;">
+              <span onclick="sortBd('yearly')" style="cursor:pointer;" id="th-yearly-label">Yearly PNL (YTD%)</span>
+              <button 
+  id="yearlyToggleBtn"
+  onclick="toggleYearlyMode(event)"
+  title="Switch between Calendar Year and Financial Year"
+  style="
+    margin-left:6px;
+    font-family:'Inter',sans-serif;
+    font-size:0.48rem;
+    letter-spacing:0.08em;
+    background:var(--accent-glow);
+    border:1px solid var(--accent-dim);
+    color:var(--accent);
+    padding:0.18rem 0.5rem;
+    cursor:pointer;
+    vertical-align:middle;
+    transition:all 0.18s;
+    position:relative;
+    z-index:10;
+    pointer-events:auto;
+  ">
+  FY
+</button>
+            </th>
+            <th onclick="sortBd('drawdown')" id="th-drawdown">Current DD/Total DD</th>
+          </tr>
+        </thead>
+        <tbody id="bdBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <p style="font-family:'Inter',sans-serif;font-size:0.7rem;color:var(--muted);margin-top:0.75rem;margin-bottom:0.5rem;letter-spacing:0.02em;">⚠ Past performance does not guarantee future returns, these are our account returns. Kindly consult your financial adviser.</p>
+
+  <!-- ── TOP CONTROLS ── -->
+  <div class="top-controls">
+    <div class="range-group">
+      <button class="range-btn active" onclick="setRange('all',this)">All</button>
+      <button class="range-btn" onclick="setRange('ytd',this)">YTD</button>
+      <button class="range-btn" onclick="setRange('6m',this)">6M</button>
+      <button class="range-btn" onclick="setRange('3m',this)">3M</button>
+      <button class="range-btn" onclick="setRange('1m',this)">1M</button>
+    </div>
+    <div class="view-toggle">
+      <button class="view-btn active" onclick="setDisplayView('calendar',this)">&#10727; Calendar</button>
+    </div>
+    <div class="date-nav"></div>
+  </div>
+
+
+
+  <!-- ── ROLLING STATS ── -->
+  <p class="section-title">Rolling Performance &mdash; <span id="rollingPeriodLabel">All Time</span></p>
+  <div class="rolling-grid" id="rollingGrid"></div>
+
+  <!-- ── CHARTS ── -->
+  <div class="chart-grid">
+    <div class="chart-panel full">
+      <div class="chart-panel-title">Cumulative P&amp;L &mdash; All Strategies</div>
+      <div class="chart-wrap h300"><canvas id="cumulChart"></canvas></div>
+    </div>
+    <div class="chart-panel">
+      <div class="chart-panel-title">Daily P&amp;L Bar &mdash; Selected Range</div>
+      <div class="chart-wrap h260"><canvas id="dailyBarChart"></canvas></div>
+    </div>
+    <div class="chart-panel">
+      <div class="chart-panel-title">Strategy Contribution &mdash; <span id="pieDate">&mdash;</span></div>
+      <div class="chart-wrap h260"><canvas id="stratPieChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ── ACTIVITY HEATMAP ── -->
+  <p class="section-title">Trading Activity &mdash; Win/Loss Heatmap</p>
+  <div style="background:var(--surface);border:1px solid var(--rule);padding:1.2rem 1.4rem;margin-bottom:2rem;">
+    <div class="heat-bar" id="heatBar"></div>
+    <div style="display:flex;gap:1.5rem;margin-top:0.75rem;align-items:center;">
+      <div style="font-family:'Inter',sans-serif;font-size:0.55rem;color:var(--muted);">&uarr; Each square = 1 trading day &middot; Hover for P&amp;L</div>
+      <div style="display:flex;align-items:center;gap:0.4rem;">
+        <div style="width:12px;height:12px;background:rgba(63,224,136,0.8);border-radius:2px;"></div><span style="font-family:'Inter',sans-serif;font-size:0.54rem;color:var(--muted);">Profit</span>
+        <div style="width:12px;height:12px;background:rgba(240,112,112,0.8);border-radius:2px;margin-left:0.8rem;"></div><span style="font-family:'Inter',sans-serif;font-size:0.54rem;color:var(--muted);">Loss</span>
+        <div style="width:12px;height:12px;background:var(--surface2);border:1px solid var(--rule);border-radius:2px;margin-left:0.8rem;"></div><span style="font-family:'Inter',sans-serif;font-size:0.54rem;color:var(--muted);">Zero</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CALENDAR VIEW ── -->
+  <div id="calendarView">
+    <div class="cal-header">
+      <div class="cal-month-nav">
+        <button class="nav-btn" onclick="calNav(-1)">&#8592; Prev</button>
+        <h2 class="cal-title" id="calTitle">&mdash;</h2>
+        <button class="nav-btn" onclick="calNav(1)">Next &#8594;</button>
+      </div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+  <div style="margin-bottom:2rem;"></div>
+
+  <!-- ── SUMMARY STRIP ── -->
+  <p class="section-title">Period Summary &mdash; <span id="summaryPeriodLabel">All Time</span></p>
+  <div class="summary-strip" id="summaryStrip"></div>
+
+</main>
+
+<footer>
+    <div class="footer-disclaimer">
+      <p class="footer-disclaimer-text">⚠ Disclaimer: Past performance is not a guarantee of future results. As per SEBI, 93% of traders lose money in F&O. Apex Algos is not a SEBI-registered advisor. You are responsible for your trading decisions &amp; losses.</p>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Apex Algos. All rights reserved.</p>
+      <p id="footerUpdated">Built for performance. Engineered with discipline.</p>
+    </div>
+  </footer>
+
+<!-- ══ SECRET ADMIN PANEL — hidden from public ══ -->
+<div id="adminPanel" aria-hidden="true">
+  <div class="admin-header">
+    <span class="admin-title">&#9881; Admin — Data Sync</span>
+    <button class="admin-close" onclick="closeAdminPanel()" title="Close">&times;</button>
+  </div>
+
+  <!-- GitHub Sync -->
+  <div class="admin-section-label">GitHub Actions</div>
+  <button class="admin-btn admin-btn-primary" id="ghSyncBtn" onclick="triggerGithubSync()">
+    <span>&#9654;</span> Run Sheet Sync Workflow
+  </button>
+
+  <!-- GitHub Config -->
+  <div id="ghConfigArea" style="display:none; margin-bottom:0.55rem;">
+    <input id="ghRepo"  class="admin-input" placeholder="owner/repo  (e.g. apex/site)" />
+    <input id="ghFile"  class="admin-input" placeholder="Workflow file  (e.g. sync.yml)" />
+    <input id="ghToken" class="admin-input" type="password" placeholder="GitHub PAT token" />
+    <div style="display:flex;gap:0.4rem;">
+      <button class="admin-btn" style="margin-bottom:0;flex:1;" onclick="saveGhConfig()">&#10003; Save</button>
+      <button class="admin-btn" style="margin-bottom:0;flex:1;border-color:var(--neg);color:var(--neg);" onclick="clearGhConfig()">&#128465; Clear</button>
+    </div>
+  </div>
+  <button class="admin-btn-ghost" id="ghConfigToggle" onclick="toggleGhConfig()">&#9881; Configure GitHub settings</button>
+
+  <hr class="admin-divider" />
+
+  <!-- Local Fetch -->
+  <div class="admin-section-label">Local Cache</div>
+  <button class="admin-btn" id="hardFetchBtn" onclick="hardSheetFetch()">
+    <span>&#8635;</span> Hard Fetch data.json
+  </button>
+  <button class="admin-btn" id="clearCacheBtn" onclick="clearDataCache()">
+    <span>&#128465;</span> Clear Cached Data
+  </button>
+
+  <hr class="admin-divider" />
+  <div class="admin-status" id="adminStatus">Ready</div>
+  <div class="admin-note" style="margin-top:0.5rem;">
+    Press <strong style="color:var(--cream);">Esc</strong> or ✕ to close.
+  </div>
+</div>
+
+<script>
+const DATA = {"updated":"05/04/26","months":["Feb 25","Mar 25","Apr 25","May 25","Jun 25","Jul 25","Aug 25","Sep 25","Oct 25","Nov 25","Dec 25","Jan 26","Feb 26","Mar 26","Apr 26"],"nap_monthly":[21674.0,-13125.0,-2368.0,41408.0,21632.0,3693.0,18159.0,10466.0,3346.0,9246.0,16514.0,24989.0,8327.0,-6107.0,-740.0],"sap_monthly":[12824.0,2846.0,-15970.0,8268.0,25972.0,16376.0,15001.0,2290.0,4470.0,2548.0,14746.0,13953.0,1332.0,-12463.0,-2387.0],"napv2_monthly":[0,0,0,0,0,0,0,0,9232.0,9137.0,5881.0,30528.0,5558.0,-6224.0,-2874.0],"napv3_monthly":[0,0,0,0,0,0,0,0,12686.0,12699.0,9244.0,17889.0,6380.0,-3499.0,2759.0],"sapv2_monthly":[0,0,0,0,0,0,0,0,0,5649.0,2426.0,15044.0,4666.0,2024.0,1086.0],"sapv3_monthly":[0,0,0,0,0,0,0,0,4367.0,-7757.0,6686.0,2191.0,4851.0,-11337.0,-3683.0],"nap_daily":[-2370.0,2137.0,1541.0,3622.0,-4898.0,5974.0,1973.0,3667.0,3814.0,1988.0,4226.0,506.0,1613.0,-431.0,-6330.0,-1523.0,97.0,-4631.0,-2010.0,-2430.0,-1511.0,-1421.0,-1511.0,3131.0,-4931.0,-4958.0,5411.0,-607.0,2141.0,6270.0,-1849.0,1766.0,5501.0,2366.0,-5134.0,5325.0,-3454.0,2842.0,-1954.0,-4916.0,5550.0,682.0,-4890.0,-221.0,5790.0,345.0,-4852.0,-5265.0,10140.0,2546.0,848.0,0.0,3480.0,6585.0,-5220.0,3787.0,1129.0,-5115.0,2081.0,2797.0,-5160.0,4433.0,7020.0,131.0,405.0,5449.0,12829.0,-4961.0,-1796.0,0.0,7751.0,5138.0,4301.0,-885.0,705.0,3676.0,-135.0,-5306.0,-1842.0,1018.0,4427.0,1776.0,353.0,-2408.0,3217.0,-4890.0,782.0,551.0,1260.0,2143.0,4745.0,-1675.0,-4974.0,2841.0,-185.0,3589.0,1426.0,-5328.0,-1301.0,1810.0,3289.0,155.0,1950.0,1095.0,1508.0,-291.0,-695.0,4088.0,-2734.0,-1575.0,1237.0,-360.0,-4922.0,-1774.0,2509.0,965.0,458.0,5098.0,-3138.0,-1350.0,2614.0,300.0,3476.0,5798.0,3060.0,131.0,-41.0,-502.0,1155.0,660.0,0.0,-2028.0,768.0,-2134.0,880.0,-1606.0,-13.0,1828.0,1133.0,4388.0,2166.0,636.0,135.0,1467.0,1348.0,-1568.0,1286.0,1703.0,2640.0,-5208.0,-1669.0,-830.0,2119.0,1176.0,589.0,1931.0,375.0,-2646.0,834.0,2350.0,-448.0,2768.0,2385.0,-4972.0,-543.0,-1854.0,-5041.0,-4867.0,0.0,3342.0,572.0,3304.0,2703.0,-1320.0,4582.0,-109.0,-53.0,4335.0,0.0,1463.0,308.0,728.0,2729.0,-757.0,-3541.0,-232.0,2419.0,1088.0,-4957.0,1084.0,1331.0,-2490.0,3390.0,491.0,833.0,1077.0,686.0,3168.0,-581.0,546.0,-1497.0,-503.0,1197.0,-4102.0,-2020.0,3094.0,2663.0,4069.0,604.0,934.0,1444.0,1032.0,3634.0,2055.0,1425.0,-475.0,2417.0,-3276.0,1317.0,335.0,828.0,-19.0,-667.0,423.0,-1651.0,958.0,-4866.0,1892.0,0.0,943.0,3198.0,2637.0,5616.0,2116.0,4523.0,5301.0,4455.0,-2350.0,782.0,5012.0,2656.0,2381.0,842.0,1032.0,1762.0,-845.0,1723.0,923.0,-3601.0,-1635.0,-274.0,-5068.0,-2286.0,1401.0,-554.0,3391.0,351.0,334.0,-6085.0,4382.0,-3225.0,-4953.0,1636.0,-5014.0,1551.0,1608.0,3856.0,-720.0,-957.0,-2428.0,-2117.0,5090.0,703.0,2075.0,3359.0,-4868.0,-1969.0,1229.0],"sap_daily":[0,0,0,0,-3694.0,3248.0,2536.0,3960.0,1710.0,255.0,4809.0,-11.0,4726.0,1412.0,-3262.0,-291.0,1310.0,-1867.0,-611.0,340.0,252.0,1645.0,-361.0,1255.0,-5075.0,-3473.0,2034.0,1816.0,-437.0,3444.0,-5166.0,-879.0,1918.0,1506.0,-5286.0,-432.0,-2207.0,4829.0,-1660.0,-5150.0,1573.0,4471.0,-4976.0,-138.0,3298.0,-573.0,-4916.0,-2182.0,3298.0,5882.0,3390.0,0.0,-3213.0,5014.0,-5112.0,-4467.0,2200.0,-5043.0,3482.0,5732.0,-5034.0,1305.0,498.0,958.0,205.0,-7151.0,6557.0,661.0,-894.0,0.0,6524.0,3873.0,1859.0,-323.0,2286.0,5467.0,-25.0,-867.0,1216.0,584.0,5329.0,-2275.0,-1806.0,1753.0,4218.0,-4923.0,707.0,-483.0,2123.0,735.0,6841.0,-458.0,-2528.0,2736.0,963.0,4765.0,1393.0,-900.0,588.0,3241.0,4285.0,242.0,124.0,862.0,216.0,-607.0,-324.0,1867.0,-1943.0,-1036.0,1143.0,-40.0,-5054.0,-2814.0,2107.0,4086.0,-571.0,4862.0,-444.0,-895.0,-1781.0,-1317.0,-690.0,4746.0,645.0,-2796.0,1092.0,297.0,1090.0,5099.0,0.0,802.0,1483.0,-28.0,2646.0,176.0,-939.0,384.0,-1648.0,298.0,2647.0,2949.0,278.0,150.0,-1639.0,140.0,1849.0,-848.0,1089.0,-5134.0,1039.0,421.0,132.0,-1362.0,-310.0,5852.0,-864.0,-1427.0,-494.0,-324.0,-464.0,-2270.0,540.0,-601.0,-927.0,2335.0,-1350.0,-97.0,0.0,764.0,1060.0,283.0,1643.0,-695.0,2890.0,-1384.0,-1550.0,1179.0,0.0,-2242.0,-676.0,638.0,-1928.0,-1874.0,-804.0,1019.0,1257.0,-146.0,-2549.0,3155.0,1524.0,-428.0,4379.0,-1197.0,1687.0,1104.0,113.0,2125.0,709.0,-1487.0,-2511.0,686.0,3143.0,-3123.0,1271.0,1147.0,951.0,2455.0,1427.0,-11.0,1443.0,274.0,1155.0,3106.0,1205.0,345.0,557.0,-234.0,1494.0,-666.0,289.0,3572.0,1917.0,570.0,520.0,875.0,-19.0,2670.0,0.0,1576.0,-1255.0,-2149.0,2903.0,1300.0,2368.0,-1489.0,3054.0,-3577.0,325.0,3135.0,4234.0,2791.0,-246.0,449.0,631.0,757.0,1542.0,-2047.0,-2431.0,-1199.0,-2290.0,-5235.0,-2816.0,1025.0,628.0,2936.0,-27.0,-830.0,-4986.0,718.0,-4895.0,-5378.0,1347.0,-4735.0,-4603.0,-3039.0,56.0,-1173.0,1031.0,3223.0,-2152.0,3475.0,2244.0,935.0,-1017.0,6486.0,-1843.0,-544.0],"napv2_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2775.0,-596.0,3247.0,1226.0,-1399.0,3266.0,713.0,675.0,2441.0,0.0,-1489.0,-2111.0,510.0,4496.0,-3405.0,-3454.0,311.0,2029.0,3772.0,-3623.0,281.0,2366.0,-1410.0,4665.0,-322.0,2149.0,1256.0,105.0,1905.0,-75.0,38.0,-3499.0,-919.0,-3045.0,-3634.0,-3544.0,3082.0,2745.0,1470.0,439.0,2632.0,1950.0,1005.0,2284.0,2509.0,836.0,244.0,2951.0,-3598.0,1063.0,-224.0,1076.0,1976.0,-1082.0,-1358.0,-1245.0,2220.0,-3400.0,2233.0,0.0,468.0,3351.0,2353.0,7030.0,3354.0,3214.0,6214.0,5658.0,-2373.0,1521.0,3247.0,2841.0,2178.0,2652.0,767.0,1852.0,-929.0,1700.0,13.0,-3991.0,-3481.0,1128.0,-3715.0,-2444.0,1982.0,-3452.0,5070.0,608.0,-1989.0,-2876.0,7283.0,-3276.0,-3673.0,140.0,-3776.0,4453.0,-718.0,3273.0,-2355.0,-3442.0,-913.0,-1683.0,5239.0,-3591.0,1089.0,1979.0,-3377.0,-3608.0,734.0],"napv3_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4466.0,2509.0,3345.0,-3555.0,-165.0,3671.0,2415.0,180.0,2546.0,0.0,4856.0,-3971.0,1560.0,3874.0,-1384.0,-3581.0,2816.0,2618.0,1714.0,-2119.0,-1020.0,2089.0,604.0,2753.0,-409.0,-630.0,203.0,-142.0,1148.0,2096.0,-1297.0,-3563.0,-1804.0,1867.0,-1987.0,-3484.0,2209.0,2655.0,1699.0,840.0,1954.0,1879.0,1939.0,3956.0,1706.0,623.0,60.0,364.0,-3474.0,1316.0,-400.0,0.0,1602.0,-120.0,484.0,-3526.0,-1305.0,-3516.0,2220.0,0.0,1245.0,4563.0,1684.0,7764.0,3133.0,3952.0,-3634.0,3100.0,-673.0,1417.0,5870.0,1534.0,2460.0,2408.0,1917.0,2502.0,-962.0,1609.0,-335.0,-3734.0,-3708.0,683.0,-3438.0,-2980.0,2519.0,-1944.0,5356.0,-3604.0,-1190.0,-4154.0,5905.0,-3117.0,-3315.0,-3309.0,-3442.0,4813.0,582.0,-3595.0,-117.0,-3630.0,-962.0,-546.0,6445.0,-3406.0,7075.0,4911.0,-3637.0,-3543.0,6302.0],"sapv2_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2239.0,2173.0,-1073.0,3990.0,-3522.0,596.0,1246.0,-3072.0,1096.0,650.0,230.0,-3607.0,798.0,2450.0,-3600.0,185.0,1014.0,-61.0,2327.0,314.0,-84.0,321.0,485.0,597.0,3088.0,1196.0,99.0,36.0,-2036.0,2361.0,-404.0,837.0,3260.0,1280.0,614.0,538.0,566.0,95.0,1102.0,0.0,-467.0,-1785.0,-1332.0,2347.0,2297.0,2448.0,844.0,3958.0,-3515.0,1129.0,2733.0,3957.0,2545.0,3098.0,-719.0,2794.0,544.0,1245.0,-1894.0,-3741.0,-1095.0,-1596.0,-3300.0,-2975.0,-249.0,611.0,2488.0,719.0,-1628.0,-3578.0,4145.0,-3488.0,-3554.0,2388.0,-3360.0,-358.0,-3253.0,-3504.0,1427.0,1159.0,3418.0,-3484.0,5156.0,2877.0,1904.0,-170.0,4299.0,-3743.0,4829.0],"sapv3_daily":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,496.0,635.0,328.0,10.0,204.0,2540.0,154.0,-3520.0,387.0,0.0,-3678.0,-1762.0,90.0,1012.0,338.0,-3480.0,1810.0,1125.0,1061.0,-2574.0,1589.0,2032.0,-939.0,3288.0,-2286.0,-3487.0,1237.0,-2294.0,920.0,1489.0,113.0,-3485.0,801.0,2751.0,-3530.0,2662.0,968.0,461.0,2793.0,696.0,-2296.0,1055.0,165.0,1717.0,1913.0,702.0,-228.0,429.0,-1116.0,1914.0,-1503.0,-145.0,2412.0,1404.0,2513.0,-3639.0,-1766.0,-127.0,-1837.0,0.0,3631.0,222.0,-2615.0,-4234.0,1208.0,2182.0,1881.0,2310.0,-1620.0,1530.0,5094.0,1588.0,1777.0,429.0,-284.0,1923.0,606.0,1881.0,-918.0,-957.0,-230.0,-876.0,-3293.0,-2776.0,1254.0,980.0,928.0,-1923.0,-1882.0,-3490.0,616.0,-4530.0,-3426.0,724.0,-3464.0,-2570.0,-3254.0,-3534.0,2335.0,-4380.0,6007.0,-3499.0,-1547.0,2179.0,4050.0,1762.0,4684.0,-2593.0,-1090.0],"daily_dates":["13/02/25","14/02/25","17/02/25","18/02/25","19/02/25","20/02/25","21/02/25","24/02/25","25/02/25","27/02/25","28/02/25","03/03/25","04/03/25","05/03/25","06/03/25","07/03/25","10/03/25","11/03/25","12/03/25","13/03/25","17/03/25","18/03/25","19/03/25","20/03/25","21/03/25","24/03/25","25/03/25","26/03/25","27/03/25","28/03/25","01/04/25","02/04/25","03/04/25","04/04/25","08/04/25","09/04/25","11/04/25","15/04/25","16/04/25","17/04/25","21/04/25","22/04/25","23/04/25","24/04/25","25/04/25","28/04/25","29/04/25","30/04/25","02/05/25","05/05/25","06/05/25","07/05/25","08/05/25","09/05/25","12/05/25","13/05/25","14/05/25","15/05/25","16/05/25","19/05/25","20/05/25","21/05/25","22/05/25","23/05/25","26/05/25","27/05/25","28/05/25","29/05/25","30/05/25","02/06/25","03/06/25","04/06/25","05/06/25","06/06/25","09/06/25","10/06/25","11/06/25","12/06/25","13/06/25","16/06/25","17/06/25","18/06/25","19/06/25","20/06/25","23/06/25","24/06/25","25/06/25","26/06/25","27/06/25","30/06/25","01/07/25","02/07/25","03/07/25","04/07/25","07/07/25","08/07/25","09/07/25","10/07/25","11/07/25","14/07/25","15/07/25","16/07/25","17/07/25","18/07/25","21/07/25","22/07/25","23/07/25","24/07/25","25/07/25","28/07/25","29/07/25","30/07/25","31/07/25","01/08/25","04/08/25","05/08/25","06/08/25","07/08/25","08/08/25","11/08/25","12/08/25","13/08/25","14/08/25","18/08/25","19/08/25","20/08/25","21/08/25","22/08/25","25/08/25","26/08/25","27/08/25","28/08/25","29/08/25","01/09/25","02/09/25","03/09/25","04/09/25","05/09/25","08/09/25","09/09/25","10/09/25","11/09/25","12/09/25","15/09/25","16/09/25","17/09/25","18/09/25","19/09/25","22/09/25","23/09/25","24/09/25","25/09/25","26/09/25","29/09/25","30/09/25","01/10/25","03/10/25","06/10/25","07/10/25","08/10/25","09/10/25","10/10/25","13/10/25","14/10/25","15/10/25","16/10/25","17/10/25","20/10/25","22/10/25","23/10/25","24/10/25","27/10/25","28/10/25","29/10/25","30/10/25","31/10/25","03/11/25","04/11/25","05/11/25","06/11/25","07/11/25","10/11/25","11/11/25","12/11/25","13/11/25","14/11/25","17/11/25","18/11/25","19/11/25","20/11/25","21/11/25","24/11/25","25/11/25","26/11/25","27/11/25","28/11/25","01/12/25","02/12/25","03/12/25","04/12/25","05/12/25","08/12/25","09/12/25","10/12/25","11/12/25","12/12/25","15/12/25","16/12/25","17/12/25","18/12/25","19/12/25","22/12/25","23/12/25","24/12/25","26/12/25","29/12/25","30/12/25","31/12/25","01/01/26","02/01/26","05/01/26","06/01/26","07/01/26","08/01/26","09/01/26","12/01/26","13/01/26","14/01/26","15/01/26","16/01/26","19/01/26","20/01/26","21/01/26","22/01/26","23/01/26","27/01/26","28/01/26","29/01/26","02/02/26","03/02/26","04/02/26","05/02/26","06/02/26","09/02/26","10/02/26","11/02/26","12/02/26","13/02/26","16/02/26","17/02/26","18/02/26","19/02/26","20/02/26","23/02/26","24/02/26","25/02/26","26/02/26","27/02/26","02/03/26","05/03/26","06/03/26","09/03/26","10/03/26","11/03/26","12/03/26","13/03/26","16/03/26","17/03/26","18/03/26","19/03/26","20/03/26","23/03/26","24/03/26","25/03/26","27/03/26","30/03/26","01/04/26","02/04/26"],"stats":{"nap":{"roi":62.8,"avg_month_roi":4.5,"pnl":157114,"sharpe":2.94,"max_dd":-11.4,"win_rate":61.2,"days":278},"sap":{"roi":35.9,"avg_month_roi":2.6,"pnl":89806,"sharpe":2.01,"max_dd":-15.6,"win_rate":55.4,"days":278},"cap":{"roi":0.5,"avg_month_roi":0.1,"pnl":2360,"sharpe":0.15,"max_dd":-4.2,"win_rate":17.3,"days":76},"napv2":{"roi":20.5,"avg_month_roi":3.6,"pnl":51238,"sharpe":1.7,"max_dd":-8.0,"win_rate":23.7,"days":107},"napv3":{"roi":23.3,"avg_month_roi":3.7,"pnl":58158,"sharpe":1.8,"max_dd":-10.9,"win_rate":21.9,"days":106},"sapv2":{"roi":12.4,"avg_month_roi":2.4,"pnl":30895,"sharpe":1.32,"max_dd":-10.9,"win_rate":20.1,"days":88},"sapv3":{"roi":-1.9,"avg_month_roi":-0.1,"pnl":-4682,"sharpe":-0.19,"max_dd":-13.9,"win_rate":22.7,"days":107},"comb":{"roi":49.4,"pnl":246920,"sharpe":2.81,"max_dd":-11.3,"win_rate":59.0}}};
+
+// ── AUTO-DETECT STRATEGIES FROM DATA ──────────────────────────────────────────
+// Color palette — cycles automatically for new strategies
+const AUTO_PALETTE = ['#D4A840','#3FE088','#B06FE0','#E06F6F','#E0B06F','#6FE0D4','#6F9FE0','#E06FB0','#A0E06F','#E0C46F'];
+
+// If fetch_data.py exports DATA.strategies, use it. Otherwise auto-detect from _daily keys.
+let STRATS, STRAT_LABELS, STRAT_FULL, STRAT_COLORS, CAPITALS, STRAT_SHEETS;
+
+if (DATA.strategies && DATA.strategies.length) {
+  // Structured config from fetch_data.py — zero manual work needed
+  STRATS       = DATA.strategies.map(s => s.key);
+  STRAT_LABELS = Object.fromEntries(DATA.strategies.map(s => [s.key, s.label]));
+  STRAT_FULL   = Object.fromEntries(DATA.strategies.map(s => [s.key, s.label]));
+  STRAT_COLORS = Object.fromEntries(DATA.strategies.map((s, i) => [s.key, s.color || AUTO_PALETTE[i % AUTO_PALETTE.length]]));
+  CAPITALS     = Object.fromEntries(DATA.strategies.map(s => [s.key, s.capital ?? 250000]));
+  STRAT_SHEETS = Object.fromEntries(DATA.strategies.map(s => [s.key, s.sheet || 'DAILY P&L']));
+} else {
+  // Fallback: auto-detect from _daily keys in DATA
+  STRATS = Object.keys(DATA)
+    .filter(k => k.endsWith('_daily') && k !== 'daily_dates')
+    .map(k => k.replace('_daily', ''));
+  STRAT_COLORS = Object.fromEntries(STRATS.map((k, i) => [k, AUTO_PALETTE[i % AUTO_PALETTE.length]]));
+  STRAT_LABELS = Object.fromEntries(STRATS.map(k => [k, k.toUpperCase()]));
+  STRAT_FULL   = { ...STRAT_LABELS };
+  CAPITALS     = Object.fromEntries(STRATS.map(k => [k, 250000]));
+  STRAT_SHEETS = Object.fromEntries(STRATS.map(k => [k, 'DAILY P&L']));
+}
+
+let activeStrats = new Set(STRATS);
+
+// ── STRATEGY CONFIG (category + visibility) ────────────────────────────────
+// Stored in localStorage. Defaults: all NFO, all visible.
+const CONFIG_KEY = 'apexStratConfig_v1';
+const CAT_LABELS = { nfo: 'NFO / BFO', mcx: 'MCX', hidden: 'Hidden' };
+
+function loadStratConfig() {
+  try { return JSON.parse(localStorage.getItem(CONFIG_KEY)) || {}; } catch { return {}; }
+}
+function saveStratConfig(cfg) {
+  localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg));
+}
+const STRAT_CAT_DEFAULT = {
+  nap:'nfo', napv2:'nfo', napv3:'nfo',
+  sap:'nfo', sapv2:'nfo', sapv3:'nfo',
+  naph:'nfo', saph:'nfo',
+  nagap:'mcx', nagapm:'mcx'
+};
+function getStratCat(k) {
+  const cfg = loadStratConfig();
+  if (cfg[k]?.category) return cfg[k].category;
+  const def_ = DATA.strategies?.find(s => s.key === k);
+  if (def_?.category) return def_.category;
+  return STRAT_CAT_DEFAULT[k] || 'nfo';
+}
+function getStratVisible(k) {
+  const cfg = loadStratConfig();
+  if (cfg[k] && cfg[k].visible !== undefined) return cfg[k].visible;
+  // Fall back to the value baked into data.json by fetch_data.py
+  const def_ = DATA.strategies?.find(s => s.key === k);
+  return def_ ? (def_.visible !== false) : true;
+}
+
+// Active category filter for the breakdown table
+let activeCatFilter = 'all';
+
+function renderStratToggles() {
+  const bar = document.getElementById('stratToggleBar');
+  if (!bar) return;
+  const cfg = loadStratConfig();
+
+  let html = `<div style="font-family:'Inter',sans-serif;font-size:0.55rem;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--rule);">Strategy Manager — Category &amp; Visibility</div>`;
+
+  STRATS.forEach(k => {
+    const cat = getStratCat(k);
+    const vis = cfg[k]?.visible !== false;
+    html += `<div style="display:flex;align-items:center;gap:1rem;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+      <span style="display:flex;align-items:center;gap:0.5rem;min-width:90px;">
+        <span style="width:8px;height:8px;border-radius:50%;background:${STRAT_COLORS[k]};flex-shrink:0;"></span>
+        <span style="font-family:'Inter',sans-serif;font-size:0.68rem;font-weight:600;color:var(--cream);">${STRAT_LABELS[k]}</span>
+      </span>
+      <div style="display:flex;gap:0.3rem;">
+        ${['nfo','mcx','hidden'].map(c => `
+          <button onclick="setStratCat('${k}','${c}')"
+            style="font-family:'Inter',sans-serif;font-size:0.55rem;letter-spacing:0.08em;padding:0.25rem 0.6rem;border:1px solid ${cat===c?'var(--accent)':'var(--rule)'};background:${cat===c?'var(--accent-glow)':'transparent'};color:${cat===c?'var(--accent)':'var(--muted)'};cursor:pointer;transition:all 0.15s;">
+            ${CAT_LABELS[c]}
+          </button>`).join('')}
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:0.5rem;">
+        <span style="font-family:'Inter',sans-serif;font-size:0.55rem;color:var(--muted);">Show on site</span>
+        <button onclick="toggleStratVisible('${k}')"
+          style="font-family:'Inter',sans-serif;font-size:0.6rem;padding:0.25rem 0.7rem;border:1px solid ${vis?'var(--pos)':'var(--rule)'};background:${vis?'rgba(63,224,136,0.08)':'transparent'};color:${vis?'var(--pos)':'var(--muted)'};cursor:pointer;transition:all 0.15s;">
+          ${vis ? '● Visible' : '○ Hidden'}
+        </button>
+      </div>
+    </div>`;
+  });
+
+  // ── Save reminder footer ──
+  html += `<div style="margin-top:1rem;padding-top:0.75rem;border-top:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+    <span style="font-family:'Inter',sans-serif;font-size:0.55rem;color:var(--muted);line-height:1.6;">
+      ⚠ Changes are saved in this browser only.<br>
+      To make permanent, update <code style="color:var(--accent);">fetch_data.py</code> and re-run.
+    </span>
+    <button onclick="copyStratConfig()"
+      style="font-family:'Inter',sans-serif;font-size:0.6rem;letter-spacing:0.08em;padding:0.4rem 1rem;border:1px solid var(--accent);background:var(--accent-glow);color:var(--accent);cursor:pointer;">
+      ⎘ Copy fetch_data.py snippet
+    </button>
+  </div>`;
+
+  bar.innerHTML = html;
+}
+
+function copyStratConfig() {
+  const cfg = loadStratConfig();
+  const lines = STRATS.map(k => {
+    const s = DATA.strategies?.find(s => s.key === k) || {};
+    const cat = getStratCat(k);
+    const vis = cfg[k]?.visible !== undefined ? cfg[k].visible : (s.visible !== false);
+    return `    # key='${k}' → category='${cat}', visible=${vis}`;
+  });
+  const out = "# Paste these category/visible values into fetch_data.py STRATEGIES:\n" + lines.join("\n");
+  navigator.clipboard.writeText(out).then(() => {
+    alert('Copied to clipboard! Paste into fetch_data.py as a reference.');
+  }).catch(() => {
+    prompt('Copy this:', out);
+  });
+}
+
+function setStratCat(k, cat) {
+  const cfg = loadStratConfig();
+  cfg[k] = { ...(cfg[k]||{}), category: cat };
+  saveStratConfig(cfg);
+  renderStratToggles();
+  renderBreakdownTable(document.getElementById('searchInput').value);
+}
+
+function setCatFilter(cat, btn) {
+  activeCatFilter = cat;
+  ['all','nfo','mcx','unhedged','hedged'].forEach(c => {
+    const el = document.getElementById('cat-'+c);
+    if (el) el.classList.toggle('active', c === cat);
+  });
+  renderBreakdownTable(document.getElementById('searchInput').value);
+  renderTodayBanner();
+  renderRollingStats();
+  renderSummaryStrip();
+  reRenderCharts();
+  renderHeatmap();
+  renderCalendar();
+}
+
+function toggleStratVisible(k) {
+  const cfg = loadStratConfig();
+  cfg[k] = { ...(cfg[k]||{}), visible: !(cfg[k]?.visible !== false) };
+  saveStratConfig(cfg);
+  renderStratToggles();
+}
+
+function toggleAllStrats() {}  // kept for safety, no-op now
+
+
+document.addEventListener('keydown', e => {
+  if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+  secretBuffer = (secretBuffer || '') + e.key.toLowerCase();
+  if (secretBuffer.length > 16) secretBuffer = secretBuffer.slice(-16);
+  if (secretBuffer === 'apexstrategyedit') {
+    const bar = document.getElementById('stratToggleBar');
+    if (bar) bar.style.display = bar.style.display === 'flex' ? 'none' : 'flex';
+    secretBuffer = '';
+  }
+});
+let secretBuffer = '';
+
+let currentRange = 'all';
+let currentDateIdx = 0;
+let calMonthOffset = 0;
+let bdSortKey = 'name';
+let bdSortAsc = true;
+let charts = {};
+
+// ── THEME ──
+function toggleTheme() {
+  const isLight = document.documentElement.classList.toggle('light');
+  document.getElementById('themeIcon').textContent = isLight ? '◐' : '☀';
+  document.getElementById('themeLabel').textContent = isLight ? 'Dark' : 'Light';
+  localStorage.setItem('apex-theme', isLight ? 'light' : 'dark');
+  reRenderCharts();
+}
+// Restore saved theme on load
+(function() {
+  const saved = localStorage.getItem('apex-theme');
+  if (saved === 'light') {
+    document.documentElement.classList.add('light');
+    document.addEventListener('DOMContentLoaded', () => {
+      const icon  = document.getElementById('themeIcon');
+      const label = document.getElementById('themeLabel');
+      if (icon)  icon.textContent  = '◐';
+      if (label) label.textContent = 'Dark';
+    });
+  }
+})();
+
+// ── HELPERS ──
+function fmt(v, showPlus=true) {
+  if (v === 0 || v === null || v === undefined) return '—';
+  const abs = Math.abs(v);
+  const s = abs >= 100000 ? (abs/100000).toFixed(2)+'L' : abs >= 1000 ? (abs/1000).toFixed(1)+'k' : abs.toFixed(0);
+  return (v > 0 ? (showPlus?'+':'') : '-') + '₹' + s;
+}
+function fmtIN(v) {
+  if (v === 0 || v === null || v === undefined) return '—';
+  const sign = v > 0 ? '+' : '-';
+  return sign + '₹' + Math.abs(v).toLocaleString('en-IN');
+}
+function pct(v, cap) { return ((v / cap) * 100).toFixed(2); }
+function parseDate(str) {
+  const [d,m,y] = str.split('/');
+  return new Date(2000+parseInt(y), parseInt(m)-1, parseInt(d));
+}
+function getFilteredIndices() {
+  const now = new Date();
+  return DATA.daily_dates.map((d,i) => ({d,i})).filter(({d}) => {
+    const dt = parseDate(d);
+    if (currentRange === 'ytd') return dt.getFullYear() === now.getFullYear();
+    if (currentRange === '6m') return dt >= new Date(now - 180*86400000);
+    if (currentRange === '3m') return dt >= new Date(now - 90*86400000);
+    if (currentRange === '1m') return dt >= new Date(now - 30*86400000);
+    return true;
+  }).map(x => x.i);
+}
+function getFilteredStrats() {
+  const cfg = loadStratConfig();
+  return STRATS.filter(k => {
+    if (!getStratVisible(k)) return false;
+    const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
+    const cat = getStratCat(k);
+    if (activeCatFilter === 'hedged')   return isHedged;
+    if (activeCatFilter === 'unhedged') return !isHedged;
+    if (activeCatFilter !== 'all')      return cat === activeCatFilter;
+    return true;
+  });
+}
+function getAllTotal(i) { return getFilteredStrats().reduce((s,k) => s+(DATA[k+'_daily']?.[i]||0), 0); }
+function getRangeLabel() { return {all:'All Time',ytd:'Year-to-Date','6m':'Last 6 Months','3m':'Last 3 Months','1m':'Last Month'}[currentRange]; }
+
+
+// ── LAST VALID DATE (data cutoff: 3:30 PM IST) ──
+function getLastValidIdx() {
+  try {
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const ist = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + istOffset);
+    const pastCutoff = (ist.getHours() > 15) || (ist.getHours() === 15 && ist.getMinutes() >= 30);
+
+    const dd = String(ist.getDate()).padStart(2,'0');
+    const mm = String(ist.getMonth() + 1).padStart(2,'0');
+    const yy = String(ist.getFullYear()).slice(2);
+    const todayStr = dd + '/' + mm + '/' + yy;
+
+    const todayIdx = DATA.daily_dates.indexOf(todayStr);
+
+    // If today is in the data:
+    if (todayIdx > -1) {
+      // After 3:30 PM → show today; before 3:30 PM → show yesterday
+      return pastCutoff ? todayIdx : Math.max(0, todayIdx - 1);
+    }
+
+    // Today not in data yet — show the last available date regardless of whether values are 0
+    // (0 is a valid P&L for a holiday/flat day — don't skip it)
+    return DATA.daily_dates.length - 1;
+  } catch(e) {
+    return Math.max(0, DATA.daily_dates.length - 1);
+  }
+}
+
+// ── INIT ──
+function init() {
+  const last = DATA.daily_dates.length - 1;
+  currentDateIdx = getLastValidIdx();
+  const _set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  _set('updatedTag',    'Last updated: ' + DATA.updated);
+  _set('footerUpdated', 'Data as of '    + DATA.updated);
+  _set('liveBadge',    'LIVE · '        + DATA.updated);
+  _set('bdDatePill',   DATA.daily_dates[currentDateIdx]);
+  updateDateNav();
+  renderStratToggles();
+  setTimeout(() => {
+    renderBreakdownTable();
+    renderTodayBanner();
+    renderRollingStats();
+    renderCharts();
+    renderHeatmap();
+    renderCalendar();
+    renderSummaryStrip();
+  }, 0);
+}
+
+// ══════════════════════════════════
+//  STRATEGY BREAKDOWN TABLE
+// ══════════════════════════════════
+function getMonthlyPnl(k) {
+  // Use DATA monthly arrays for the current (last) month
+  const lastMonthIdx = DATA.months.length - 1;
+  return DATA[k + '_monthly']?.[lastMonthIdx] || 0;
+}
+function getYearlyPnl(k) {
+  // Sum all months of current calendar year
+  const now = new Date();
+  let sum = 0;
+  DATA.months.forEach((m, i) => {
+    const parts = m.split(' ');
+    const yr = 2000 + parseInt(parts[1]);
+    if (yr === now.getFullYear()) sum += DATA[k+'_monthly']?.[i] || 0;
+  });
+  return sum;
+}
+
+// Financial Year = Apr of previous year to Mar of current year
+// e.g. FY2025-26 = Apr 25 → Mar 26
+function getFinancialYearPnl(k) {
+  const now = new Date();
+  const curMonth = now.getMonth(); // 0=Jan
+  // FY starts April (month index 3). If current month < April, FY start year is last year.
+  const fyStartYear = curMonth >= 3 ? now.getFullYear() : now.getFullYear() - 1;
+  let sum = 0;
+  DATA.months.forEach((m, i) => {
+    const parts = m.split(' ');
+    const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const mIdx = monthNames.indexOf(parts[0]);
+    const yr = 2000 + parseInt(parts[1]);
+    // FY spans Apr(fyStartYear) → Mar(fyStartYear+1)
+    const inFY = (yr === fyStartYear && mIdx >= 3) || (yr === fyStartYear + 1 && mIdx <= 2);
+    if (inFY) sum += DATA[k+'_monthly']?.[i] || 0;
+  });
+  return sum;
+}
+
+let yearlyMode = 'cy'; // 'cy' = Calendar Year, 'fy' = Financial Year
+
+function toggleYearlyMode(event) {
+  if (event) event.stopPropagation();
+  yearlyMode = yearlyMode === 'cy' ? 'fy' : 'cy';
+  const btn = document.getElementById('yearlyToggleBtn');
+  const lbl = document.getElementById('th-yearly-label');
+  if (yearlyMode === 'fy') {
+    const now = new Date();
+    const fyStartYear = now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1;
+    const fyLabel = 'FY ' + fyStartYear + '-' + String(fyStartYear + 1).slice(2);
+    if (lbl) lbl.textContent = fyLabel + ' PNL (ROI%)';
+    if (btn) { btn.textContent = 'CY'; btn.title = 'Switch to Calendar Year'; btn.style.background = 'rgba(63,224,136,0.08)'; btn.style.borderColor = '#3FE088'; btn.style.color = '#3FE088'; }
+  } else {
+    if (lbl) lbl.textContent = 'Yearly PNL (YTD%)';
+    if (btn) { btn.textContent = 'FY'; btn.title = 'Switch to Financial Year'; btn.style.background = 'var(--accent-glow)'; btn.style.borderColor = 'var(--accent-dim)'; btn.style.color = 'var(--accent)'; }
+  }
+  renderBreakdownTable(document.getElementById('searchInput').value);
+}
+function getTodayPnl(k) {
+  return DATA[k+'_daily']?.[currentDateIdx] || 0;
+}
+
+// ── MCX PREV-DAY FALLBACK ──
+// MCX closes at 11:30 PM IST. Until then, today's data is 0.
+// Returns { idx, dateStr, isPrev } for MCX strategies.
+// If all MCX strategies have 0 for currentDateIdx, walks back to find last non-zero day.
+function getMcxDayCtx(mcxKeys) {
+  // If there are no MCX strategies, return current date as-is — no walk-back
+  if (!mcxKeys.length) {
+    return { idx: currentDateIdx, dateStr: DATA.daily_dates[currentDateIdx], isPrev: false };
+  }
+  // Check if any MCX strategy has non-zero today
+  const todayHasData = mcxKeys.some(k => {
+    const v = DATA[k + '_daily']?.[currentDateIdx];
+    return v !== undefined && v !== null && v !== 0;
+  });
+  if (todayHasData) {
+    return { idx: currentDateIdx, dateStr: DATA.daily_dates[currentDateIdx], isPrev: false };
+  }
+  // Walk back to find last day with MCX data (MCX only — never affects NFO/BFO rows)
+  for (let i = currentDateIdx - 1; i >= 0; i--) {
+    const hasData = mcxKeys.some(k => {
+      const v = DATA[k + '_daily']?.[i];
+      return v !== undefined && v !== null && v !== 0;
+    });
+    if (hasData) {
+      const raw = DATA.daily_dates[i]; // DD/MM/YY
+      const [dd, mm] = raw.split('/');
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const dateStr = dd + ' ' + months[parseInt(mm) - 1];
+      return { idx: i, dateStr, isPrev: true };
+    }
+  }
+  return { idx: currentDateIdx, dateStr: DATA.daily_dates[currentDateIdx], isPrev: false };
+}
+
+function pnlPill(v, cap) {
+  if (v === 0) return '<span class="pnl-pill zero"><span class="pnl-amount">—</span><span class="pnl-pct">—</span></span>';
+  const cls = v > 0 ? 'pos' : 'neg';
+  const sign = v > 0 ? '+' : '-';
+  const abs = Math.abs(v);
+  const amtStr = sign + '₹' + abs.toLocaleString('en-IN');
+  const pctStr = '(' + (v > 0 ? '+' : '') + pct(v, cap) + '%)';
+  return `<span class="pnl-pill ${cls}"><span class="pnl-amount">${amtStr}</span><span class="pnl-pct">${pctStr}</span></span>`;
+}
+
+// Compute current drawdown (%) from a daily PnL array and capital
+function computeCurrentDrawdown(dailyArr, capital) {
+  let cumPnl = 0, peak = 0, maxDd = 0, curDd = 0;
+  const nonZero = dailyArr.filter(v => v !== 0);
+  if (!nonZero.length) return { cur: 0, max: 0 };
+  // Find first non-zero index to start tracking
+  let started = false;
+  for (let i = 0; i < dailyArr.length; i++) {
+    const v = dailyArr[i];
+    if (!started && v === 0) continue;
+    started = true;
+    cumPnl += v;
+    if (cumPnl > peak) peak = cumPnl;
+    const dd = peak > 0 ? ((cumPnl - peak) / capital * 100) : 0;
+    if (dd < maxDd) maxDd = dd;
+    curDd = dd;
+  }
+  return { cur: curDd, max: maxDd };
+}
+
+function ddCell(curDd, maxDd) {
+  if (curDd === 0 && maxDd === 0) return '<span class="dd-zero">—</span>';
+  // maxPct is always 100% (full bar width = max DD)
+  // curPct is current DD as proportion of max DD
+  const curPct = Math.min(100, maxDd !== 0 ? Math.abs(curDd) / Math.abs(maxDd) * 100 : 0);
+  const curStr = curDd === 0 ? '0.00%' : curDd.toFixed(2) + '%';
+  const maxStr = maxDd.toFixed(2) + '%';
+  return `<div class="dd-cell">
+    <div class="dd-label-row">
+      <span class="dd-cur">${curStr}</span>
+      <span class="dd-sep">/</span>
+      <span class="dd-max-val">${maxStr}</span>
+    </div>
+    <div class="dd-bar-track">
+      <div class="dd-bar-max" style="width:100%"></div>
+      <div class="dd-bar-cur" style="width:${curPct}%"></div>
+    </div>
+  </div>`;
+}
+
+let bdRows = [];
+
+function buildBdRows() {
+  const dailyKey = Object.fromEntries(STRATS.map(k => [k, k + '_daily']));
+  const cfg = loadStratConfig();
+
+  // Compute MCX prev-day context once for all MCX rows
+  const mcxKeys = STRATS.filter(k => getStratCat(k) === 'mcx');
+  const mcxCtx  = getMcxDayCtx(mcxKeys);
+
+  bdRows = STRATS.filter(k => {
+    const cat      = getStratCat(k);
+    const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
+    if (activeCatFilter === 'hedged') {
+      if (!isHedged) return false;
+    } else if (activeCatFilter === 'unhedged') {
+      if (isHedged) return false;
+    } else if (activeCatFilter !== 'all') {
+      if (cat !== activeCatFilter) return false;
+    }
+    if (!getStratVisible(k)) return false;   // respect visible flag
+    return true;
+  }).map(k => {
+    const cap = CAPITALS[k];
+    const isMcx = getStratCat(k) === 'mcx';
+    const todayIdx = isMcx ? mcxCtx.idx : currentDateIdx;
+    const today = DATA[k+'_daily']?.[todayIdx] || 0;
+    const monthly = getMonthlyPnl(k);
+    const yearly = yearlyMode === 'fy' ? getFinancialYearPnl(k) : getYearlyPnl(k);
+    const maxDdFromStats = DATA.stats[k]?.max_dd || 0;
+    const series = DATA[dailyKey[k]] || [];
+    const { cur: curDd, max: computedMax } = computeCurrentDrawdown(series, cap);
+    const maxDd = maxDdFromStats;
+    const sheet = (STRAT_SHEETS && STRAT_SHEETS[k]) || 'DAILY P&L';
+    const cat = getStratCat(k);
+    const isPrevDay  = isMcx && mcxCtx.isPrev;
+    const prevDateStr = isMcx ? mcxCtx.dateStr : null;
+    return { k, cap, today, monthly, yearly, curDd, maxDd, sheet, cat, isPrevDay, prevDateStr };
+  });
+}
+
+function renderBreakdownTable(filter='') {
+  buildBdRows();
+  let rows = [...bdRows];
+  if (filter) rows = rows.filter(r => STRAT_LABELS[r.k].toLowerCase().includes(filter.toLowerCase()) || STRAT_FULL[r.k].toLowerCase().includes(filter.toLowerCase()));
+
+  // Sort — Standard always before Hedged, then user sort within group
+  const _hedgedSheet = 'DAILY P&L HEDGED';
+  rows.sort((a, b) => {
+    const ga = a.sheet === _hedgedSheet ? 1 : 0;
+    const gb = b.sheet === _hedgedSheet ? 1 : 0;
+    if (ga !== gb) return ga - gb;
+    let va, vb;
+    if (bdSortKey === 'name') { va = STRAT_LABELS[a.k]; vb = STRAT_LABELS[b.k]; return bdSortAsc ? va.localeCompare(vb) : vb.localeCompare(va); }
+    if (bdSortKey === 'capital') { va = a.cap; vb = b.cap; }
+    if (bdSortKey === 'today') { va = a.today; vb = b.today; }
+    if (bdSortKey === 'monthly') { va = a.monthly; vb = b.monthly; }
+    if (bdSortKey === 'yearly') { va = a.yearly; vb = b.yearly; }
+    if (bdSortKey === 'drawdown') { va = a.curDd; vb = b.curDd; }
+    return bdSortAsc ? va - vb : vb - va;
+  });
+
+  const HEDGED_SHEET = 'DAILY P&L HEDGED';
+  // Split rows into NFO-standard, NFO-hedged, MCX
+  const nfoStdRows  = rows.filter(r => r.sheet !== HEDGED_SHEET && r.cat !== 'mcx');
+  const nfoHedRows  = rows.filter(r => r.sheet === HEDGED_SHEET);
+  const mcxRows     = rows.filter(r => r.cat === 'mcx');
+  // Legacy aliases for subTotalRow/showGroups logic
+  const stdRows    = nfoStdRows;
+  const hedgedRows = nfoHedRows;
+  const hasHedged   = nfoHedRows.length > 0;
+  const hasStandard = nfoStdRows.length > 0;
+  const hasMcx      = mcxRows.length > 0;
+  const showGroups  = (hasHedged || hasMcx) && hasStandard;
+
+  // Helper: subtotal row html
+  function subTotalRow(label, rws, isOverall) {
+    if (!rws.length) return '';
+    const sCap = rws.reduce((s,r) => s + r.cap, 0);
+    const sToday = rws.reduce((s,r) => s + r.today, 0);
+    const sMon   = rws.reduce((s,r) => s + r.monthly, 0);
+    const sYear  = rws.reduce((s,r) => s + r.yearly, 0);
+    const cls = isOverall ? 'total-row' : 'total-row subtotal-row';
+    return `<tr class="${cls}">
+      <td><div class="strat-name-cell"><span style="font-family:'Inter',sans-serif;font-size:0.65rem;letter-spacing:0.1em;">${label}</span></div></td>
+      <td><span class="cap-cell" style="font-weight:700;">&#8377;${sCap.toLocaleString('en-IN')}</span></td>
+      <td>${pnlPill(sToday, sCap)}</td>
+      <td>${pnlPill(sMon, sCap)}</td>
+      <td>${pnlPill(sYear, sCap)}</td>
+      <td><span class="dd-zero">—</span></td>
+    </tr>`;
+  }
+
+  // Build rows html with subgroup headers + subtotals
+  let rowsHtml = '';
+  function renderGroupRows(grpRows, label, icon) {
+    if (!grpRows.length) return;
+    const isMcxGroup = label === 'MCX';
+    if (showGroups || isMcxGroup) {
+      // For MCX group: always show date in header
+      let groupLabel = label || '';
+      if (isMcxGroup && grpRows[0]?.prevDateStr) {
+        const isPrev = grpRows[0].isPrevDay;
+        const sessionLabel = isPrev
+          ? `<span style="font-size:0.5rem;letter-spacing:0.08em;color:var(--muted);margin-left:0.2rem;">prev session</span>`
+          : ``;
+        groupLabel = `MCX <span style="font-size:0.55rem;letter-spacing:0.06em;color:var(--accent);background:var(--accent-glow);border:1px solid rgba(212,168,64,0.3);padding:0.1rem 0.5rem;margin-left:0.4rem;vertical-align:middle;">${grpRows[0].prevDateStr}</span> ${sessionLabel}`;
+      }
+      rowsHtml += `<tr class="subgroup-row"><td colspan="6"><div class="subgroup-label">${groupLabel}</div></td></tr>`;
+    }
+    grpRows.forEach(r => {
+      // For MCX rows showing prev day: wrap today pill with a subtle prev-day indicator
+      let todayCell;
+      if (r.isPrevDay) {
+        todayCell = `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.2rem;">
+          ${pnlPill(r.today, r.cap)}
+          <span style="font-family:'Inter',sans-serif;font-size:0.48rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);opacity:0.8;">&#9679; ${r.prevDateStr}</span>
+        </div>`;
+      } else {
+        todayCell = pnlPill(r.today, r.cap);
+      }
+      rowsHtml += `
+      <tr>
+        <td><div class="strat-name-cell"><span class="dot" style="background:${STRAT_COLORS[r.k]}"></span><span class="strat-name-text">${STRAT_FULL[r.k]}</span></div></td>
+        <td><span class="cap-cell">&#8377;${r.cap.toLocaleString('en-IN')}</span></td>
+        <td>${todayCell}</td>
+        <td>${pnlPill(r.monthly, r.cap)}</td>
+        <td>${pnlPill(r.yearly, r.cap)}</td>
+        <td>${ddCell(r.curDd, r.maxDd)}</td>
+      </tr>`;
+    });
+    if (showGroups) rowsHtml += subTotalRow((label || 'Standard') + ' Total', grpRows, false);
+  }
+
+  renderGroupRows(nfoStdRows,  'NFO / BFO', '');
+  renderGroupRows(nfoHedRows,  'NFO / BFO — Hedged', '');
+  renderGroupRows(mcxRows,     'MCX', '');
+
+  // Overall total row — only show if more than one group or single filter
+  const allRows = rows;
+  const totalCap = allRows.reduce((s,r) => s + r.cap, 0);
+  const totalToday = allRows.reduce((s,r) => s + r.today, 0);
+  const totalMonthly = allRows.reduce((s,r) => s + r.monthly, 0);
+  const totalYearly = allRows.reduce((s,r) => s + r.yearly, 0);
+
+  const tbody = document.getElementById('bdBody');
+  tbody.innerHTML = rowsHtml + subTotalRow('TOTAL / AVERAGE', allRows, true);
+
+  // Update sort indicators
+  ['name','capital','today','monthly','drawdown'].forEach(k => {
+    const el = document.getElementById('th-'+k);
+    if (el) { el.classList.toggle('sorted', bdSortKey === k); el.textContent = el.textContent.replace(' ↑','').replace(' ↓',''); if (bdSortKey === k) el.textContent += bdSortAsc ? ' ↑' : ' ↓'; }
+  });
+  // th-yearly contains a nested button — update only the label span, never overwrite innerHTML
+  const thYearly = document.getElementById('th-yearly');
+  const lblYearly = document.getElementById('th-yearly-label');
+  if (thYearly) thYearly.classList.toggle('sorted', bdSortKey === 'yearly');
+  if (lblYearly) {
+    lblYearly.textContent = lblYearly.textContent.replace(' ↑','').replace(' ↓','');
+    if (bdSortKey === 'yearly') lblYearly.textContent += bdSortAsc ? ' ↑' : ' ↓';
+  }
+}
+
+function sortBd(key) {
+  if (bdSortKey === key) bdSortAsc = !bdSortAsc;
+  else { bdSortKey = key; bdSortAsc = key === 'name'; }
+  renderBreakdownTable(document.getElementById('searchInput').value);
+}
+
+function filterBreakdown() {
+  renderBreakdownTable(document.getElementById('searchInput').value);
+}
+
+// ── SNAPSHOT ──
+async function snapshotTable() {
+  const btn = document.getElementById('snapshotBtn');
+  const origText = btn.innerHTML;
+  btn.innerHTML = '⏳ Capturing…';
+  btn.disabled = true;
+
+  // Build a wrapper div that contains today strip + bd-header + table
+  const todayStrip  = document.getElementById('bdTodayStrip');
+  const bdHeader    = document.querySelector('.bd-header');
+  const tableWrap   = document.querySelector('.bd-table-wrap');
+  const disclaimer  = document.querySelector('p[style*="Past performance"]');
+
+  // Create off-screen snapshot container
+  const wrap = document.createElement('div');
+  wrap.style.cssText = `
+    position:fixed; left:-9999px; top:0;
+    background:${getComputedStyle(document.documentElement).getPropertyValue('--ink').trim()};
+    width:${Math.round(tableWrap.offsetWidth * 1.6)}px;
+    font-family:'Inter',sans-serif;
+  `;
+
+  // Clone the nodes
+  const todayClone   = todayStrip.cloneNode(true);
+  const headerClone  = bdHeader.cloneNode(true);
+  const tableClone   = tableWrap.cloneNode(true);
+  const discClone    = document.createElement('p');
+  discClone.style.cssText = 'font-family:Inter,sans-serif;font-size:0.65rem;color:#8a7a60;padding:0.6rem 1.1rem 0.75rem;';
+  discClone.textContent   = '⚠ Past performance does not guarantee future returns, these are our account returns. Kindly consult your financial adviser.';
+
+  // Strip pnl-pill background/border for clean snapshot look
+  [todayClone, headerClone, tableClone].forEach(node => {
+    node.querySelectorAll('.pnl-pill').forEach(el => {
+      el.style.background = 'transparent';
+      el.style.border = 'none';
+      el.style.padding = '0.32rem 0';
+    });
+    // Hide sort arrows / interactive buttons in header
+    node.querySelectorAll('#yearlyToggleBtn, button').forEach(el => el.style.display = 'none');
+  });
+
+  // ── SNAPSHOT-ONLY: bigger fonts, wider container fills naturally ─────────────
+  [todayClone, headerClone, tableClone].forEach(node => {
+    node.querySelectorAll('.bd-table-wrap').forEach(el => el.style.overflowX = 'visible');
+    node.querySelectorAll('.bd-table').forEach(el => { el.style.width = '100%'; el.style.minWidth = '0'; });
+    node.querySelectorAll('th').forEach(el => { el.style.fontSize = '1.5rem'; el.style.padding = '1.1rem 1.3rem'; });
+    node.querySelectorAll('td').forEach(el => { el.style.fontSize = '1.5rem'; el.style.padding = '1.1rem 1.3rem'; });
+    node.querySelectorAll('.strat-name-text').forEach(el => { el.style.fontSize = '1.5rem'; el.style.fontWeight = '700'; });
+    node.querySelectorAll('.pnl-amount').forEach(el => { el.style.fontSize = '1.5rem'; el.style.fontWeight = '700'; });
+    node.querySelectorAll('.pnl-pct').forEach(el => { el.style.fontSize = '1.5rem'; el.style.fontWeight = '700'; el.style.opacity = '1'; });
+    node.querySelectorAll('.pnl-pill').forEach(el => { el.style.minWidth = '0'; el.style.width = '100%'; });
+    node.querySelectorAll('.dd-cur, .dd-pct').forEach(el => { el.style.fontSize = '1.5rem'; el.style.fontWeight = '700'; });
+    node.querySelectorAll('.dd-max-val, .dd-sep').forEach(el => { el.style.fontSize = '1.5rem'; el.style.fontWeight = '700'; el.style.opacity = '1'; });
+    node.querySelectorAll('.dd-cell').forEach(el => el.style.minWidth = '0');
+    node.querySelectorAll('.cap-cell').forEach(el => { el.style.fontSize = '1.5rem'; el.style.fontWeight = '700'; });
+    node.querySelectorAll('.total-row td').forEach(el => { el.style.fontSize = '1.55rem'; el.style.fontWeight = '700'; });
+    node.querySelectorAll('.subtotal-row td').forEach(el => { el.style.fontSize = '1.35rem'; el.style.fontWeight = '600'; });
+    node.querySelectorAll('.subgroup-label').forEach(el => el.style.fontSize = '1.1rem');
+    node.querySelectorAll('.strip-item-val').forEach(el => { el.style.fontSize = '1.6rem'; el.style.fontWeight = '700'; });
+    node.querySelectorAll('.strip-item-val.combined').forEach(el => el.style.fontSize = '1.8rem');
+    node.querySelectorAll('.strip-item-label').forEach(el => el.style.fontSize = '0.95rem');
+    node.querySelectorAll('.strip-date-main').forEach(el => el.style.fontSize = '1.3rem');
+    node.querySelectorAll('.strip-date-sub').forEach(el => el.style.fontSize = '0.9rem');
+    node.querySelectorAll('.bd-title').forEach(el => el.style.fontSize = '1.6rem');
+    node.querySelectorAll('.bd-sub').forEach(el => el.style.fontSize = '1.1rem');
+    node.querySelectorAll('.bd-date-pill').forEach(el => el.style.fontSize = '1.05rem');
+    node.querySelectorAll('.today-total-val').forEach(el => { el.style.fontSize = '1.4rem'; el.style.fontWeight = '700'; });
+    node.querySelectorAll('.today-total-lbl').forEach(el => el.style.fontSize = '0.9rem');
+  });
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  // Also strip search/export toolbar if cloned (not needed)
+  wrap.appendChild(todayClone);
+  wrap.appendChild(headerClone);
+  wrap.appendChild(tableClone);
+  wrap.appendChild(discClone);
+  document.body.appendChild(wrap);
+
+  try {
+    const canvas = await html2canvas(wrap, {
+      scale: 3,
+      useCORS: true,
+      backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#121008',
+      logging: false,
+    });
+
+    // Auto-download as PNG
+    const link = document.createElement('a');
+    const filterLabel = ['all','nfo','mcx','unhedged','hedged'].find(c => document.getElementById('cat-'+c)?.classList.contains('active')) || 'all';
+    const dateStr = DATA.daily_dates[currentDateIdx]?.replace(/\//g,'-') || 'snapshot';
+    link.download = `ApexAlgos_${filterLabel}_${dateStr}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  } catch(e) {
+    console.error('Snapshot error:', e);
+    alert('Snapshot failed: ' + e.message);
+  } finally {
+    document.body.removeChild(wrap);
+    btn.innerHTML = origText;
+    btn.disabled = false;
+  }
+}
+
+function exportCSV() {
+  buildBdRows();
+  const headers = ['Strategy','Capital','Today PNL','Today ROI%','Monthly PNL','Monthly ROI%','Yearly PNL','Yearly ROI%','Drawdown%'];
+  const lines = [headers.join(',')];
+  bdRows.forEach(r => {
+    lines.push([
+      STRAT_FULL[r.k], r.cap,
+      r.today.toFixed(0), pct(r.today, r.cap),
+      r.monthly.toFixed(0), pct(r.monthly, r.cap),
+      r.yearly.toFixed(0), pct(r.yearly, r.cap),
+      r.curDd.toFixed(2) + '/' + r.maxDd.toFixed(2)
+    ].join(','));
+  });
+  const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'apex_strategy_breakdown.csv'; a.click();
+}
+
+function exportExcel() { exportCSV(); } // simplified — same CSV for now
+
+// ── DATE NAV ──
+function updateDateNav() {
+  document.getElementById('dateLabel').textContent = DATA.daily_dates[currentDateIdx];
+}
+function navDate(dir) {
+  const lastValid = getLastValidIdx();
+  currentDateIdx = Math.max(0, Math.min(lastValid, currentDateIdx + dir));
+  // Disable next btn at boundary
+  const nextBtn = document.querySelector('.nav-btn[onclick*="1"]');
+  if (nextBtn) { nextBtn.disabled = currentDateIdx >= lastValid; nextBtn.style.opacity = currentDateIdx >= lastValid ? '0.3' : '1'; }
+  updateDateNav(); renderTodayBanner(); renderStratPie();
+  renderBreakdownTable(document.getElementById('searchInput')?.value || '');
+}
+function navToday() {
+  currentDateIdx = getLastValidIdx();
+  updateDateNav(); renderTodayBanner(); renderStratPie();
+  renderBreakdownTable(document.getElementById('searchInput')?.value || '');
+}
+
+// ── TODAY BANNER ──
+function renderTodayBanner() {
+  const idx = currentDateIdx;
+  const d = DATA.daily_dates[idx];
+  const dt = parseDate(d);
+  const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  let grand = 0;
+  const parts = [];
+  const _bannerCfg = loadStratConfig();
+  // Compute MCX fallback context so banner reflects same date as the table
+  const _mcxKeysBanner = STRATS.filter(k => getStratCat(k) === 'mcx');
+  const _mcxCtxBanner  = getMcxDayCtx(_mcxKeysBanner);
+  STRATS.forEach(k => {
+    if (!getStratVisible(k)) return;
+    const cat      = getStratCat(k);
+    const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
+    if (activeCatFilter === 'hedged' && !isHedged) return;
+    if (activeCatFilter === 'unhedged' && isHedged) return;
+    if (activeCatFilter !== 'all' && activeCatFilter !== 'hedged' && activeCatFilter !== 'unhedged' && cat !== activeCatFilter) return;
+    const isMcx = cat === 'mcx';
+    const vIdx = isMcx ? _mcxCtxBanner.idx : idx;
+    const v = DATA[k+'_daily']?.[vIdx] || 0;
+    if (v !== 0) {
+      grand += v;
+      parts.push(`<div class="today-total-item"><div class="today-total-lbl"><span class="dot" style="background:${STRAT_COLORS[k]};margin-right:4px;"></span>${STRAT_LABELS[k]}</div><div class="today-total-val ${v>0?'td-pos':'td-neg'}">${fmtIN(v)}</div></div>`);
+    }
+  });
+  parts.unshift(`<div class="today-total-item"><div class="today-total-lbl">Combined P&L</div><div class="today-total-val ${grand>0?'td-pos':grand<0?'td-neg':''}">${fmtIN(grand)}</div></div>`);
+
+
+  // ── Compact strip above the breakdown table ──
+  const strip = document.getElementById('bdTodayStrip');
+  if (strip) {
+    const dateStr = `${dt.getDate()} ${MONTHS[dt.getMonth()]} 20${d.split('/')[2]}`;
+    const dayStr = DAYS[dt.getDay()] + ' · Trading Day #' + (idx+1);
+    let stripParts = `<div class="strip-date"><div class="strip-date-main">${dateStr}</div><div class="strip-date-sub">${dayStr}</div></div>`;
+    stripParts += `<div class="strip-divider"></div>`;
+    stripParts += `<div class="strip-totals">`;
+    const grandCls = grand > 0 ? 'pos' : grand < 0 ? 'neg' : '';
+    stripParts += `<div class="strip-item"><div class="strip-item-label">Combined P&L</div><div class="strip-item-val combined ${grandCls}">${fmtIN(grand)}</div></div>`;
+    const stripCfg = loadStratConfig();
+    STRATS.filter(k => {
+      if (!getStratVisible(k)) return false;
+      const cat      = getStratCat(k);
+      const isHedged = (STRAT_SHEETS && STRAT_SHEETS[k]) === 'DAILY P&L HEDGED';
+      if (activeCatFilter === 'hedged')   return isHedged;
+      if (activeCatFilter === 'unhedged') return !isHedged;
+      if (activeCatFilter !== 'all') return cat === activeCatFilter;
+      return true;
+    }).forEach(k => {
+      const isMcx = getStratCat(k) === 'mcx';
+      const vIdx = isMcx ? _mcxCtxBanner.idx : idx;
+      const v = DATA[k+'_daily']?.[vIdx] || 0;
+      if (v !== 0) {
+        const cls = v > 0 ? 'pos' : 'neg';
+        stripParts += `<div class="strip-item"><div class="strip-item-label"><span class="dot" style="background:${STRAT_COLORS[k]};margin-right:3px;width:6px;height:6px;"></span>${STRAT_LABELS[k]}</div><div class="strip-item-val ${cls}">${fmtIN(v)}</div></div>`;
+      }
+    });
+    stripParts += `</div>`;
+    strip.innerHTML = stripParts;
+  }
+}
+
+// ── ROLLING STATS ──
+function renderRollingStats() {
+  const idxs = getFilteredIndices();
+  const totals = idxs.map(i => getAllTotal(i));
+  const sum = totals.reduce((a,b)=>a+b,0);
+  const wins = totals.filter(v=>v>0).length;
+  const losses = totals.filter(v=>v<0).length;
+  const wr = totals.length ? (wins/totals.length*100).toFixed(1) : 0;
+  const active = totals.filter(v=>v!==0);
+  const avg = active.length ? (active.reduce((a,b)=>a+b,0)/active.length).toFixed(0) : 0;
+  const best = Math.max(...totals);
+  const worst = Math.min(...totals);
+  let streak = 0;
+  for (let i = totals.length-1; i>=0; i--) {
+    if (!totals[i]) continue;
+    if (!streak) streak = totals[i]>0?1:-1;
+    else if (Math.sign(totals[i]) !== Math.sign(streak)) break;
+    else streak += Math.sign(streak);
+  }
+  document.getElementById('rollingPeriodLabel').textContent = getRangeLabel();
+  document.getElementById('rollingGrid').innerHTML = `
+    <div class="roll-cell"><div class="roll-label">Total P&amp;L</div><div class="roll-val ${sum>0?'td-pos':'td-neg'}">${fmtIN(sum)}</div><div class="roll-sub">${idxs.length} trading days</div></div>
+    <div class="roll-cell"><div class="roll-label">Win Rate</div><div class="roll-val ${parseFloat(wr)>=50?'td-pos':'td-neg'}">${wr}%</div><div class="roll-sub">${wins}W / ${losses}L</div></div>
+    <div class="roll-cell"><div class="roll-label">Avg Daily P&amp;L</div><div class="roll-val ${avg>0?'td-pos':avg<0?'td-neg':''}">${fmtIN(parseFloat(avg))}</div><div class="roll-sub">Active days only</div></div>
+    <div class="roll-cell"><div class="roll-label">Current Streak</div><div class="roll-val ${streak>=0?'td-pos':'td-neg'}">${Math.abs(streak)}&times; ${streak>=0?'WIN':'LOSS'}</div><div class="roll-sub">Best: ${fmt(best)} / Worst: ${fmt(worst)}</div></div>
+  `;
+}
+
+// ── CHARTS ──
+function chartDefaults() {
+  const L = document.documentElement.classList.contains('light');
+  return { grid: L?'rgba(24,20,12,0.07)':'rgba(237,230,214,0.07)', text: L?'rgba(24,20,12,0.6)':'rgba(237,230,214,0.6)' };
+}
+function renderCharts() { renderCumulChart(); renderDailyBarChart(); renderStratPie(); }
+function reRenderCharts() { Object.values(charts).forEach(c=>c.destroy()); charts={}; renderCharts(); }
+
+function renderCumulChart() {
+  const idxs = getFilteredIndices();
+  const labels = idxs.map(i => DATA.daily_dates[i]);
+  const cd = chartDefaults();
+  const datasets = getFilteredStrats().map(k => {
+    let cum = 0;
+    const vals = idxs.map(i => { cum += DATA[k+'_daily']?.[i]||0; return cum; });
+    if (!vals.some(v=>v!==0)) return null;
+    return { label:STRAT_LABELS[k], data:vals, borderColor:STRAT_COLORS[k], backgroundColor:'transparent', borderWidth:1.5, pointRadius:0, tension:0.3 };
+  }).filter(Boolean);
+  if (charts.cumul) charts.cumul.destroy();
+  charts.cumul = new Chart(document.getElementById('cumulChart').getContext('2d'), {
+    type:'line', data:{labels,datasets},
+    options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
+      plugins:{ legend:{labels:{color:cd.text,font:{family:'Inter',size:10},boxWidth:12}}, tooltip:{backgroundColor:'#1A1710',titleColor:'#EDE6D6',bodyColor:'#C8B89A',borderColor:'#252118',borderWidth:1,callbacks:{label:c=>` ${c.dataset.label}: ₹${c.parsed.y.toLocaleString('en-IN')}`}}},
+      scales:{ x:{ticks:{color:cd.text,font:{size:9,family:'Inter'},maxTicksLimit:8},grid:{color:cd.grid}}, y:{ticks:{color:cd.text,font:{size:9,family:'Inter'},callback:v=>'₹'+(Math.abs(v)>=1000?(v/1000).toFixed(0)+'k':v)},grid:{color:cd.grid}} }
+    }
+  });
+}
+
+function renderDailyBarChart() {
+  const idxs = getFilteredIndices().slice(-60);
+  const labels = idxs.map(i => DATA.daily_dates[i]);
+  const totals = idxs.map(i => getAllTotal(i));
+  const cd = chartDefaults();
+  if (charts.bar) charts.bar.destroy();
+  charts.bar = new Chart(document.getElementById('dailyBarChart').getContext('2d'), {
+    type:'bar', data:{labels,datasets:[{label:'Daily P&L',data:totals,backgroundColor:totals.map(v=>v>=0?'rgba(63,224,136,0.6)':'rgba(240,112,112,0.6)'),borderColor:totals.map(v=>v>=0?'#3FE088':'#F07070'),borderWidth:1}]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'#1A1710',titleColor:'#EDE6D6',bodyColor:'#C8B89A',borderColor:'#252118',borderWidth:1,callbacks:{label:c=>` ₹${c.parsed.y.toLocaleString('en-IN')}`}}},
+      scales:{x:{ticks:{color:cd.text,font:{size:8,family:'Inter'},maxTicksLimit:8},grid:{color:cd.grid}},y:{ticks:{color:cd.text,font:{size:9,family:'Inter'},callback:v=>'₹'+(Math.abs(v)>=1000?(v/1000).toFixed(1)+'k':v)},grid:{color:cd.grid}}}
+    }
+  });
+}
+
+function renderStratPie() {
+  const idx = currentDateIdx;
+  document.getElementById('pieDate').textContent = DATA.daily_dates[idx];
+  const active = getFilteredStrats().filter(k => DATA[k+'_daily']?.[idx] !== 0);
+  const cd = chartDefaults();
+  if (charts.pie) charts.pie.destroy();
+  if (!active.length) return;
+  charts.pie = new Chart(document.getElementById('stratPieChart').getContext('2d'), {
+    type:'doughnut',
+    data:{ labels:active.map(k=>STRAT_LABELS[k]), datasets:[{data:active.map(k=>Math.abs(DATA[k+'_daily']?.[idx]||0)),backgroundColor:active.map(k=>STRAT_COLORS[k]+'CC'),borderColor:active.map(k=>STRAT_COLORS[k]),borderWidth:1}] },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'right',labels:{color:cd.text,font:{size:10,family:'Inter'},boxWidth:10}},tooltip:{backgroundColor:'#1A1710',titleColor:'#EDE6D6',bodyColor:'#C8B89A',borderColor:'#252118',borderWidth:1,callbacks:{label:c=>` ${c.label}: ₹${c.parsed.toLocaleString('en-IN')}`}}}
+    }
+  });
+}
+
+// ── HEATMAP ──
+function renderHeatmap() {
+  const bar = document.getElementById('heatBar');
+  bar.innerHTML = '';
+  DATA.daily_dates.forEach((d,i) => {
+    const total = getAllTotal(i);
+    const bg = total>10000?'rgba(63,224,136,0.9)':total>5000?'rgba(63,224,136,0.65)':total>0?'rgba(63,224,136,0.35)':total<-10000?'rgba(240,112,112,0.9)':total<-5000?'rgba(240,112,112,0.65)':total<0?'rgba(240,112,112,0.35)':'var(--surface2)';
+    const el = document.createElement('div');
+    el.className='heat-day'; el.style.background=bg;
+    el.setAttribute('data-tip', `${d}: ${fmtIN(total)}`);
+    el.onclick = () => { currentDateIdx=i; updateDateNav(); renderTodayBanner(); renderStratPie(); };
+    bar.appendChild(el);
+  });
+}
+
+// ── CALENDAR ──
+function renderCalendar() {
+  const now = new Date();
+  const refDate = new Date(now.getFullYear(), now.getMonth()+calMonthOffset, 1);
+  const y = refDate.getFullYear(), m = refDate.getMonth();
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calTitle').textContent = `${MONTHS[m]} ${y}`;
+  const lookup = {};
+  DATA.daily_dates.forEach((d,i) => { const dt=parseDate(d); if(dt.getFullYear()===y&&dt.getMonth()===m) lookup[dt.getDate()]=i; });
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+  ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(d => grid.innerHTML+=`<div class="cal-dow">${d}</div>`);
+  const firstDay = new Date(y,m,1).getDay();
+  const offset = firstDay===0?6:firstDay-1;
+  const daysInMonth = new Date(y,m+1,0).getDate();
+  for(let e=0;e<offset;e++) grid.innerHTML+='<div class="cal-day empty"></div>';
+  for(let day=1;day<=daysInMonth;day++){
+    const i = lookup[day];
+    const isToday = now.getFullYear()===y&&now.getMonth()===m&&now.getDate()===day;
+    if(i!==undefined){
+      const total=getAllTotal(i);
+      const color=total>0?'var(--pos)':total<0?'var(--neg)':'var(--muted)';
+      grid.innerHTML+=`<div class="cal-day ${isToday?'today-cal':''}" onclick="currentDateIdx=${i};updateDateNav();renderTodayBanner();renderStratPie();">
+        <div class="cal-day-num">${day}</div>
+        <div class="cal-day-pnl" style="color:${color}">${fmt(total,false)}</div>
+      </div>`;
+    } else {
+      grid.innerHTML+=`<div class="cal-day ${isToday?'today-cal':''}" style="opacity:0.35;"><div class="cal-day-num">${day}</div></div>`;
+    }
+  }
+}
+function calNav(dir) { calMonthOffset+=dir; renderCalendar(); }
+
+// ── SUMMARY STRIP ──
+function renderSummaryStrip() {
+  const idxs = getFilteredIndices();
+  const totals = idxs.map(i=>getAllTotal(i));
+  const sum = totals.reduce((a,b)=>a+b,0);
+  const wins = totals.filter(v=>v>0).length;
+  const wr = totals.length?(wins/totals.length*100).toFixed(1):0;
+  const active = totals.filter(v=>v!==0);
+  const avg = active.length?(active.reduce((a,b)=>a+b,0)/active.length):0;
+  const best=Math.max(...totals), worst=Math.min(...totals);
+  document.getElementById('summaryPeriodLabel').textContent = getRangeLabel();
+  document.getElementById('summaryStrip').innerHTML = [
+    {label:'Total P&L',val:fmtIN(sum),cls:sum>0?'td-pos':'td-neg'},
+    {label:'Trading Days',val:idxs.length,cls:''},
+    {label:'Win Rate',val:wr+'%',cls:parseFloat(wr)>=50?'td-pos':'td-neg'},
+    {label:'Avg Daily P&L',val:fmtIN(Math.round(avg)),cls:avg>0?'td-pos':'td-neg'},
+    {label:'Best Day',val:fmtIN(best),cls:'td-pos'},
+    {label:'Worst Day',val:fmtIN(worst),cls:'td-neg'},
+  ].map(({label,val,cls})=>`<div class="sum-cell"><div class="sum-label">${label}</div><div class="sum-val ${cls}">${val}</div></div>`).join('');
+}
+
+// ── CONTROLS ──
+function setRange(r, btn) {
+  currentRange=r;
+  document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRollingStats(); renderCharts(); renderSummaryStrip();
+}
+function setDisplayView(v, btn) {
+  document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+init();
+
+// ── PDF EXPORT ──
+async function exportPDF() {
+  const btn = document.getElementById('pdfExportBtn');
+  const origText = btn.innerHTML;
+  btn.innerHTML = '⏳ Generating…';
+  btn.disabled = true;
+
+  // Force light mode for PDF regardless of current theme
+  const wasLight = document.documentElement.classList.contains('light');
+  if (!wasLight) document.documentElement.classList.add('light');
+
+  // Small delay so CSS vars reflow before capture
+  await new Promise(r => setTimeout(r, 120));
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const PAGE_W = 210, PAGE_H = 297, MARGIN = 10;
+    const CONTENT_W = PAGE_W - MARGIN * 2;
+    let cursorY = MARGIN;
+
+    const filterLabels = { all: 'All Strategies', nfo: 'NFO / BFO', mcx: 'MCX', hedged: 'Hedged', unhedged: 'Unhedged' };
+    const filterLabel  = filterLabels[activeCatFilter] || 'All Strategies';
+    const rangeLabel   = getRangeLabel();
+    const dateStr      = new Date().toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+
+    // ── helper: capture element → add to pdf as compressed JPEG ──
+    async function addSection(el, opts = {}) {
+      if (!el) return;
+
+      const canvas = await html2canvas(el, {
+        scale: 3,                    // full 2× for sharp text and chart lines
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#F1EDE3', // light-mode bg always
+        onclone: (doc) => {
+          doc.documentElement.classList.add('light');
+          doc.documentElement.classList.remove('dark');
+        }
+      });
+
+      // JPEG @ 0.88 — good quality, still 60-70% smaller than PNG
+      const imgData = canvas.toDataURL('image/jpeg', 0.88);
+      const imgH    = (canvas.height / canvas.width) * CONTENT_W;
+
+      if (opts.label) {
+        if (cursorY + 6 + imgH + 4 > PAGE_H - MARGIN) { pdf.addPage(); cursorY = MARGIN; }
+        pdf.setFontSize(7); pdf.setTextColor(100, 80, 30); pdf.setFont('helvetica', 'bold');
+        pdf.text(opts.label.toUpperCase(), MARGIN, cursorY + 3);
+        cursorY += 6;
+      } else {
+        if (cursorY + imgH + 4 > PAGE_H - MARGIN) { pdf.addPage(); cursorY = MARGIN; }
+      }
+
+      pdf.addImage(imgData, 'JPEG', MARGIN, cursorY, CONTENT_W, imgH);
+      cursorY += imgH + (opts.gap ?? 4);
+    }
+
+    // ── HEADER ──
+    pdf.setFillColor(245, 240, 228);
+    pdf.rect(0, 0, PAGE_W, 22, 'F');
+    pdf.setFontSize(14); pdf.setTextColor(120, 80, 10); pdf.setFont('helvetica', 'bold');
+    pdf.text('APEX ALGOS', MARGIN, 10);
+    pdf.setFontSize(8); pdf.setTextColor(80, 65, 40); pdf.setFont('helvetica', 'normal');
+    pdf.text('Daily P&L Dashboard  ·  ' + filterLabel + '  ·  ' + rangeLabel, MARGIN, 16);
+    pdf.setFontSize(7); pdf.setTextColor(130, 110, 80);
+    pdf.text('Generated: ' + dateStr, PAGE_W - MARGIN, 16, { align: 'right' });
+    pdf.setDrawColor(200, 185, 155); pdf.line(MARGIN, 21, PAGE_W - MARGIN, 21);
+    cursorY = 26;
+
+    // ── 1. BREAKDOWN TABLE ──
+    const tableWrap = document.querySelector('.bd-table-wrap');
+    await addSection(tableWrap, { label: 'Strategy Breakdown — ' + filterLabel, gap: 4 });
+
+    // ── 2. TODAY BANNER ──
+    const todayBanner = document.getElementById('bdTodayStrip');
+    if (todayBanner && todayBanner.innerHTML.trim())
+      await addSection(todayBanner, { gap: 4 });
+
+    // ── 3. ROLLING STATS ──
+    const rollingGrid = document.getElementById('rollingGrid');
+    await addSection(rollingGrid, { label: 'Rolling Performance — ' + rangeLabel, gap: 4 });
+
+    // ── 4. CHARTS (each panel separately) ──
+    for (const panel of document.querySelectorAll('.chart-panel')) {
+      const title = panel.querySelector('.chart-panel-title')?.textContent.trim() || '';
+      await addSection(panel, { label: title, gap: 4 });
+    }
+
+    // ── 5. HEATMAP ──
+    const heatSection = document.getElementById('heatBar')?.closest('div[style*="border"]')
+                     || document.getElementById('heatBar')?.parentElement;
+    if (heatSection) await addSection(heatSection, { label: 'Win/Loss Heatmap', gap: 4 });
+
+    // ── 6. CALENDAR ──
+    const calView = document.getElementById('calendarView');
+    await addSection(calView, { label: 'Calendar View', gap: 4 });
+
+    // ── 7. SUMMARY STRIP ──
+    const summaryStrip = document.getElementById('summaryStrip');
+    if (summaryStrip) await addSection(summaryStrip, { label: 'Period Summary — ' + rangeLabel, gap: 4 });
+
+    // ── FOOTER ON ALL PAGES ──
+    const totalPages = pdf.internal.getNumberOfPages();
+    for (let p = 1; p <= totalPages; p++) {
+      pdf.setPage(p);
+      pdf.setFontSize(6); pdf.setTextColor(130, 110, 80); pdf.setFont('helvetica', 'normal');
+      pdf.text('⚠ Past performance does not guarantee future returns. These are our account returns. Kindly consult your financial adviser.', MARGIN, PAGE_H - 5);
+      pdf.text('Page ' + p + ' of ' + totalPages, PAGE_W - MARGIN, PAGE_H - 5, { align: 'right' });
+    }
+
+    const safeName = filterLabel.replace(/[^a-zA-Z0-9]/g, '_');
+    pdf.save('ApexAlgos_' + safeName + '_' + dateStr.replace(/ /g, '') + '.pdf');
+
+  } catch (err) {
+    console.error('PDF export error:', err);
+    alert('PDF export failed: ' + err.message);
+  } finally {
+    // Restore original theme
+    if (!wasLight) document.documentElement.classList.remove('light');
+    btn.innerHTML = origText;
+    btn.disabled  = false;
+  }
+}
+
+// ── LIVE SYNC — fetch fresh data.json and fully re-init on page load ──
+(async function liveSync() {
+  try {
+    const res = await fetch('./data.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) return;
+    const d = await res.json();
+    if (!d) return;
+
+    // Full merge — same as hardSheetFetch, so daily_dates + all arrays always update
+    Object.keys(d).forEach(k => { DATA[k] = d[k]; });
+
+    if (d.strategies && d.strategies.length) {
+      STRATS       = d.strategies.map(s => s.key);
+      STRAT_LABELS = Object.fromEntries(d.strategies.map(s => [s.key, s.label]));
+      STRAT_FULL   = Object.fromEntries(d.strategies.map(s => [s.key, s.label]));
+      STRAT_COLORS = Object.fromEntries(d.strategies.map((s,i) => [s.key, s.color || AUTO_PALETTE[i % AUTO_PALETTE.length]]));
+      CAPITALS     = Object.fromEntries(d.strategies.map(s => [s.key, s.capital ?? 250000]));
+      STRAT_SHEETS = Object.fromEntries(d.strategies.map(s => [s.key, s.sheet || 'DAILY P&L']));
+    }
+    // Re-render with fresh data
+    init();
+  } catch(e) { console.warn('liveSync:', e.message); }
+})();
+
+// ══════════════════════════════════════════════════════
+//  SECRET ADMIN PANEL  —  code: apexstrategyedit
+//  Not linked anywhere, not visible to public.
+// ══════════════════════════════════════════════════════
+
+const GH_STORAGE_KEY = 'apexAdminGhConfig';
+const GH_DEFAULTS = {
+  repo: 'apexalgosindia/apexalgosindia.github.io',
+  file: 'update-data.yml',
+  token: ''
+};
+
+function loadGhConfig() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(GH_STORAGE_KEY)) || {};
+    return {
+      repo:  saved.repo  || GH_DEFAULTS.repo,
+      file:  saved.file  || GH_DEFAULTS.file,
+      token: saved.token || GH_DEFAULTS.token,
+    };
+  } catch { return { ...GH_DEFAULTS }; }
+}
+function saveGhConfig() {
+  const repo  = document.getElementById('ghRepo').value.trim();
+  const file  = document.getElementById('ghFile').value.trim();
+  const token = document.getElementById('ghToken').value.trim();
+  if (!repo || !file || !token) { setAdminStatus('✗ Fill in all three fields', 'err'); return; }
+  localStorage.setItem(GH_STORAGE_KEY, JSON.stringify({ repo, file, token }));
+  setAdminStatus('✓ GitHub config saved', 'ok');
+  toggleGhConfig(false);
+}
+function clearGhConfig() {
+  localStorage.removeItem(GH_STORAGE_KEY);
+  document.getElementById('ghRepo').value  = '';
+  document.getElementById('ghFile').value  = '';
+  document.getElementById('ghToken').value = '';
+  setAdminStatus('GitHub config cleared', '');
+}
+function toggleGhConfig(forceState) {
+  const area   = document.getElementById('ghConfigArea');
+  const toggle = document.getElementById('ghConfigToggle');
+  const open   = forceState !== undefined ? forceState : area.style.display === 'none';
+  area.style.display = open ? 'block' : 'none';
+  toggle.innerHTML   = open ? '&#9650; Hide settings' : '&#9881; Configure GitHub settings';
+  if (open) {
+    // Pre-fill from saved config
+    const cfg = loadGhConfig();
+    if (cfg.repo)  document.getElementById('ghRepo').value  = cfg.repo;
+    if (cfg.file)  document.getElementById('ghFile').value  = cfg.file;
+    if (cfg.token) document.getElementById('ghToken').value = cfg.token;
+  }
+}
+
+// Trigger workflow_dispatch via GitHub API
+async function triggerGithubSync() {
+  const cfg = loadGhConfig();
+  // If not configured, open config area and prompt user
+  if (!cfg.repo || !cfg.file || !cfg.token) {
+    toggleGhConfig(true);
+    setAdminStatus('⚠ Enter GitHub details first', 'err');
+    return;
+  }
+
+  const btn = document.getElementById('ghSyncBtn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span>⏳</span> Triggering workflow…'; }
+  setAdminStatus('Sending dispatch to GitHub…', '');
+
+  try {
+    const [owner, repo] = cfg.repo.split('/');
+    if (!owner || !repo) throw new Error('Repo must be in format owner/repo');
+
+    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${cfg.file}/dispatches`;
+
+    const res = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Accept':        'application/vnd.github+json',
+        'Authorization': 'Bearer ' + cfg.token,
+        'X-GitHub-Api-Version': '2022-11-28',
+        'Content-Type':  'application/json',
+      },
+      body: JSON.stringify({ ref: 'main' })
+    });
+
+    // 204 No Content = success for workflow_dispatch
+    if (res.status === 204) {
+      setAdminStatus('✓ Workflow triggered! Sync running…', 'ok');
+      // After ~20s, auto hard-fetch to pick up fresh data.json
+      setAdminStatus('✓ Triggered — auto-fetching in 25s…', 'ok');
+      setTimeout(() => hardSheetFetch(), 25000);
+    } else if (res.status === 401) {
+      throw new Error('401 Unauthorized — check your PAT token');
+    } else if (res.status === 404) {
+      throw new Error('404 — check repo name & workflow file');
+    } else if (res.status === 422) {
+      throw new Error('422 — check branch name (default: main)');
+    } else {
+      const body = await res.text();
+      throw new Error('HTTP ' + res.status + ': ' + body.slice(0, 80));
+    }
+  } catch (err) {
+    console.error('triggerGithubSync error:', err);
+    setAdminStatus('✗ ' + err.message, 'err');
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Run Sheet Sync Workflow'; }
+  }
+}
+
+(function() {
+  const SECRET     = 'apexstrategyedit';
+  let   keyBuffer  = '';
+  let   bufferTimer = null;
+
+  document.addEventListener('keydown', function(e) {
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
+
+    keyBuffer += e.key.toLowerCase();
+    if (keyBuffer.length > SECRET.length) keyBuffer = keyBuffer.slice(-SECRET.length);
+
+    clearTimeout(bufferTimer);
+    bufferTimer = setTimeout(() => { keyBuffer = ''; }, 2500);
+
+    if (keyBuffer === SECRET) {
+      keyBuffer = '';
+      openAdminPanel();
+    }
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeAdminPanel();
+  });
+})();
+
+// ── MOBILE: 7 rapid taps on "Daily Performance" title opens admin panel ──
+(function() {
+  const REQUIRED_TAPS  = 7;
+  const MAX_GAP_MS     = 400;
+  const WINDOW_MS      = 3000;
+  let taps = [];
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const target = document.getElementById('adminTapTarget');
+    if (!target) return;
+
+    target.addEventListener('touchend', function(e) {
+      if (e.changedTouches.length === 0) return;
+      const now = Date.now();
+      taps = taps.filter(t => now - t < WINDOW_MS);
+      if (taps.length > 0 && (now - taps[taps.length - 1]) > MAX_GAP_MS) taps = [];
+      taps.push(now);
+      if (taps.length === REQUIRED_TAPS) {
+        taps = [];
+        openAdminPanel();
+      }
+    });
+  });
+})();
+
+function openAdminPanel() {
+  const panel = document.getElementById('adminPanel');
+  if (!panel) return;
+  panel.style.display = 'block';
+  setAdminStatus('Ready', '');
+  // Auto-open config if token not yet saved
+  const cfg = loadGhConfig();
+  if (!cfg.token) toggleGhConfig(true);
+}
+
+function closeAdminPanel() {
+  const panel = document.getElementById('adminPanel');
+  if (panel) panel.style.display = 'none';
+}
+
+function setAdminStatus(msg, type) {
+  const el = document.getElementById('adminStatus');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'admin-status' + (type ? ' ' + type : '');
+}
+
+// Hard-fetch: bypasses every cache layer, force-reloads data.json, re-inits dashboard
+async function hardSheetFetch() {
+  const btn = document.getElementById('hardFetchBtn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span>⏳</span> Fetching…'; }
+  setAdminStatus('Fetching fresh data…', '');
+
+  try {
+    const url = './data.json?t=' + Date.now() + '&nocache=' + Math.random().toString(36).slice(2);
+    const res = await fetch(url, {
+      cache: 'no-store',
+      headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate', 'Pragma': 'no-cache' }
+    });
+
+    if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+    const d = await res.json();
+    if (!d) throw new Error('Empty response from server');
+
+    Object.keys(d).forEach(k => { DATA[k] = d[k]; });
+
+    if (d.strategies && d.strategies.length) {
+      STRATS       = d.strategies.map(s => s.key);
+      STRAT_LABELS = Object.fromEntries(d.strategies.map(s => [s.key, s.label]));
+      STRAT_FULL   = Object.fromEntries(d.strategies.map(s => [s.key, s.label]));
+      STRAT_COLORS = Object.fromEntries(d.strategies.map((s,i) => [s.key, s.color || AUTO_PALETTE[i % AUTO_PALETTE.length]]));
+      CAPITALS     = Object.fromEntries(d.strategies.map(s => [s.key, s.capital ?? 250000]));
+      STRAT_SHEETS = Object.fromEntries(d.strategies.map(s => [s.key, s.sheet || 'DAILY P&L']));
+    }
+
+    init();
+    const ts = d.updated ? ' · Updated: ' + d.updated : '';
+    setAdminStatus('✓ Fetched successfully' + ts, 'ok');
+  } catch (err) {
+    console.error('hardSheetFetch error:', err);
+    setAdminStatus('✗ ' + err.message, 'err');
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#8635;</span> Hard Fetch data.json'; }
+  }
+}
+
+// Clear localStorage apex keys and reload
+function clearDataCache() {
+  const btn = document.getElementById('clearCacheBtn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span>⏳</span> Clearing…'; }
+  setAdminStatus('Clearing cache…', '');
+  try {
+    Object.keys(localStorage).filter(k => k.startsWith('apex') && k !== GH_STORAGE_KEY)
+      .forEach(k => localStorage.removeItem(k));
+    setAdminStatus('✓ Cache cleared — reloading…', 'ok');
+    setTimeout(() => {
+      window.location.href = window.location.pathname + '?t=' + Date.now();
+    }, 800);
+  } catch(e) {
+    setAdminStatus('✗ ' + e.message, 'err');
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#128465;</span> Clear Cached Data'; }
+  }
+}
+</script>
+</body>
+</html>
