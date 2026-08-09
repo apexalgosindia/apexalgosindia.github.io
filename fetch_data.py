@@ -37,7 +37,7 @@ STRATEGIES = [
 
     # ── Hedged strategies (DAILY P&L HEDGED tab) ─────────────────────────────────────────────────────────────
     {'key':'naph',  'label':'NAP-H', 'capital':150_000, 'col':1,  'sheet':'DAILY P&L HEDGED', 'category':'nfo', 'color':'#A0E06F', 'visible':True, 'tradetron_id':'7286441', 'share_code':'65ad2c9c-0ceb-4076-932f-5430d14b4530', 'subtitle':'Nifty Apex Predator — Hedged',  'sl':5000},
-    #{'key':'saph',  'label':'SAP-H', 'capital':150_000, 'col':4,  'sheet':'DAILY P&L HEDGED', 'category':'nfo', 'color':'#E06FB0', 'visible':True, 'tradetron_id':'7324673', 'share_code':'YOUR-SAPH-SHARE-CODE',                 'subtitle':'Sensex Apex Predator — Hedged', 'sl':5000},
+    {'key':'naph-v3',  'label':'NAP-H V3', 'capital':150_000, 'col':4,  'sheet':'DAILY P&L HEDGED', 'category':'nfo', 'color':'#E06FB0', 'visible':True, 'tradetron_id':'8820653', 'share_code':'ebe34383-ad3e-4e82-8c39-a0cf7d999e12','subtitle':'Nifty Apex Predator — Hedged V3', 'sl':3500},
     
 
 
