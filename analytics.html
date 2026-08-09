@@ -732,6 +732,7 @@ function renderBreakdownTable(filter='') {
     return bdSortAsc ? va - vb : vb - va;
   });
 
+  const HEDGED_SHEET = 'DAILY P&L HEDGED';
   const nfoStdRows  = rows.filter(r => r.sheet !== HEDGED_SHEET);
   const nfoHedRows  = rows.filter(r => r.sheet === HEDGED_SHEET);
   // Legacy aliases for subTotalRow/showGroups logic
