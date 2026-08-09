@@ -39,9 +39,7 @@ STRATEGIES = [
     {'key':'naph',  'label':'NAP-H', 'capital':150_000, 'col':1,  'sheet':'DAILY P&L HEDGED', 'category':'nfo', 'color':'#A0E06F', 'visible':True, 'tradetron_id':'7286441', 'share_code':'65ad2c9c-0ceb-4076-932f-5430d14b4530', 'subtitle':'Nifty Apex Predator — Hedged',  'sl':5000},
     #{'key':'saph',  'label':'SAP-H', 'capital':150_000, 'col':4,  'sheet':'DAILY P&L HEDGED', 'category':'nfo', 'color':'#E06FB0', 'visible':True, 'tradetron_id':'7324673', 'share_code':'YOUR-SAPH-SHARE-CODE',                 'subtitle':'Sensex Apex Predator — Hedged', 'sl':5000},
     
-    # MCX strategies
-    {'key':'ngap', 'label':'NGAP', 'capital':220_000, 'col':8, 'sheet':'DAILY P&L', 'category':'mcx', 'color':'#6B8BFA', 'visible':True,  'tradetron_id':'7927425', 'share_code':'7914905e-fdcb-4039-80ed-e5e71d3a5336', 'subtitle':'NG Apex Predator',           'sl':1800},
-    {'key':'ngapm', 'label':'NGAPM', 'capital':50_000, 'col':11, 'sheet':'DAILY P&L', 'category':'mcx', 'color':'#4FFF8A', 'visible':True,  'tradetron_id':'9444470', 'share_code':'6c5191a4-aa36-42da-badb-ae16622165d6', 'subtitle':'NG Apex Predator MINI',           'sl':500},
+
 
 ]
 
@@ -313,19 +311,24 @@ def build_data():
             'days':          len([x for x in d if x != 0]),
         }
 
-    # Legacy combined stat (NAP + SAP)
-    nap_d = daily.get('nap', []);  sap_d = daily.get('sap', [])
-    nap_m = monthly.get('nap', []); sap_m = monthly.get('sap', [])
-    comb  = [n + s for n, s in zip(nap_d, sap_d)] if nap_d and sap_d else []
-    nc = _S.get('nap', {}).get('capital', 250_000)
-    sc = _S.get('sap', {}).get('capital', 250_000)
+    # Combined stat (NAP + NAPv2 + NAPv3)
+    nap_keys = ['nap', 'napv2', 'napv3']
+    nap_d_lists = [daily.get(k, []) for k in nap_keys]
+    nap_m_lists = [monthly.get(k, []) for k in nap_keys]
+    
+    if all(nap_d_lists):
+        comb_d = [sum(items) for items in zip(*nap_d_lists)]
+        comb_m = [sum(items) for items in zip(*nap_m_lists)]
+        comb_cap = sum(_S.get(k, {}).get('capital', 250_000) for k in nap_keys)
+    else:
+        comb_d, comb_m, comb_cap = [], [], 0
+
     stats['comb'] = {
-        'roi':      round((sum(nap_m) + sum(sap_m)) / (nc + sc) * 100, 1)
-                    if nap_m and sap_m else 0,
-        'pnl':      round(sum(nap_m) + sum(sap_m)) if nap_m and sap_m else 0,
-        'sharpe':   sharpe(comb, nc + sc),
-        'max_dd':   max_drawdown(comb, nc + sc),
-        'win_rate': win_rate(comb),
+        'roi':      round(sum(comb_m) / comb_cap * 100, 1) if comb_m and comb_cap else 0,
+        'pnl':      round(sum(comb_m)) if comb_m else 0,
+        'sharpe':   sharpe(comb_d, comb_cap) if comb_d else 0,
+        'max_dd':   max_drawdown(comb_d, comb_cap) if comb_d else 0,
+        'win_rate': win_rate(comb_d) if comb_d else 0,
     }
 
     # ── 6. Assemble output ────────────────────────────────────────────────────
