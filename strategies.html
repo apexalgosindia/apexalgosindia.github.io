@@ -128,18 +128,6 @@
     </div>
     <div class="strategy-grid" id="grid-nfo-hedged"></div>
 
-    <!-- MCX SECTION -->
-    <div class="section-header" id="section-mcx" style="display:none;">
-      <span class="section-badge" style="background:var(--surface2);color:var(--accent);border:1px solid rgba(212,168,64,0.4);">MCX</span>
-      <h2 class="section-heading">MCX Strategies</h2>
-    </div>
-    <div class="strategy-grid" id="grid-mcx"></div>
-    <div class="sub-section-header" id="sub-section-mcx-hedged" style="display:none;">
-      <span class="sub-section-badge">&#128737; Hedged</span>
-      <h3 class="sub-section-heading">Hedged Strategies</h3>
-      <div class="sub-section-divider"></div>
-    </div>
-    <div class="strategy-grid" id="grid-mcx-hedged"></div>
 
         <!-- Telegram -->
     <a class="tg-card" href="https://t.me/apexalgoschat" target="_blank" rel="noopener">
@@ -445,6 +433,12 @@ function sliceMonthlyByRange(months, values, range) {
   return { months: months.slice(-n), values: values.slice(-n) };
 }
 
+function trimLeadingZeros(arr, labels) {
+  let start = arr.findIndex(v => v !== 0);
+  if (start <= 0) return { values: arr, labels };
+  return { values: arr.slice(start), labels: labels.slice(start) };
+}
+
 function renderAmContent() {
   const d    = _amData;
   const key  = _amKey;
@@ -456,8 +450,16 @@ function renderAmContent() {
   const cap        = (d.strategies?.find(s => s.key === key)?.capital) || 250000;
 
   // Slice by range
-  const { dates: rDates, values: rDaily }     = sliceDailyByRange(dates, dailyArr, _amRange);
-  const { months: rMonths, values: rMonthly } = sliceMonthlyByRange(months, monthlyArr, _amRange);
+  const slicedD = sliceDailyByRange(dates, dailyArr, _amRange);
+  const slicedM = sliceMonthlyByRange(months, monthlyArr, _amRange);
+
+  // Trim leading zeros so charts don't start with a flat line
+  const trimmedD = trimLeadingZeros(slicedD.values, slicedD.dates);
+  const trimmedM = trimLeadingZeros(slicedM.values, slicedM.months);
+  const rDates   = trimmedD.labels;
+  const rDaily   = trimmedD.values;
+  const rMonths  = trimmedM.labels;
+  const rMonthly = trimmedM.values;
 
   // Cumulative P&L
   let cum = 0;
