@@ -56,8 +56,8 @@
     </div>
     <div class="page-hero-stats" id="heroStats">
       <div class="hero-stat">
-        <div class="hero-stat-val pos" id="live-nap-roi">—</div>
-        <div class="hero-stat-label">NAP v1 ROI</div>
+        <div class="hero-stat-val pos" id="live-total-pf-roi">—</div>
+        <div class="hero-stat-label">Total PF ROI</div>
       </div>
       <div class="hero-stat-divider"></div>
       <div class="hero-stat">
@@ -91,6 +91,12 @@
         <span class="live-stat-label">NAP v3 ROI</span>
         <span class="live-stat-val pos" id="live-napv3-roi">—</span>
         <span class="live-stat-sub" id="live-napv3-pnl">—</span>
+      </div>
+      <div class="live-stat-sep"></div>
+      <div class="live-stat-item">
+        <span class="live-stat-label">NAP Hedged</span>
+        <span class="live-stat-val pos" id="live-naph-roi">—</span>
+        <span class="live-stat-sub" id="live-naph-pnl">—</span>
       </div>
       <div class="live-stat-sep"></div>
       <div class="live-stat-item" style="margin-left:auto; flex-direction:row; align-items:center; gap:1rem;">
@@ -280,15 +286,32 @@
       const fmt = n => '&#8377;' + Math.abs(Math.round(n)).toLocaleString('en-IN');
       const setEl = (id, v) => { const e = document.getElementById(id); if (e) e.innerHTML = v; };
 
+      let totalPfCap = 0, totalPfPnl = 0;
+      ['nap', 'napv2', 'napv3', 'naph'].forEach(k => {
+        if (s[k]) {
+          const stratInfo = (d.strategies || []).find(st => st.key === k);
+          if (stratInfo && stratInfo.capital) {
+            totalPfCap += stratInfo.capital;
+            totalPfPnl += s[k].pnl || 0;
+          }
+        }
+      });
+      const totalPfRoi = totalPfCap > 0 ? (totalPfPnl / totalPfCap) * 100 : 0;
+      
+      setEl('live-total-pf-roi', (totalPfRoi >= 0 ? '+' : '') + totalPfRoi.toFixed(1) + '%');
+
       setEl('live-comb-roi', '+' + s.comb.roi + '%');
       setEl('live-comb-pnl', fmt(s.comb.pnl));
-      setEl('live-nap-roi',  '+' + s.nap.roi  + '%');
       setEl('live-nap-roi2', '+' + s.nap.roi  + '%');
       setEl('live-nap-pnl',  fmt(s.nap.pnl));
       setEl('live-napv2-roi','+' + s.napv2.roi + '%');
       setEl('live-napv2-pnl',fmt(s.napv2.pnl));
       setEl('live-napv3-roi','+' + s.napv3.roi + '%');
       setEl('live-napv3-pnl',fmt(s.napv3.pnl));
+      if(s.naph) {
+        setEl('live-naph-roi', (s.naph.roi >= 0 ? '+' : '') + s.naph.roi + '%');
+        setEl('live-naph-pnl', fmt(s.naph.pnl));
+      }
       setEl('live-updated',  d.updated || '—');
 
       const badge = document.getElementById('live-status');
