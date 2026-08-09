@@ -1,5 +1,7 @@
 name: Update Performance Data
 on:
+  repository_dispatch:
+    types: [sheet_updated]
   schedule:
     # Every 15 min, 9:00 AM – 11:45 PM IST (IST = UTC+5:30)
     # 9:00 AM IST = 03:30 UTC  |  11:45 PM IST = 18:15 UTC
