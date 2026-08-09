@@ -68,39 +68,9 @@
   </div>
 
     <!-- LIVE STATS BAR -->
-    <div class="live-stats-bar">
-      <div class="live-stat-item">
-        <span class="live-stat-label">NAP Combined ROI</span>
-        <span class="live-stat-val pos" id="live-comb-roi">—</span>
-        <span class="live-stat-sub" id="live-comb-pnl">—</span>
-      </div>
-      <div class="live-stat-sep"></div>
-      <div class="live-stat-item">
-        <span class="live-stat-label">NAP v1 ROI</span>
-        <span class="live-stat-val pos" id="live-nap-roi2">—</span>
-        <span class="live-stat-sub" id="live-nap-pnl">—</span>
-      </div>
-      <div class="live-stat-sep"></div>
-      <div class="live-stat-item">
-        <span class="live-stat-label">NAP v2 ROI</span>
-        <span class="live-stat-val pos" id="live-napv2-roi">—</span>
-        <span class="live-stat-sub" id="live-napv2-pnl">—</span>
-      </div>
-      <div class="live-stat-sep"></div>
-      <div class="live-stat-item">
-        <span class="live-stat-label">NAP v3 ROI</span>
-        <span class="live-stat-val pos" id="live-napv3-roi">—</span>
-        <span class="live-stat-sub" id="live-napv3-pnl">—</span>
-      </div>
-      <div class="live-stat-sep"></div>
-      <div class="live-stat-item">
-        <span class="live-stat-label">NAP Hedged</span>
-        <span class="live-stat-val pos" id="live-naph-roi">—</span>
-        <span class="live-stat-sub" id="live-naph-pnl">—</span>
-      </div>
-      <div class="live-stat-sep"></div>
+    <div class="live-stats-bar" id="liveStatsBar">
       <div class="live-stat-item" style="margin-left:auto; flex-direction:row; align-items:center; gap:1rem;">
-        <div id="live-status" class="live-status-badge">LOADING”¦</div>
+        <div id="live-status" class="live-status-badge">LOADING…</div>
         <a href="https://docs.google.com/spreadsheets/d/1Rgy-HH8bcY7guN7PuH6biiK-JVV-PaFOH5aDII8oVf8/edit?usp=sharing" target="_blank" rel="noopener" class="sheet-link">Full P&amp;L Sheet ↗</a>
       </div>
     </div>
@@ -287,39 +257,54 @@
       const setEl = (id, v) => { const e = document.getElementById(id); if (e) e.innerHTML = v; };
 
       let totalPfCap = 0, totalPfPnl = 0;
-      ['nap', 'napv2', 'napv3', 'naph'].forEach(k => {
-        if (s[k]) {
-          const stratInfo = (d.strategies || []).find(st => st.key === k);
-          if (stratInfo && stratInfo.capital) {
-            totalPfCap += stratInfo.capital;
+      if (d.strategies) {
+        d.strategies.forEach(st => {
+          const k = st.key;
+          if (s[k] && st.capital && st.visible !== false) {
+            totalPfCap += st.capital;
             totalPfPnl += s[k].pnl || 0;
           }
-        }
-      });
+        });
+      }
       const totalPfRoi = totalPfCap > 0 ? (totalPfPnl / totalPfCap) * 100 : 0;
       
       setEl('live-total-pf-roi', (totalPfRoi >= 0 ? '+' : '') + totalPfRoi.toFixed(1) + '%');
 
-      setEl('live-comb-roi', '+' + s.comb.roi + '%');
-      setEl('live-comb-pnl', fmt(s.comb.pnl));
-      setEl('live-nap-roi2', '+' + s.nap.roi  + '%');
-      setEl('live-nap-pnl',  fmt(s.nap.pnl));
-      setEl('live-napv2-roi','+' + s.napv2.roi + '%');
-      setEl('live-napv2-pnl',fmt(s.napv2.pnl));
-      setEl('live-napv3-roi','+' + s.napv3.roi + '%');
-      setEl('live-napv3-pnl',fmt(s.napv3.pnl));
-      if(s.naph) {
-        setEl('live-naph-roi', (s.naph.roi >= 0 ? '+' : '') + s.naph.roi + '%');
-        setEl('live-naph-pnl', fmt(s.naph.pnl));
-      }
       setEl('live-updated',  d.updated || '—');
 
-      const badge = document.getElementById('live-status');
-      if (badge && d.updated) {
-        badge.textContent = 'LIVE · ' + d.updated;
-        badge.style.background  = 'rgba(78,160,110,0.12)';
-        badge.style.borderColor = 'rgba(78,160,110,0.35)';
-        badge.style.color       = '#7EC8A0';
+      const barContainer = document.getElementById('liveStatsBar');
+      if (barContainer && d.strategies) {
+        let html = '';
+        const createItem = (label, roi, pnl) => {
+          const sign = roi >= 0 ? '+' : '';
+          const cls = roi >= 0 ? 'pos' : 'neg';
+          return `<div class="live-stat-item">
+              <span class="live-stat-label">${label}</span>
+              <span class="live-stat-val ${cls}">${sign}${roi.toFixed(1)}%</span>
+              <span class="live-stat-sub">${fmt(pnl)}</span>
+            </div><div class="live-stat-sep"></div>`;
+        };
+
+        if (s.comb) {
+           html += createItem('Combined ROI', s.comb.roi, s.comb.pnl);
+        }
+        
+        d.strategies.forEach(st => {
+           if (st.visible && s[st.key]) {
+             let label = st.label;
+             if (!label.toLowerCase().includes('roi')) label += ' ROI';
+             html += createItem(label, s[st.key].roi, s[st.key].pnl);
+           }
+        });
+
+        html += `
+          <div class="live-stat-item" style="margin-left:auto; flex-direction:row; align-items:center; gap:1rem;">
+            <div id="live-status" class="live-status-badge" style="background:rgba(78,160,110,0.12);border-color:rgba(78,160,110,0.35);color:#7EC8A0;">LIVE · ${d.updated || '—'}</div>
+            <a href="https://docs.google.com/spreadsheets/d/1Rgy-HH8bcY7guN7PuH6biiK-JVV-PaFOH5aDII8oVf8/edit?usp=sharing" target="_blank" rel="noopener" class="sheet-link">Full P&amp;L Sheet ↗</a>
+          </div>
+        `;
+        
+        barContainer.innerHTML = html;
       }
 
       // Rebuild cards every refresh (picks up visibility changes)
